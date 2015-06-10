@@ -209,7 +209,7 @@
             <div style='overflow-y: scroll; max-height: 270px'>
               <ul>
 
-                 <% ReadingPreference.pluck(:genre).each do |role| %>
+                 <% ReadingPreference.pluck(:genre).uniq.each do |role| %>
       
                    <li>
                      <%= check_box_tag 'genre[]', role -%>
@@ -248,7 +248,7 @@
                 <div style='overflow-y: scroll; max-height: 270px'>
 
               <ul>
-                 <% ReadingPreference.pluck(:Author).each do |role| %>
+                 <% ReadingPreference.pluck(:Author).uniq.each do |role| %>
       
                    <li>
                      <%= check_box_tag 'Author[]', role -%>
@@ -288,7 +288,7 @@
                <div style='overflow-y: scroll; max-height: 270px'>
 
               <ul>
-                 <% User.pluck(:location).each do |role| %>
+                 <% User.pluck(:location).uniq.each do |role| %>
       
                    <li>
                      <%= check_box_tag 'location[]', role -%>
