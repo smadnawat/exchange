@@ -3,19 +3,7 @@ before_filter :skip_sidebar!
  actions :all, :except => [:new,:destroy,:show,:edit] 
   menu priority: 1,label: "User Profiles and Data"
 
-# See permitted parameters documentation:
-# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-#
-# permit_params :list, :of, :attributes, :on, :model
 permit_params :username, :picture, :gender, :email, :location, :date_signup,:is_block#, :device_used
-# or
-#
- 
-# permit_params do
-#   permitted = [:permitted, :attributes]
-#   permitted << :other if resource.something?
-#   permitted
-# end
 
 index :title => 'User Profiles and Data' do
 	selectable_column
@@ -46,22 +34,14 @@ index :title => 'User Profiles and Data' do
       f.date_signup.to_date
     end
   
-  
-  
-  
   column "Author Preference",:title  do |f|
-    # f.preferencces.title if f.preferencces.present?
-     
-      # f.reading_preferences.map{|p| p.title}.join(' , ') if f.reading_preferences.present?
      f.reading_preferences.present? ? f.reading_preferences.map{|p| p.title}.join(' , ') : 'no Reading Preferences'
       
     #   p.book_title
      end
   
   column "Genre Preference",:genre  do |f|
-    # f.preferencces.book_title if f.preferencces.present?
-     # f.preferencces.last.genre_name if f.preferencces.present?
-     # f.reading_preferences.map{|p| p.genre}.join(' , ') if f.reading_preferences.present? 
+   
      f.reading_preferences.present? ? f.reading_preferences.map{|p| p.genre}.join(' , ') : 'no Reading Preferences'
 # condition ? if_true : if_false
       # p.genre_name
@@ -113,55 +93,12 @@ index :title => 'User Profiles and Data' do
   end
    
 end
-	# column :profile_pic
-	# column :gender
-	# column :email
-	# column :location
-	# column :date_of_sign_up
-	# column :device_used
-	# column "Action",:is_block 
-  # column :book_title
-  # column :genre_name
-  # column :author_name
-
-    
- 
-  # form do |f|
-  #   f.inputs "Admin Details" do
-  #     f.input :name
-  #     f.input :profile_pic
-  #     f.input :gender
-  #     f.input :email
-  #     f.input :location
-  #     f.input :date_of_sign_up
-  #     f.input :device_used
-  #     f.input :is_block 
-      
-  #   end
-  # end
-  # controller do
-  #    scoped_collection do 
-  #      User.all.where(:is_block => nil)
-  #    end
-  # end
+	
   controller do
       def scoped_collection
         p"=========scope collection==============="
         User.users
       end
     end
-# See permitted parameters documentation:
-# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-#
-# permit_params :list, :of, :attributes, :on, :model
-#
-# or
-#
-# permit_params do
-#   permitted = [:permitted, :attributes]
-#   permitted << :other if resource.something?
-#   permitted
-# end
-
 
 end

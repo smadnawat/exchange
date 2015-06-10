@@ -49,7 +49,6 @@
   <script type="text/javascript">
       $(".error").hide();
       $(".error").html('');
-    // jQuery(document).ready(function() {
        $("#user_All").change(function(){
          $(".error").hide();
          $(".error").html('');
@@ -57,20 +56,14 @@
           {    
            
               if ($('#user_subject').val() == ''){
-                // alert("Please fill Subject");
+               
                 $(".error-subject").html('Subject is required');
                 $(".error").show(); 
-
-
               }
                if ($('#user_content').val() == ''){
-                // alert("Please fill Content");
                   $(".error-content").html('Content is required');
-                  $(".error").show();   
-
+                  $(".error").show(); 
               }
-              
-
              $('#custom_subject_genre').val( $("#user_subject").val()) ;
              $('#custom_content_genre').val($("#user_content").val()) ;
           if (($('#user_subject').val() != '') && ($('#user_content').val() != '')) {
@@ -79,7 +72,6 @@
            }
           else if ($(this).val() == 'Author')
           {
-            
               if ($('#user_subject').val() == ''){
                $(".error-subject").html('Subject is required');
                 $(".error").show(); 
@@ -117,8 +109,6 @@
                 if (($('#user_subject').val() != '') && ($('#user_content').val() != '')) {
              $('#form-co').modal('show')
            }
-             
-              
               $('#custom_subject_location').val($("#user_subject").val()) ;
               
               $('#custom_content_location').val($("#user_content").val()) ;
@@ -126,27 +116,18 @@
            }
           else if ($(this).val() == 'All')
            {
-               
-
                  $( "#clickme" ).show( "slow", function() {
                   
                  });
-                 
-            
                   $('#notification_subject').val($("#user_subject").val()) ;
                   $('#notification_content').val($("#user_content").val()) ;
-                  
-              
-              
+                
            }
       });
       // ########Validation on Submit######################
-      // $(".error").hide();
-      // $(".error").html('');
-
+     
       $('#submit_form').click(function(){ 
-       
-       // alert("jjjjjjjjjjjjjjjjjjjj")
+     
       $(".error").hide();
       $(".error").html('');
       var check_subject = /^([a-zA-Z ]){1,30}$/;
@@ -181,7 +162,7 @@
           $.each(newjobErr, function(key, value) { 
             count = count + 1;                
           });  
-          // alert(count);
+        
           if(count >= 1) {   
 
               $(".error").show();        
@@ -195,7 +176,7 @@
           });
 
 
-// });
+
    </script>
 
 
@@ -205,12 +186,8 @@
                 <a class="close" data-dismiss="modal">×</a>
                 <h3>Select Genre</h3>
           </div>
-          <!-- <form class="contact"> -->
-             
           
             <div class="modal-body"> 
-           
-            <%#= form_for(:rrrrrr,  url: admin_notifications_path , html: { class: 'modal-form form-horizontal' } ) do |t| %>  
               <%= form_for :notification, :url => do_create_path do |f| %>
             <div style='overflow-y: scroll; max-height: 270px'>
               <ul>
@@ -233,14 +210,12 @@
                   </div>
 
                   <div class="modal-footer">
-                    <!-- <button class="btn btn-success" id="submit">Send</button> -->
+                   
                      <%= f.submit "Send ", :class=>"btn btn-success" %>
                     <a href="#" class="btn" data-dismiss="modal">Close</a>
                   </div>
              <%end%>
             </div>
-           
-     <!-- </form> -->
   </div>
 
 
@@ -249,12 +224,8 @@
                 <a class="close" data-dismiss="modal">×</a>
                 <h3>Select Author</h3>
           </div>
-          <!-- <form class="contact"> -->
-             
           
-            <div class="modal-body"> 
-           
-            <%#= form_for(:rrrrrr,  url: admin_notifications_path , html: { class: 'modal-form form-horizontal' } ) do |t| %>  
+            <div class="modal-body">  
               <%= form_for :notification, :url => do_create_path do |f| %>
               
                 <div style='overflow-y: scroll; max-height: 270px'>
@@ -279,14 +250,12 @@
                   </div>
 
                   <div class="modal-footer">
-                    <!-- <button class="btn btn-success" id="submit">Send</button> -->
+                   
                      <%= f.submit "Send", :class=>"btn btn-success" %>
                     <a href="#" class="btn" data-dismiss="modal">Close</a>
                   </div>
              <%end%>
             </div>
-           
-     <!-- </form> -->
   </div>
 
 
@@ -295,14 +264,10 @@
                 <a class="close" data-dismiss="modal">×</a>
                 <h3>Select Location</h3>
           </div>
-          <!-- <form class="contact"> -->
-             
           
             <div class="modal-body"> 
-           
-            <%#= form_for(:rrrrrr,  url: admin_notifications_path , html: { class: 'modal-form form-horizontal' } ) do |t| %>  
               <%= form_for :notification, :url => do_create_path do |f| %>
-               <!-- <div style="overflow:scroll; height:100px;width:100"> -->
+              
                <div style='overflow-y: scroll; max-height: 270px'>
 
               <ul>
@@ -325,14 +290,12 @@
                   </div>
 
                   <div class="modal-footer">
-                    <!-- <button class="btn btn-success" id="submit">Send</button> -->
+                   
                      <%= f.submit "Send", :class=>"btn btn-success" %>
                     <a href="#" class="btn" data-dismiss="modal">Close</a>
                   </div>
              <%end%>
             </div>
-           
-     <!-- </form> -->
   </div>
 
 
