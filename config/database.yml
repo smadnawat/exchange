@@ -1,0 +1,20 @@
+defaults: &defaults
+  adapter: postgresql
+  username: postgres #adapter username
+  password: postgres #adapter password
+  host: localhost    #host name
+  port: 5432          #port number
+  pool: 10            #pool value
+  timeout: 5000       #timeout value
+
+development:
+  database: ExchangeApp_development   #database name
+  <<: *defaults
+
+test:
+  database: ExchangeApp_test
+  <<: *defaults
+
+production:
+  database: ExchangeApp_production
+  <<: *defaults
