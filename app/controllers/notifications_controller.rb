@@ -36,6 +36,10 @@ class NotificationsController < ApplicationController
 
      
   end
-	
+
+	def notfound
+      flash[:notice] = "Invalid Path"
+          redirect_to admin_users_path
+    end 
 
 end
