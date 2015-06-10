@@ -22,6 +22,8 @@ gem 'grocer'
 gem 'gcm'
 gem 'sidekiq', '3.0.0'
 gem 'redis'
+gem 'rails_12factor', group: :production
+
 # gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git'
 
 # Use jquery as the JavaScript library
