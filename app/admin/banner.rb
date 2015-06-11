@@ -35,16 +35,28 @@ end
     f.inputs "Ad Banner", :multipart => true do
 
       
-    f.input :image ,:as => :file,:hint => f.content_tag(:span, image_tag("Please Upload Image ", id: 'my_image'))
+    f.input :image ,:as => :file,:hint => f.content_tag(:span, image_tag("", id: 'my_image')) 
 
       f.input :image_cache, :as => :hidden 
       f.input :banner_name,:input_html => {:placeholder => "Name of Ad Banner"}
       f.input :author_name,:input_html => {:placeholder => "Name of Author"}
-      f.input :link,:input_html => {:placeholder => "Link to the Landing Page"}
+      f.input :link,:input_html => {:placeholder => "http://www.mobiloitte.com"}
      
     end
    
      f.actions
+  end
+
+
+   controller do        
+    def new
+      super
+    end  
+
+    def create
+       super
+      flash[:notice] = 'Banner is successfully created'      
+    end
   end
 
 end

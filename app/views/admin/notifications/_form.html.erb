@@ -49,7 +49,7 @@
           <span class="error-content error"></span>
         </div>
         <div>
-            <%= f.label :Recipent %>
+            <%= f.label :Recipient %>
         </div>
         <div>
             <%= f.select(:All, options_for_select( [['Location Based', 'Location'], ['Genre Preference','Genre'],['Author Preference','Author'],['All', 'All']] ),:prompt => 'Please Select')%>
@@ -200,15 +200,14 @@
   <!-- model content -->  
   <div id="form-content" class="modal  fade in" style="display: none; ">
           <div class="modal-header">
-                <a class="close" data-dismiss="modal">×</a>
-                <h3>Select Genre</h3>
+            <a class="close" data-dismiss="modal">×</a>
+            <h3>Select Genre</h3>
           </div>
-          
+           <%= form_for :notification, :url => do_create_path do |f| %>
             <div class="modal-body"> 
-              <%= form_for :notification, :url => do_create_path do |f| %>
+             
             <div style='overflow-y: scroll; max-height: 270px'>
               <ul>
-
                  <% ReadingPreference.pluck(:genre).uniq.each do |role| %>
       
                    <li>
@@ -219,20 +218,19 @@
                  <% end %>
               </ul>
               </div>
-                 <div>
+                  <div>
                     <%= f.hidden_field :subject, id: 'custom_subject_genre'%>
                   </div>
                   <div>
                   <%= f.hidden_field :content, id: 'custom_content_genre' %>
                   </div>
-
                   <div class="modal-footer">
-                   
-                     <%= f.submit "Send ", :class=>"btn btn-success" %>
-                    <a href="#" class="btn" data-dismiss="modal">Close</a>
+                     <%= f.submit "Send ",  class: '' %>
+                      <button type="submit" class="">Cancel</button>
                   </div>
-             <%end%>
+             
             </div>
+            <%end%>
   </div>
 
 
@@ -268,8 +266,9 @@
 
                   <div class="modal-footer">
                    
-                     <%= f.submit "Send", :class=>"btn btn-success" %>
-                    <a href="#" class="btn" data-dismiss="modal">Close</a>
+                     <%= f.submit "Send", :class=>'' %>
+                    <!-- <a href="#" class="btn  " data-dismiss="modal">Close</a> -->
+                    <button type="submit" data-dismiss="modal" class= ''>Cancel</button>
                   </div>
              <%end%>
             </div>
@@ -308,8 +307,9 @@
 
                   <div class="modal-footer">
                    
-                     <%= f.submit "Send", :class=>"btn btn-success" %>
-                    <a href="#" class="btn" data-dismiss="modal">Close</a>
+                     <%= f.submit "Send", :class=> '' %>
+                    <!-- <a href="#" class="btn" data-dismiss="modal">Close</a> -->
+                    <button type="submit" data-dismiss="modal" class= ''>Cancel</button>
                   </div>
              <%end%>
             </div>

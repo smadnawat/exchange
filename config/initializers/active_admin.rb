@@ -203,6 +203,19 @@ ActiveAdmin.setup do |config|
   #     end
   #   end
   #
+
+    config.namespace :admin do |admin|
+          admin.build_menu :utility_navigation do |menu|
+             menu.add  :label  => proc{ display_name current_active_admin_user },
+                     
+                      :id     => 'current_user',
+                      :if     => proc{ current_active_admin_user? }
+            admin.add_logout_button_to_menu menu
+          end
+        end
+
+
+
   # If you wanted to add a static menu item to the default menu provided:
   #
   #   config.namespace :admin do |admin|
