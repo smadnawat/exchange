@@ -13,8 +13,8 @@ index :title => 'User Profiles and Data' do
     end
 
     column :picture do |f|
-      f.picture.present? ? image_tag(f.picture.url(:thumb)) : img(src:'/assets/no_image.jpg', :width=> 150, :height=> 100);
-      # image_tag(f.picture.url(:thumb)) if f.picture.present?
+      f.picture.present? ? image_tag(f.picture.url(:thumb)) : img(src:'http://res.cloudinary.com/abhicloud/image/upload/c_scale,h_100,w_150/v1434012609/no_image_obxfvr.jpg');
+      # image_tag(f.picture.url(:thumb)) if f.picture.present?http://res.cloudinary.com/abhicloud/image/upload/v1434012609/no_image_obxfvr.jpg
 
     end
 

@@ -1,6 +1,6 @@
 #= require active_admin/base
  jQuery(document).ready ->
-  $("#my_image").attr "src", "/assets/no_image.jpg"
+  $("#my_image").attr "src", "http://res.cloudinary.com/abhicloud/image/upload/v1434012609/no_image_obxfvr.jpg"
   $("#banner_image").change ->
     readURL = undefined
     readURL = (input) ->
