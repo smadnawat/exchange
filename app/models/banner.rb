@@ -8,7 +8,7 @@ class Banner < ActiveRecord::Base
 	validates :author_name, presence: true
 	validates :link, presence: true,  
 						format: { with:  /(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?$)/ix , 
-						message: "Link should be in Proper Formate."}
+						message: "Link should be in Proper Format."}
 
 end
  

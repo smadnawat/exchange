@@ -20,7 +20,8 @@ Rails.application.routes.draw do
   post '/login'     =>   'sessions#create'
   post '/logout'    =>   'sessions#destroy'
 
-   get '*notfound'         => 'notifications#notfound'
+  get '*notfound'         => 'notifications#notfound'
   post '/do_create'    =>   'notifications#do_create', as: 'do_create'
+  root :to => 'notifications#welcome'
 
 end

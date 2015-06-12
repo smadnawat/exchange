@@ -4,7 +4,7 @@ class ApplePushWorker
  include Sidekiq::Worker
   # sidekiq_options  :retry => false
    def perform(device_id,device_type,subject,content ) 
-      puts "=====#{device_id}======#{subject}====#{content}===#{device_type}===Inside Apple2222222222" 
+      puts "=====#{device_id}======#{subject}====#{content}===#{device_type}===" 
       if ( device_type == 'Ios')
          puts"=====================INSIDE Apple WORKER======="
 

@@ -18,7 +18,6 @@ ActiveAdmin.register User, as: "Aggregate Data" do
 
     column "Total Books Uploaded" do |f|
         Book.all.find_by_created_at( Date.today).present? ? Book.all.find_by_created_at( Date.today) : 'No Books Uploaded'
-       
     end
 
     column "Total Matches Possible in Less then 5 km radius" do |f|

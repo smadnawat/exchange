@@ -55,7 +55,7 @@ end
 
     def create
        super
-      flash[:notice] = 'Banner is successfully created'      
+      # flash[:notice] = 'Banner is successfully created'      
     end
   end
 

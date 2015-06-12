@@ -206,11 +206,15 @@ ActiveAdmin.setup do |config|
 
     config.namespace :admin do |admin|
           admin.build_menu :utility_navigation do |menu|
-             menu.add  :label  => proc{ display_name current_active_admin_user },
+            #  menu.add  :label  =>   proc{ display_name current_active_admin_user },
+
                      
-                      :id     => 'current_user',
-                      :if     => proc{ current_active_admin_user? }
-            admin.add_logout_button_to_menu menu
+            #           :id     => 'current_user',
+            #           :if     => proc{ current_active_admin_user? }
+            # admin.add_logout_button_to_menu menu
+              menu.add label: "Welcome"
+              admin.add_current_user_to_menu  menu
+                admin.add_logout_button_to_menu menu
           end
         end
 

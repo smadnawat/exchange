@@ -18,13 +18,13 @@ class NotificationsController < ApplicationController
     elsif params[:location].present?
       p"----------in location==============="
 
-        User.where(:location => params[:location] ).map{|user| user.devices.select {|rpm| ApplePushWorker.perform_async(rpm.device_id,rpm.device_type,"#{params[:notification][:subject]}", "#{params[:notification][:content]}") }}
+        User.where(:location => params[:location], is_block: 'false' ).map{|user| user.devices.select {|rpm| ApplePushWorker.perform_async(rpm.device_id,rpm.device_type,"#{params[:notification][:subject]}", "#{params[:notification][:content]}") }}
       p"----------in location===========after location===="
            redirect_to admin_notifications_path
     elsif params[:user].present?
       p"----------in user==============="
 
-          User.all.map{|user| user.devices.select {|rpm| ApplePushWorker.perform_async(rpm.device_id,rpm.device_type, "#{params[:user][:subject]}", "#{params[:user][:content]}") }}
+          User.all.where(:is_block => 'false').map{|user| user.devices.select {|rpm| ApplePushWorker.perform_async(rpm.device_id,rpm.device_type, "#{params[:user][:subject]}", "#{params[:user][:content]}") }}
       p"----------in user============after worker==="
          redirect_to admin_notifications_path
     else 
@@ -41,5 +41,9 @@ class NotificationsController < ApplicationController
       flash[:notice] = "Invalid Path"
           redirect_to admin_users_path
     end 
+
+    def welcome
+        redirect_to new_admin_user_session_path
+    end
 
 end
