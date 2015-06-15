@@ -4,7 +4,7 @@ ActiveAdmin.setup do |config|
   # Set the title that is displayed on the main layout
   # for each of the active admin pages.
   #
-  config.site_title = "Exchange App"
+  config.site_title = "Novelinked.com"
   config.site_title_link  = "users"
   # config.site_title_image = "no_image.jpg"
   # config.site_title_image = "http://www.google.com/images/logos/google_logo_41.png"
@@ -218,7 +218,13 @@ ActiveAdmin.setup do |config|
           end
         end
 
-
+      # config.namespace :admin do |admin|
+      #   admin.build_menu do |menu|
+      #     menu.add :label => 'Custom Menu' do |submenu|
+      #       submenu.add :label => 'Custom Link'#, :url => custom_path
+      #     end
+      #   end
+      # end
 
   # If you wanted to add a static menu item to the default menu provided:
   #

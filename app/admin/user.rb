@@ -40,7 +40,7 @@ index :title => 'User Profiles and Data' do
     #   p.book_title
      end
   
-  column "Genre Preference",:genre  do |f|
+  column "Gener Preference",:genre  do |f|
    
      f.reading_preferences.present? ? f.reading_preferences.map{|p| p.genre}.join(' , ') : 'no Reading Preferences'
 # condition ? if_true : if_false
@@ -84,7 +84,7 @@ index :title => 'User Profiles and Data' do
     
   end
 
-  column "No. of Matches (Less then 5 kms)"  do |f|
+  column "No. of Matches (Less than 5 kms)"  do |f|
     
   end
 

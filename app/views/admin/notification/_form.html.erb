@@ -52,7 +52,7 @@
             <%= f.label :Recipient %>
         </div>
         <div>
-            <%= f.select(:All, options_for_select( [['Location Based', 'Location'], ['Genre Preference','Genre'],['Author Preference','Author'],['All', 'All']] ),:prompt => 'Please Select')%>
+            <%= f.select(:All, options_for_select( [['Location Based', 'Location'], ['Gener Preference','Genre'],['Author Preference','Author'],['All', 'All']] ),:prompt => 'Please Select')%>
         </div>
          <br>
         <div id="clickme" style="display:none;">
@@ -201,7 +201,7 @@
   <div id="form-content" class="modal  fade in" style="display: none; ">
           <div class="modal-header">
             <a class="close" data-dismiss="modal">×</a>
-            <h3>Select Genre</h3>
+            <h3>Select Gener</h3>
           </div>
            <%= form_for :notification, :url => do_create_path do |f| %>
             <div class="modal-body"> 

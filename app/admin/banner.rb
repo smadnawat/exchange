@@ -38,6 +38,7 @@ end
     f.input :image ,:as => :file,:hint => f.content_tag(:span, image_tag("http://res.cloudinary.com/abhicloud/image/upload/c_scale,h_100,w_150/v1434012609/no_image_obxfvr.jpg", id: 'my_image')) 
 
       f.input :image_cache, :as => :hidden 
+      
       f.input :banner_name,:input_html => {:placeholder => "Name of Ad Banner"}
       f.input :author_name,:input_html => {:placeholder => "Name of Author"}
       f.input :link,:input_html => {:placeholder => "http://www.mobiloitte.com"}
