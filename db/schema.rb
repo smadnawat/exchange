@@ -16,6 +16,50 @@ ActiveRecord::Schema.define(version: 20150616111456) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "active_admin_comments", force: :cascade do |t|
+    t.string   "namespace"
+    t.text     "body"
+    t.string   "resource_id",   null: false
+    t.string   "resource_type", null: false
+    t.integer  "author_id"
+    t.string   "author_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "active_admin_comments", ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id", using: :btree
+  add_index "active_admin_comments", ["namespace"], name: "index_active_admin_comments_on_namespace", using: :btree
+  add_index "active_admin_comments", ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id", using: :btree
+
+  create_table "admin_users", force: :cascade do |t|
+    t.string   "email",                  default: "", null: false
+    t.string   "encrypted_password",     default: "", null: false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",          default: 0,  null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.inet     "current_sign_in_ip"
+    t.inet     "last_sign_in_ip"
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.string   "username"
+  end
+
+  add_index "admin_users", ["email"], name: "index_admin_users_on_email", unique: true, using: :btree
+  add_index "admin_users", ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true, using: :btree
+
+  create_table "banners", force: :cascade do |t|
+    t.string   "banner_name"
+    t.string   "author_name"
+    t.string   "link"
+    t.string   "image"
+    t.integer  "clicks",      default: 0
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
   create_table "books", force: :cascade do |t|
     t.string   "title",                     null: false
     t.string   "author",                    null: false
@@ -53,7 +97,7 @@ ActiveRecord::Schema.define(version: 20150616111456) do
   add_index "invitations", ["book_id"], name: "index_invitations_on_book_id", using: :btree
   add_index "invitations", ["user_id"], name: "index_invitations_on_user_id", using: :btree
 
-  create_table "notifications", force: :cascade do |t|
+  create_table "notices", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "book_id"
     t.string   "action_type"
@@ -64,8 +108,22 @@ ActiveRecord::Schema.define(version: 20150616111456) do
     t.integer  "invitation_id"
   end
 
-  add_index "notifications", ["book_id"], name: "index_notifications_on_book_id", using: :btree
-  add_index "notifications", ["user_id"], name: "index_notifications_on_user_id", using: :btree
+  add_index "notices", ["book_id"], name: "index_notices_on_book_id", using: :btree
+  add_index "notices", ["user_id"], name: "index_notices_on_user_id", using: :btree
+
+  create_table "notifications", force: :cascade do |t|
+    t.string   "subject"
+    t.text     "content"
+    t.string   "location"
+    t.string   "author"
+    t.string   "genre"
+    t.string   "all"
+    t.string   "sub_locations", default: [],              array: true
+    t.string   "sub_authors",   default: [],              array: true
+    t.string   "sub_genres",    default: [],              array: true
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
 
   create_table "reading_preferences", force: :cascade do |t|
     t.string   "title",      null: false
@@ -88,13 +146,14 @@ ActiveRecord::Schema.define(version: 20150616111456) do
     t.string   "location"
     t.date     "date_signup"
     t.string   "picture"
-    t.datetime "created_at",                           null: false
-    t.datetime "updated_at",                           null: false
-    t.float    "latitude",               default: 0.0, null: false
-    t.float    "longitude",              default: 0.0, null: false
-    t.string   "provider",               default: "",  null: false
-    t.string   "u_id",                   default: "",  null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.float    "latitude",               default: 0.0,   null: false
+    t.float    "longitude",              default: 0.0,   null: false
+    t.string   "provider",               default: "",    null: false
+    t.string   "u_id",                   default: "",    null: false
     t.string   "device_used"
+    t.boolean  "is_block",               default: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
   end
@@ -102,7 +161,7 @@ ActiveRecord::Schema.define(version: 20150616111456) do
   add_foreign_key "devices", "users"
   add_foreign_key "invitations", "books"
   add_foreign_key "invitations", "users"
-  add_foreign_key "notifications", "books"
-  add_foreign_key "notifications", "users"
+  add_foreign_key "notices", "books"
+  add_foreign_key "notices", "users"
   add_foreign_key "reading_preferences", "users"
 end

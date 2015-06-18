@@ -1,3 +1,4 @@
+
 class ApplePushWorker
 	include Sidekiq::Worker
 
@@ -24,3 +25,4 @@ class ApplePushWorker
 
   end
 end
+

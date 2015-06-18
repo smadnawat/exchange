@@ -1,6 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
+<<<<<<< HEAD
   user_id: 
   action_type: MyString
   reciever_id: 1
@@ -11,3 +12,25 @@ two:
   action_type: MyString
   reciever_id: 1
   pending: false
+=======
+  subject: MyString
+  content: MyText
+  location: MyString
+  author: MyString
+  genre: MyString
+  all: MyString
+  sub_locations: MyString
+  sub_authors: MyString
+  sub_genres: MyString
+
+two:
+  subject: MyString
+  content: MyText
+  location: MyString
+  author: MyString
+  genre: MyString
+  all: MyString
+  sub_locations: MyString
+  sub_authors: MyString
+  sub_genres: MyString
+>>>>>>> f19fb2910bfcb26ecf49ecb05811018557c69620

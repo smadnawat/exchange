@@ -15,6 +15,7 @@ class ApisController < ApplicationController
 				@user = User.new(permitted_params)
 					if @user.save	
 						Device.total_devices(params[:device_id],params[:device_type],@user.id) unless params[:device_id].nil?
+
 						render :json => {:responseCode => 200,:responseMessage => 'Your registration process is successfull.', :user_id => @user.id	} 
 					else
 						render :json => {:responseCode => 500, :responseMessage => @user.errors.full_messages.first}			
@@ -179,5 +180,4 @@ class ApisController < ApplicationController
 	def reading_pref_params
 	   params.permit(:title,:author,:genre)
 	end
-
 end

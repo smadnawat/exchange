@@ -1,0 +1,335 @@
+
+<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script> -->
+<!-- <link href="http://www.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet"> 
+<script src="http://www.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script> -->
+
+<!-- <link href="stylesheets/bootstrap.css" rel="stylesheet">  -->
+<!-- <script src="javascripts/bootstrap.js"></script> -->
+
+
+ <%= stylesheet_link_tag 'bootstrap' %>
+  <%=  javascript_include_tag 'bootstrap' %>
+  
+<!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/2.2.2/css/bootstrap.min.css"> -->
+
+<!-- Optional theme -->
+<!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/2.2.2/css/bootstrap-theme.min.css"> -->
+
+<!-- Latest compiled and minified JavaScript -->
+<!-- <script src="http://maxcdn.bootstrapcdn.com/bootstrap/2.2.2/js/bootstrap.min.js"></script> -->
+
+
+
+<!-- <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css " rel="stylesheet"> 
+<script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js"></script> -->
+
+
+
+
+<div class="container">
+
+  <%= form_for(:user, url:  do_create_path, html: { class: 'modal-form form-horizontal' } ) do |f| %>
+
+        <div>
+            <%= f.label :Subject%><br>
+              
+            <%= f.text_field :subject%>
+        </div>
+        <div>
+          <span class="error-subject error"></span>
+        </div>
+        <br>
+        <div>
+           <%= f.label :Description  %><br>
+              
+            <%= f.text_area :content %>
+        </div>
+        <br>
+        <div>
+          <span class="error-content error"></span>
+        </div>
+        <div>
+            <%= f.label :Recipient %>
+        </div>
+        <div>
+            <%= f.select(:All, options_for_select( [['Location Based', 'Location'], ['Gener Preference','Genre'],['Author Preference','Author'],['All', 'All']] ),:prompt => 'Please Select')%>
+        </div>
+         <br>
+        <div id="clickme" style="display:none;">
+          <%= f.submit "Done", id: 'submit_form' %>
+        </div>
+        <% end %>
+        
+ </div>
+
+
+  <script type="text/javascript">
+      $(".error").hide();
+      $(".error").html('');
+       $("#user_All").change(function(){
+         $(".error").hide();
+         $(".error").html('');
+          if ($(this).val() == 'Genre')
+          {    
+           
+              if ($('#user_subject').val() == ''){
+               
+                $(".error-subject").html('Subject is required');
+                $(".error").show(); 
+              }
+               if ($('#user_content').val() == ''){
+                  $(".error-content").html('Content is required');
+                  $(".error").show(); 
+              }
+             $('#custom_subject_genre').val( $("#user_subject").val()) ;
+             $('#custom_content_genre').val($("#user_content").val()) ;
+          if (($('#user_subject').val() != '') && ($('#user_content').val() != '')) {
+             $('#form-content').modal('show') 
+           }
+           }
+          else if ($(this).val() == 'Author')
+          {
+              if ($('#user_subject').val() == ''){
+               $(".error-subject").html('Subject is required');
+                $(".error").show(); 
+
+              }
+               if ($('#user_content').val() == ''){
+                
+               $(".error-content").html('Content is required');
+                  $(".error").show();  
+                
+
+              }
+               if (($('#user_subject').val() != '') && ($('#user_content').val() != '')) {
+             $('#form-cont').modal('show')
+             }
+              
+              $('#custom_subject_author').val($("#user_subject").val()) ;
+             
+             $('#custom_content_author').val($("#user_content").val()) ;
+            
+           }
+          else if ($(this).val() == 'Location')
+           {
+             
+              if ($('#user_subject').val() == ''){
+              $(".error-subject").html('Subject is required');
+                $(".error").show(); 
+
+              }
+               if ($('#user_content').val() == ''){
+                $(".error-content").html('Content is required');
+                  $(".error").show();  
+
+                 }
+                if (($('#user_subject').val() != '') && ($('#user_content').val() != '')) {
+             $('#form-co').modal('show')
+           }
+              $('#custom_subject_location').val($("#user_subject").val()) ;
+              
+              $('#custom_content_location').val($("#user_content").val()) ;
+            
+           }
+          else if ($(this).val() == 'All')
+           {
+                 $( "#clickme" ).show( "slow", function() {
+                  
+                 });
+                  $('#notification_subject').val($("#user_subject").val()) ;
+                  $('#notification_content').val($("#user_content").val()) ;
+                
+           }
+      });
+      // ########Validation on Submit######################
+     
+      $('#submit_form').click(function(){ 
+     
+      $(".error").hide();
+      $(".error").html('');
+      var check_subject = /^([a-zA-Z ]){1,30}$/;
+      var check_content = /^([a-zA-Z0-9@,_\n ]){1,300}$/;
+      var newjobErr = {};
+      if ($("#user_subject").val().trim() == '') {
+        newjobErr['jnme'] = 'Subject is required.';         
+        $(".error-subject").html('Subject is required');
+      } else if (($("#user_subject").val().trim()).length < 1 || ($("#user_subject").val().trim()).length > 30) {
+        newjobErr['jnme'] = 'Subject is required.</li>';         
+        $(".error-subject").html('Subject length must be between 1 - 30 characters ');
+      } else if (!check_subject.test($("#user_subject").val().trim())) {
+         newjobErr['jnme'] = 'Subject is required.</li>';         
+        $(".error-subject").html('Subject should not contain special characters and digits.');
+      } 
+
+     if ($("#user_content").val().trim() == '') {
+            newjobErr['jnme1'] = '<li>Content is required.</li>';         
+            $(".error-content").html('Content is required');
+          } else if (($("#user_content").val().trim()).length < 1 || ($("#user_content").val()).length > 300) {
+           
+            newjobErr['jnme1'] = 'Name is required.</li>';         
+            $(".error-content").html('Length must be between 1 - 300 characters ');
+          }
+            else if (!check_content.test($("#user_content").val().trim()) ) {
+             newjobErr['jnme1'] = 'Proper  pattern is required.</li>';         
+            $(".error-content").html('Invalid formate');
+          }
+
+      
+           var count = 0;
+          $.each(newjobErr, function(key, value) { 
+            count = count + 1;                
+          });  
+        
+          if(count >= 1) {   
+
+              $(".error").show();        
+              return false;   
+                         } 
+          else{
+          
+              return true;
+              } 
+          
+          });
+
+
+
+   </script>
+
+
+  <!-- model content -->  
+  <div id="form-content" class="modal  fade in" style="display: none; ">
+          <div class="modal-header">
+            <a class="close" data-dismiss="modal">×</a>
+            <h3>Select Gener</h3>
+          </div>
+           <%= form_for :notification, :url => do_create_path do |f| %>
+            <div class="modal-body"> 
+             
+            <div style='overflow-y: scroll; max-height: 270px'>
+              <ul>
+                 <% ReadingPreference.pluck(:genre).uniq.each do |role| %>
+      
+                   <li>
+                     <%= check_box_tag 'genre[]', role -%>
+                     <%= h role -%>
+                   </li>
+               
+                 <% end %>
+              </ul>
+              </div>
+                  <div>
+                    <%= f.hidden_field :subject, id: 'custom_subject_genre'%>
+                  </div>
+                  <div>
+                  <%= f.hidden_field :content, id: 'custom_content_genre' %>
+                  </div>
+                  <div class="modal-footer">
+                     <%= f.submit "Send ",  class: '' %>
+                      <button type="submit" class="">Cancel</button>
+                  </div>
+             
+            </div>
+            <%end%>
+  </div>
+
+
+  <div id="form-cont" class="modal  fade in" style="display: none; ">
+          <div class="modal-header">
+                <a class="close" data-dismiss="modal">×</a>
+                <h3>Select Author</h3>
+          </div>
+          
+            <div class="modal-body">  
+              <%= form_for :notification, :url => do_create_path do |f| %>
+              
+                <div style='overflow-y: scroll; max-height: 270px'>
+
+              <ul>
+                 <% ReadingPreference.pluck(:Author).uniq.each do |role| %>
+      
+                   <li>
+                     <%= check_box_tag 'Author[]', role -%>
+                     <%= h role -%>
+                   </li>
+               
+                 <% end %>
+              <ul>
+              </div>
+                <div>
+
+                  <%= f.hidden_field :subject,id: 'custom_subject_author' %>
+                  </div>
+                  <div>
+                  <%= f.hidden_field :content ,id: 'custom_content_author' %>
+                  </div>
+
+                  <div class="modal-footer">
+                   
+                     <%= f.submit "Send", :class=>'' %>
+                    <!-- <a href="#" class="btn  " data-dismiss="modal">Close</a> -->
+                    <button type="submit" data-dismiss="modal" class= ''>Cancel</button>
+                  </div>
+             <%end%>
+            </div>
+  </div>
+
+
+  <div id="form-co" class="modal  fade in" style="display: none; ">
+          <div class="modal-header">
+                <a class="close" data-dismiss="modal">×</a>
+                <h3>Select Location</h3>
+          </div>
+          
+            <div class="modal-body"> 
+              <%= form_for :notification, :url => do_create_path do |f| %>
+              
+               <div style='overflow-y: scroll; max-height: 270px'>
+
+              <ul>
+                 <% User.pluck(:location).uniq.each do |role| %>
+      
+                   <li>
+                     <%= check_box_tag 'location[]', role -%>
+                     <%= h role -%>
+                   </li>
+               
+                 <% end %>
+              <ul>
+              </div>
+                <div>
+
+                  <%= f.hidden_field :subject,id: 'custom_subject_location' %>
+                  </div>
+                  <div>
+                  <%= f.hidden_field :content,id: 'custom_content_location' %>
+                  </div>
+
+                  <div class="modal-footer">
+                   
+                     <%= f.submit "Send", :class=> '' %>
+                    <!-- <a href="#" class="btn" data-dismiss="modal">Close</a> -->
+                    <button type="submit" data-dismiss="modal" class= ''>Cancel</button>
+                  </div>
+             <%end%>
+            </div>
+  </div>
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
