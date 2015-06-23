@@ -4,6 +4,11 @@ Rails.application.routes.draw do
   post '/accept_decline' => 'chats#accept_decline'
   post '/get_notification_list' => "chats#get_notification_list"
   post '/get_notification_detail' => "chats#get_notification_detail"
+  post '/group_chat' => 'chats#group_chat'
+  get '/get_chat' => 'chats#get_chat'
+  get '/get_detail' => 'chats#get_detail'
+  post '/blok_users' => 'chats#blok_users'
+
 #===========================================
 
   post '/register'          =>   'apis#register', as: :register
@@ -18,6 +23,8 @@ Rails.application.routes.draw do
   get  '/user_profile'  => 'apis#user_profile', as: :user_profile
   put  '/update_profile'  => 'apis#update_profile', as: :update_profile
   get  '/search_potential_matches' => 'apis#search_potential_matches', as: :search_potential_matches
+  post '/create_ratings' => 'apis#create_ratings'
+  get '/get_ratings' => 'apis#get_ratings'
   
 #My password controller =========================
   post '/forgot_password' => 'mypasswords#create'

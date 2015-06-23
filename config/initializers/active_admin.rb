@@ -280,3 +280,6 @@ ActiveAdmin.setup do |config|
 end
 
 end
+module ActiveAdmin::ViewHelpers
+  include ApplicationHelper
+end

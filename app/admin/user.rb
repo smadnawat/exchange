@@ -1,14 +1,14 @@
-ActiveAdmin.register User do
-before_filter :skip_sidebar!
- actions :all, :except => [:new,:destroy,:show,:edit] 
-  menu priority: 1,label: "User Profiles and Data"
+ ActiveAdmin.register User do
+  before_filter :skip_sidebar!
+   actions :all, :except => [:new,:destroy,:show,:edit] 
+    menu priority: 1,label: "User Profiles and Data"
 
 permit_params :username, :picture, :gender, :email, :location, :date_signup,:is_block#, :device_used
 
 index :title => 'User Profiles and Data' do
-	selectable_column
+  selectable_column
   
-	column :username do |f|
+  column :username do |f|
       f.username
     end
 
@@ -34,8 +34,8 @@ index :title => 'User Profiles and Data' do
       f.date_signup.to_date
     end
   
-  column "Author Preference",:title  do |f|
-     f.reading_preferences.present? ? f.reading_preferences.map{|p| p.title}.join(' , ') : 'no Reading Preferences'
+  column "Author Preference",:author  do |f|
+     f.reading_preferences.present? ? f.reading_preferences.map{|p| p.author}.join(' , ') : 'no Reading Preferences'
       
     #   p.book_title
      end
@@ -53,22 +53,25 @@ index :title => 'User Profiles and Data' do
   end
 
   column :device_used  do |f|
-    #f.device_type
+    f.device_used
   end
 
   column "Number of Books Exchange Initiated"  do |f|
-    
+     Invitation.where(user_id: f, invitation_type: 'Exchange').present? ? Invitation.where(user_id: f, invitation_type: 'Exchange').count : '0'
   end
 
   column "No. of Chat Invites Initiated"  do |f|
-    
+     Invitation.where(user_id: f, invitation_type: 'Chat').present? ? Invitation.where(user_id: f, invitation_type: 'Chat').count : '0'
+     
   end
 
   column "No. of Book Exchange Invites Accepted"  do |f|
+     Invitation.where(user_id: f, invitation_type: 'Exchange', status: 'Accept').present? ? Invitation.where(user_id: f, invitation_type: 'Exchange', status: 'Accept').count : '0'
     
   end
 
   column "No. of Chat Invites Accepted"  do |f|
+     Invitation.where(user_id: f, invitation_type: 'Chat', status: 'Accept').present? ? Invitation.where(user_id: f, invitation_type: 'Chat', status: 'Accept').count : '0'
     
   end
 
@@ -93,7 +96,7 @@ index :title => 'User Profiles and Data' do
   end
    
 end
-	
+  
   controller do
       def scoped_collection
         p"=========scope collection==============="

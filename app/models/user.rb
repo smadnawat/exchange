@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   
-    mount_uploader :picture, AvatarUploader
+  mount_uploader :picture, AvatarUploader
 
   has_secure_password
 
@@ -9,9 +9,11 @@ class User < ActiveRecord::Base
   has_many :notices, :dependent => :destroy
 	has_many :reading_preferences, :dependent => :destroy
 	has_many :devices, :dependent => :destroy
+  has_many :ratings, :dependent => :destroy
   #has_many :send_notifications, :dependent => :destroy, :class_name => 'Notification',:foreign_key => 'user_id', :dependent => :destroy
   has_many :recieve_notifications, :class_name => 'Notice',:foreign_key => 'reciever_id', :dependent => :destroy
 
+  has_and_belongs_to_many :groups ,:join_table => "users_groups"
 
   scope :users, -> { where(:is_block => false) }
   scope :blocked, -> { where(:is_block => true) }

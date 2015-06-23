@@ -1,7 +1,7 @@
 defaults: &defaults
   adapter: postgresql
   username: postgres #adapter username
-  password: utkarsh #adapter password
+  password: postgres #adapter password
   host: localhost    #host name
   port: 5432          #port number
   pool: 10            #pool value
@@ -18,3 +18,5 @@ test:
 production:
   database: ExchangeApp_production
   <<: *defaults
+
+

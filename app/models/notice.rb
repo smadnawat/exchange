@@ -9,7 +9,7 @@ class Notice < ActiveRecord::Base
 	def self.create_Notice(user,reciever,type,book_id,invitation)
 	        user.notices.create(:action_type => type,:reciever_id => reciever,:pending=> true,:book_id => book_id,:invitation_id => invitation.id)
 	        @alert = alert(user,type)
-	        send_push_Notice(user,reciever,@alert,type,invitation_id)
+	        send_push_Notice(user,reciever,@alert,type,invitation.id)
 	end
 
 	
@@ -21,7 +21,7 @@ class Notice < ActiveRecord::Base
 			        if device.device_type == "Android"
 			          AndroidPushWorker.perform_async(reciever, @alert,@badges,invitation_id)
 			        else
-			          ApplePushWorker.perform_async(reciever, @alert,@badges,device.device_token,type,invitation_id)
+			          ApplePushWorker.perform_async(reciever, @alert,@badges,device.device_id,type,invitation_id)
 			        end
 			    end
 	        end

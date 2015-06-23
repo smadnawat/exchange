@@ -165,6 +165,41 @@ class ApisController < ApplicationController
 
   	                  }
      #end 
+
+  def create_ratings 
+	@group_rating = Rating.new_group_rating(params, @user)
+  	if @group_rating.save
+  	  	 render :json => {
+	                       :responseCode => 200,
+	                       :responseMessage => 'Ratings generated successfully',
+	                       :group_rating => @group_rating
+	  	                  }
+  	    else
+  	    	render :json => {
+		                     :responseCode => 200,
+		                     :responseMessage => 'Already rated this person'
+		  	                }
+  	end
+	end
+
+	def get_ratings
+	@group_rating = Rating.find_by_user_id_and_ratable_id(params[:user_id], params[:ratable_id])
+		if @group_rating.present?
+			render :json => {
+	                       :responseCode => 200,
+	                       :responseMessage => 'Ratings fetched successfully',
+	                       :get_ratings => @group_rating
+	  	                  }
+	  	else
+	  		render :json => {
+	                       :responseCode => 200,
+	                       :responseMessage => 'No record found'
+	  	                  }
+	  end
+	end
+
+
+
   end
 
   private

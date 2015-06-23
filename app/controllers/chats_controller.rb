@@ -5,7 +5,7 @@ class ChatsController < ApplicationController
 	def chat_exchange
 		@invitation = @user.invitations.build(:attendee => params[:reciever_id],:invitation_type =>	params[:invitation_type],:status => "pending",:book_id => params[:book_id])
 		if @invitation.save
-			Notice.create_notification(@user,params[:reciever_id],params[:invitation_type],params[:book_id],@invitation)
+			Notice.create_Notice(@user,params[:reciever_id],params[:invitation_type],params[:book_id],@invitation)
 			render :json => {:responseCode => 200,:responseMessage => 'Invitation is successfully sent'} 
 		else
 			render :json => {:responseCode => 500,:responseMessage => 'Something went wrong'} 			 
@@ -13,14 +13,25 @@ class ChatsController < ApplicationController
 	end
 
 	def accept_decline 
-		@invitation = Invitation.find_by_id(params[:invitation_id])
+	@invitation = Invitation.find_by_id(params[:invitation_id])
 		if @invitation.update_column(:status,params[:action_type])
-			Notice.create_notification(@user,@invitation.user_id,params[:action_type],params[:book_id],@invitation)
+			Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_id],@invitation)
+			book = Book.find(params[:book_id])
+			if params[:action_type] == "Accept"
+			@group = Group.create(:name => book.title, :admin_id => @invitation.user_id,
+			:get_book_id => params[:get_book_id], :give_book_id => params[:give_book_id] ) 
+				if !@group.users.include?(params[:user_id])
+          @user = User.find(params[:user_id])    
+          @sender = User.find(@invitation.user_id) 
+					@group.users << @user
+					@group.users << @sender
+				end
+			end
 		render :json => {:responseCode => 200,:responseMessage => "Request is successfully #{params[:action_type]}"}
 		else
 			render :json => {:responseCode => 500,:responseMessage => 'Something went wrong'} 
 		end
-	end 
+	end
 
 	def get_notification_list
 		@notifications = @user.recieve_notifications
@@ -32,6 +43,48 @@ class ChatsController < ApplicationController
 	end
 
 
+	def group_chat
+		if Block.find_by_id(params[:user_id]).present?
+			render :json => {:responseCode => 200,:responseMessage => "You are blocked by the admin"}
+		else
+		params[:picture] = User.image_data(params[:media])
+		@group = Group.find(params[:group_id])
+		@message = @group.messages.build(:message => params[:message],:media => params[:media], :sender_id=> params[:sender_id])
+		if @message.save
+			render :json => {:responseCode => 200,:responseMessage => "Message sent successfully"}
+		else
+			render :json => {:responseCode => 500,:responseMessage => 'Something went wrong'} 
+		end
+		end
+	end
+
+	def get_chat
+		@group = Group.find(params[:group_id])
+		@chat = @group.messages
+		render :json => {:responseCode => 200,:responseMessage => "Chat history fetched successfully",:chat => @chat		}
+	end
+
+	def get_detail
+		@group = Group.find_by_id(params[:group_id])
+		if @group
+			@get_book_id = Book.find_by_id(@group.get_book_id)
+			@give_book_id = Book.find_by_id(@group.give_book_id)
+			@users = @group.users
+			render :json => {:responseCode => 200,:responseMessage => "Group details fetched successfully", :Group => @group,:get_book_id => @get_book_id, :give_book_id => @give_book_id, :users=> @users }
+		else
+			render :json => {:responseCode => 500,:responseMessage => "Group not found" }
+		end
+	end
+
+	def blok_users
+	@group = Group.find_by_admin_id(params[:user_id])
+		if @group.present?
+			@block = @group.blocks.create(:user_id => params[:member_id])
+			render :json => {:responseCode => 200,:responseMessage => "User blocked successfully"}
+		else
+			render :json => {:responseCode => 500,:responseMessage => 'Something went wrong'} 
+		end
+	end
 
 	private
 

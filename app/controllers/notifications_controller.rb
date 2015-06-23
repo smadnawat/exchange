@@ -1,42 +1,66 @@
-class NotificationsController < ApplicationController
+AdminPushWorkerclass NotificationsController < ApplicationController
+   def index
+      @notifications = Book.details
+  end   
+ 
   def do_create
     if params[:Author].present?
-         ReadingPreference.where(:author =>  params[:Author] ).map {|um|  um.user.devices.select {|rpm| AdminPushWorker.perform_async(rpm.device_id,rpm.device_type, "#{params[:notification][:subject]}", "#{params[:notification][:content]}") }}
-   
-       redirect_to admin_notification_path
-         flash[:notice]= 'Notification Send'
-
+       rpuser = ReadingPreference.where(:author =>  params[:Author] ).map{|rpm| rpm.user if rpm.user.is_block == false}.uniq.compact
+       unless rpuser.blank?
+          rpuser.each do |rp|
+             rp.devices.select {|rpm| AdminPushWorker.perform_async(rpm.device_id,rpm.device_type, "#{params[:notification][:subject]}", "#{params[:notification][:content]}"  ) } 
+             flash[:notice]= 'Notification Send'
+          end
+       else
+            flash[:notice]= 'Notification cant be Sent because all users are blocked'
+       end 
+      redirect_to admin_notification_path
     elsif params[:genre].present?
-         ReadingPreference.where(:genre =>  params[:genre] ).map {|um|  um.user.devices.select {|rpm| AdminPushWorker.perform_async(rpm.device_id,rpm.device_type, "#{params[:notification][:subject]}", "#{params[:notification][:content]}"  ) }}
-      
-         redirect_to admin_notification_path
-         flash[:notice]= 'Notification Send'
-
+      rpuser = ReadingPreference.where(:genre =>  params[:genre] ).map{|rpm| rpm.user if rpm.user.is_block == false}.uniq.compact
+      unless rpuser.blank?
+         rpuser.each do |rp|
+           rp.devices.select {|rpm| AdminPushWorker.perform_async(rpm.device_id,rpm.device_type, "#{params[:notification][:subject]}", "#{params[:notification][:content]}"  ) } 
+           flash[:notice]= 'Notification Send'
+         end
+      else
+          flash[:notice]= 'Notification cant be Sent because all users are blocked'
+    end 
+       redirect_to admin_notification_path
+     
     elsif params[:location].present?
-        User.where(:location => params[:location], is_block: 'false' ).map{|user| user.devices.select {|rpm| AdminPushWorker.perform_async(rpm.device_id,rpm.device_type,"#{params[:notification][:subject]}", "#{params[:notification][:content]}") }}
-
-           redirect_to admin_notification_path
-         flash[:notice]= 'Notification Send'
-
+       rpuser =  User.where(:location => params[:location], is_block: 'false').uniq
+       if rpuser.present?
+         rpuser.each do |rp|
+           rp.devices.select {|rpm| AdminPushWorker.perform_async(rpm.device_id,rpm.device_type, "#{params[:notification][:subject]}", "#{params[:notification][:content]}"  ) } 
+           flash[:notice]= 'Notification Send'
+         end
+      else
+          flash[:notice]= 'Notification cant be Sent because all users are blocked'
+      end 
+          redirect_to admin_notification_path
     elsif params[:user].present?
-          User.all.where(:is_block => 'false').map{|user| user.devices.select {|rpm| AdminPushWorker.perform_async(rpm.device_id,rpm.device_type, "#{params[:user][:subject]}", "#{params[:user][:content]}") }}
-      
+       rpuser = User.all.where(:is_block => 'false').uniq
+       if rpuser.present?
+         rpuser.each do |rp|
+            rp.devices.select {|rpm| AdminPushWorker.perform_async(rpm.device_id,rpm.device_type, "#{params[:notification][:subject]}", "#{params[:notification][:content]}"  ) } 
+            flash[:notice]= 'Notification Send'
+         end
+      else
+          flash[:notice]= 'Notification cant be Sent because all users are blocked'
+      end
          redirect_to admin_notification_path
-         flash[:notice]= 'Notification Send'
-
-    else
+    else 
          redirect_to admin_notification_path
          flash[:notice]= 'Invalid..Please Select Atleast One'
     end
   end
-
 	def notfound
       flash[:notice] = "Invalid Path"
           redirect_to admin_users_path
-    end 
+  end 
 
-    def welcome
+  def welcome
         redirect_to new_admin_user_session_path
-    end
+  end
 
 end
