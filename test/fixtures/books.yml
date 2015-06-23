@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  author: MyString
+  genre: MyString
+  upload_date: 2015-05-29
+  isbn_code: MyString
+  upload_type: MyString
+  latitude: MyString
+  longitude: MyString
+  user: 
+
+two:
+  title: MyString
+  author: MyString
+  genre: MyString
+  upload_date: 2015-05-29
+  isbn_code: MyString
+  upload_type: MyString
+  latitude: MyString
+  longitude: MyString
+  user: 

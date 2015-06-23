@@ -1,0 +1,18 @@
+development:
+  cloud_name: abhicloud
+  api_key: '695729537344291'
+  api_secret: VX-muSL9OutkESA0aj1gvNJR2zo
+  enhance_image_tag: true
+  static_image_support: false
+production:
+  cloud_name: abhicloud
+  api_key: '695729537344291'
+  api_secret: VX-muSL9OutkESA0aj1gvNJR2zo
+  enhance_image_tag: true
+  static_image_support: true
+test:
+  cloud_name: abhicloud
+  api_key: '695729537344291'
+  api_secret: VX-muSL9OutkESA0aj1gvNJR2zo
+  enhance_image_tag: true
+  static_image_support: false

@@ -1,0 +1,17 @@
+defaults: &defaults
+  adapter: mysql2
+  username: root #adapter username
+  password: root #adapter password
+  host: localhost    #host name
+
+development:
+  database: ExchangeApp_development   #database name
+  <<: *defaults
+
+test:
+  database: ExchangeApp_test
+  <<: *defaults
+
+production:
+  database: ExchangeApp_production
+  <<: *defaults
