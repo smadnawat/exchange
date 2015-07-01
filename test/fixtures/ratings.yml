@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  insights: 1.5
+  contributor: 1.5
+  social: 1.5
+  overallexperience: 1.5
+  comment: MyString
+  group_id: 1
+  ratable_id: 1
+  user_id: 
+
+two:
+  insights: 1.5
+  contributor: 1.5
+  social: 1.5
+  overallexperience: 1.5
+  comment: MyString
+  group_id: 1
+  ratable_id: 1
+  user_id: 

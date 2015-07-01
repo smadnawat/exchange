@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 
+  action_type: MyString
+  reciever_id: 1
+  pending: false
+
+two:
+  user_id: 
+  action_type: MyString
+  reciever_id: 1
+  pending: false
+  subject: MyString
+  content: MyText
+  location: MyString
+  author: MyString
+  genre: MyString
+  all: MyString
+  sub_locations: MyString
+  sub_authors: MyString
+  sub_genres: MyString
+

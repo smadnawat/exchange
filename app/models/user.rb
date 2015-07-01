@@ -2,18 +2,22 @@ class User < ActiveRecord::Base
   
   mount_uploader :picture, AvatarUploader
   has_secure_password
-
 	has_many :books, :dependent => :destroy
+  has_many :invitations, :dependent => :destroy
+  has_many :notices, :dependent => :destroy
 	has_many :reading_preferences, :dependent => :destroy
 	has_many :devices, :dependent => :destroy
-
+  has_many :ratings, :dependent => :destroy
+  has_many :recieve_notifications, :class_name => 'Notice',:foreign_key => 'reciever_id', :dependent => :destroy
+  has_and_belongs_to_many :groups ,:join_table => "users_groups"
+  scope :users, -> { where(:is_block => false) }
+  scope :blocked, -> { where(:is_block => true) }
 	A = 'normal'
 	B = 'facebook'
 	C = 'google'
 
   reverse_geocoded_by :latitude, :longitude
   after_validation :reverse_geocode 
-  
   before_save :about_me_update, :if => :new_record?
   validates :email, presence: true,  
 						format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i , 
@@ -22,6 +26,7 @@ class User < ActiveRecord::Base
   validates :username, presence: true, :on => :create
   validates_presence_of :password, :on => :create
   validates_uniqueness_of :username, :message => "already exists." , :on => :create
+  accepts_nested_attributes_for :reading_preferences
 
 
   def self.image_data(data)
@@ -59,12 +64,16 @@ class User < ActiveRecord::Base
       hash[:priority_seventh] = []
       hash[:priority_eighth] = []
 
-      params[:range] = "1" if params[:range] == "0" 
+      #params[:range] = "1" if params[:range] == "0" 
       @user = User.find(params[:user_id])
-      @books = @user.books.near([params[:lat],params[:long]], params[:range], :units => :km)
+      @books = @user.books.near([params[:lat],params[:long]], params[:range_end], :units => :km)
+      logger.info"-------------------#{@books.inspect}------------------1111"
+
+            logger.info"-------------------#{@books.reject{|x|x.distance < params[:range_start]}}------------------222222"
+
       @user_preferences = @user.reading_preferences
       unless @books.blank? 
-      @books.each do |book|
+      @books.reject{|x|x.distance < params[:range_start]}.each do |book|
         (User.near([params[:lat],params[:long]], params[:range], :units => :km).reject{|u| u.id == @user.id}).each  do |other_user|
           other_user.books.each do |other_users_book|
             if (other_user.reading_preferences.where(book_deactivated: false).pluck(:title).include?(book.title) && @user_preferences.where(book_deactivated: false).pluck(:title).include?(other_users_book.title))
@@ -115,6 +124,20 @@ class User < ActiveRecord::Base
     match_hash
   end
 
+  def update_via_social_media params
+    self.update_attributes(username: params[:username],gender: params[:gender],email: params[:email],date_signup: params[:date_signup],picture: params[:picture], location: params[:location],latitude: params[:latitude], longitude: params[:longitude])
+    unless self.devices.nil?
+      Device.total_devices(params[:device_id],params[:device_type],self.id)
+    end 
+  end 
+
+  def self.search_group_user(search)
+    if search
+      where('username LIKE ?', "%#{search}%")
+    else
+      all
+    end
+  end
 
   private
 

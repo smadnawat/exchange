@@ -5,6 +5,7 @@ source 'https://rubygems.org'
 gem 'rails', '4.2.1'
 # Use postgresql as the database for Active Record
 gem 'mysql2', '0.3.17'
+gem 'activeadmin', github: 'activeadmin'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0.3'
 # Use Uglifier as compressor for JavaScript assets
@@ -12,7 +13,19 @@ gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.1.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
+
+
 # gem 'therubyracer', platforms: :ruby
+
+gem 'therubyracer', platforms: :ruby
+gem 'cloudinary'
+gem 'carrierwave'
+gem 'mini_magick'
+gem "rmagick"
+gem 'rails_12factor', group: :production
+gem 'devise'
+# gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git'
+
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -26,9 +39,10 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'bcrypt', '~> 3.1.7'
 gem 'will_paginate', '~> 3.0.6'
 gem 'geocoder'
-gem 'carrierwave'
-gem 'mini_magick'
-gem 'cloudinary'
+gem 'sidekiq'
+gem 'gcm'
+gem 'grocer'
+gem 'unicorn'
 
 
 # Use ActiveModel has_secure_password
@@ -50,4 +64,3 @@ group :development, :test do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 end
-

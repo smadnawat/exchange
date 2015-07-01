@@ -14,6 +14,8 @@ Rails.application.configure do
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
 
+  config.serve_static_files = true 
+
   # Enable Rack::Cache to put a simple HTTP cache in front of your application
   # Add `rack-cache` to your Gemfile before enabling this.
   # For large-scale production use, consider using a caching reverse proxy like
@@ -76,4 +78,15 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  config.action_mailer.default_url_options = { :host => 'exchange-app.herokuapp.com/' }
+  # config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  ActionMailer::Base.smtp_settings = {
+    :address        => 'smtp.sendgrid.net',
+    :port           => '25',
+    :authentication => :plain,
+    :user_name      => "ashish.mittal",
+    :password       => "mittal123",
+    :domain         => "sendgrid.com"
+  }
 end
