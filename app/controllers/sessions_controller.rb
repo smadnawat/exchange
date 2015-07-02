@@ -5,7 +5,7 @@ class SessionsController < ApplicationController
 	    @user = User.where("email = ? or username = ?",params[:email],params[:username]).first
 	  	if @user and @user.authenticate(params[:password])
 	  	  Device.total_devices(params[:device_id],params[:device_type],@user.id) unless params[:device_id].nil?
-	  	  render :json => {:responseCode => 200,:responseMessage => "You've signed in successfully.",   :user_id => @user.id }
+	  	  render :json => {:responseCode => 200,:responseMessage => "You've signed in successfully.",   :user_id => @user.id, :my_lib_count => @user.books.count }
 	  	else
 	  	  	render :json => {:responseCode => 500,:responseMessage => "Unauthorised access."}
 	  	end	

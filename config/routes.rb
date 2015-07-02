@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   post '/block_users' => 'chats#block_users'
   post '/search_user' => 'chats#search_user'
   post '/add_user_to_group' => 'chats#add_user_to_group'
+  post '/unblock_user' => 'chats#unblock_user'
 
 #===========================================
 
@@ -54,6 +55,7 @@ Rails.application.routes.draw do
   get  '/get_advertisement' => 'apis#get_advertisement', as: :get_advertisement
   post '/upload_multiple_reading_pref'=>'apis#upload_multiple_reading_pref', as: :upload_multiple_reading_pref
   post  '/upload_by_scanning_counts' => 'apis#upload_by_scanning_counts', as: :upload_by_scanning_counts
+  get  '/my_library' => 'apis#my_library', as: :my_library
   get '/invitation_details' => 'apis#invitation_details'
   get '/my_chat_list' => 'apis#my_chat_list'
   post '/create_ratings' => 'apis#create_ratings'

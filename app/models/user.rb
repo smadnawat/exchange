@@ -62,56 +62,69 @@ class User < ActiveRecord::Base
       hash[:priority_fifth] = []
       hash[:priority_sixth] = []
       hash[:priority_seventh] = []
-      hash[:priority_eighth] = []
+      hash[:priority_eighth] = [] 
 
-      #params[:range] = "1" if params[:range] == "0" 
-      @user = User.find(params[:user_id])
-      @books = @user.books.near([params[:lat],params[:long]], params[:range_end], :units => :km)
-      logger.info"-------------------#{@books.inspect}------------------1111"
-
-            logger.info"-------------------#{@books.reject{|x|x.distance < params[:range_start]}}------------------222222"
-
+      @user = User.includes(:books,:reading_preferences).where(:id => params[:user_id]).first
+      @books_max_range = @user.books.near([params[:lat],params[:long]], params[:range_end], :units => :km)
+      @books_min_range = @user.books.near([params[:lat],params[:long]], params[:range_start], :units => :km)
+      @books = @books_max_range - @books_min_range
       @user_preferences = @user.reading_preferences
-      unless @books.blank? 
-      @books.reject{|x|x.distance < params[:range_start]}.each do |book|
-        (User.near([params[:lat],params[:long]], params[:range], :units => :km).reject{|u| u.id == @user.id}).each  do |other_user|
-          other_user.books.each do |other_users_book|
-            if (other_user.reading_preferences.where(book_deactivated: false).pluck(:title).include?(book.title) && @user_preferences.where(book_deactivated: false).pluck(:title).include?(other_users_book.title))
-                      hash[:priority_first]<<  self.matches_detail(other_user, book, other_users_book) 
-            elsif (other_user.reading_preferences.where(author_deactivated: false).pluck(:author).include?(book.author) && @user_preferences.where(author_deactivated: false).pluck(:author).include?(other_users_book.author)) 
-                      hash[:priority_second]<<  self.matches_detail(other_user, book, other_users_book)
-            elsif (other_user.reading_preferences.where(genre_deactivated: false).pluck(:genre).include?(book.genre) && @user_preferences.where(genre_deactivated: false).pluck(:genre).include?(other_users_book.genre))        
-                      hash[:priority_third]<<  self.matches_detail(other_user, book, other_users_book)
-            elsif (other_user.books.pluck(:author).include?(book.author) && @books.map(&:author).include?(other_users_book.author)) 
-                      hash[:priority_forth]<<   self.matches_detail(other_user, book, other_users_book)
-            elsif (other_user.books.pluck(:genre).include?(book.genre) && @books.map(&:genre).include?(other_users_book.genre))  
-                      hash[:priority_fifth]<<   self.matches_detail(other_user, book, other_users_book)
+      @user_author_pref = @user.author_prefernce
+      @user_genre_pref = @user.genre_preference
+      other_users = (User.includes(:books,:reading_preferences).near([params[:lat],params[:long]], params[:range_end], :units => :km).reject{|u| u.id == @user.id})
+
+      if @books.present? 
+      @books.each do |book|
+        other_users.each  do |other_user|
+          if other_user.books.present?
+            other_user.books.each do |other_users_book|
+
+                if (other_user.reading_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:title).include?(book.title) && @user_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:title).include?(other_users_book.title))
+                         
+                          hash[:priority_first]<<  self.matches_detail(other_user, book, other_users_book) 
+                
+                elsif (other_user.reading_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:author).include?(book.author) && @user_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:author).include?(other_users_book.author)) 
+                         
+                          hash[:priority_second]<<  self.matches_detail(other_user, book, other_users_book)
+                
+                elsif (other_user.reading_preferences.map{|x| x if x.genre_deactivated == false}.compact.map(&:genre).include?(book.genre) && @user_preferences.map{|x| x if x.genre_deactivated == false}.compact.map(&:genre).include?(other_users_book.genre))        
+                          
+                          hash[:priority_third]<<  self.matches_detail(other_user, book, other_users_book)
+
+                elsif ((['Computer Books and Technology Books','Engineering Books','Study Guides & Test Prep','Education & Training','Medical Books and Reference'] & other_user.reading_preferences.map(&:genre)).include?(book.genre))  
+                
+                elsif (other_user.books.map(&:author).include?(book.author) && @books.map(&:author).include?(other_users_book.author)) 
+                         
+                          hash[:priority_forth]<<   self.matches_detail(other_user, book, other_users_book)
+               
+                elsif (other_user.books.map(&:genre).include?(book.genre) && @books.map(&:genre).include?(other_users_book.genre))  
+                          
+                          hash[:priority_fifth]<<   self.matches_detail(other_user, book, other_users_book)
+
+                end
             end
           end
         end
-      end
-    else
-        User.all.reject{|u| u.id == @user.id}.each do |other_userss|
-        if @user.books.blank? and other_userss.books.blank?
-        
-        (User.near([params[:lat],params[:long]], params[:range], :units => :km).reject{|u| u.id == @user.id}).each  do |other_user|
-        match_hash = {}
+      end 
 
-        if not(((other_user.reading_preferences.pluck(:author) & @user_preferences.map(&:author)).blank?) && ((other_user.reading_preferences.pluck(:genre) & @user_preferences.map(&:genre)).blank?)) 
-          match_hash[:other_user_detail] = other_user.as_json(:only => [:picture,:username,:id])
-          hash[:priority_sixth]<<  match_hash
+      elsif @books.blank? 
+           @user_max_range = (User.near([params[:lat],params[:long]], params[:range_end], :units => :km).reject{|u| u.id == @user.id})
+           @user_min_range = (User.near([params[:lat],params[:long]], params[:range_start], :units => :km).reject{|u| u.id == @user.id})
+           @other_user = @user_max_range - @user_min_range unless @user_max_range.blank? && @user_min_range.blank?
+           if @other_user.present?
+             @other_user.each do |other_userss|
+              if other_userss.books.blank?
+                if not(((other_userss.reading_preferences.where(book_deactivated: false).pluck(:author) & @user_preferences.where(book_deactivated: false).map(&:author)).blank?) && ((other_userss.reading_preferences.where(book_deactivated: false).pluck(:genre) & @user_preferences.where(book_deactivated: false).map(&:genre)).blank?)) 
+                  hash[:priority_sixth]<<  self.match_hash_detail(other_userss)   
+                elsif not((other_userss.reading_preferences.where(book_deactivated: false).pluck(:author) & @user_preferences.where(book_deactivated: false).map(&:author)).blank?)
+                  hash[:priority_seventh]<<  self.match_hash_detail(other_userss)
+                elsif not((other_userss.reading_preferences.where(book_deactivated: false).pluck(:genre) & @user_preferences.where(book_deactivated: false).map(&:genre)).blank?)          
+                  hash[:priority_eighth]<<  self.match_hash_detail(other_userss)
+                end
+              end
              
-        elsif not((other_user.reading_preferences.pluck(:author) & @user_preferences.map(&:author)).blank?)
-          match_hash[:other_user_detail] = other_user.as_json(:only => [:picture,:username,:id])
-          hash[:priority_seventh]<<  match_hash
-
-        elsif not((other_user.reading_preferences.pluck(:genre) & @user_preferences.map(&:genre)).blank?)          
-          match_hash[:other_user_detail] = other_user.as_json(:only => [:picture,:username,:id])
-          hash[:priority_eighth]<<  match_hash
-        end
+           end
       end
-      end
-    end
     end
       return hash
   end
@@ -119,8 +132,18 @@ class User < ActiveRecord::Base
   def self.matches_detail(other_user, book, other_users_book)
     match_hash = {}
     match_hash[:other_user_detail] = other_user.as_json(:only => [:picture,:username,:id, :distance])
-    match_hash[:book_to_give] = book.as_json(:only => [:title,:author,:genre])
-    match_hash[:book_to_get] = other_users_book.as_json(:only => [:title,:author,:genre])
+    @rating = Rating.calculate_ratings(other_user)
+    match_hash[:user_rating] = @rating
+    match_hash[:book_to_give] = book.as_json(:only => [:title,:author,:genre, :image_path])
+    match_hash[:book_to_get] = other_users_book.as_json(:only => [:title,:author,:genre, :image_path])
+    match_hash
+  end
+
+  def self.match_hash_detail(other_user)
+    match_hash = {}
+    match_hash[:other_user_detail] = other_user.as_json(:only => [:picture,:username,:id, :distance])
+    @rating = Rating.calculate_ratings(other_user)
+    match_hash[:user_rating] = @rating
     match_hash
   end
 

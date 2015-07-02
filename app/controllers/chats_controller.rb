@@ -96,12 +96,51 @@ class ChatsController < ApplicationController
 	end
 
 	def block_users
-	  @group = Group.find_by_admin_id(@user)
-			if @group.present?
-				@block = @group.blocks.create(:user_id => params[:member_id])
-				render :json => {:responseCode => 200,:responseMessage => "User blocked successfully"}
+	@group = Group.find_by_id_and_admin_id(params[:group_id], @user)
+		if @group.present?
+			@is_block = Block.find_by_user_id_and_group_id(params[:member_id], @group)
+			if @is_block.present?
+				message = "This user is already blocked.."
+				block = nil
 			else
-				render :json => {:responseCode => 500,:responseMessage => 'Something went wrong'} 
+				@block = @group.blocks.create(:user_id => params[:member_id])
+				message = "Member blocked successfully.."
+				block = @block
+			end
+			render :json => {
+											:responseCode => 200,
+											:responseMessage => message,
+											:block => block.as_json(except: [:created_at,:updated_at]) 
+											}
+		else
+			render :json => {
+											:responseCode => 500,
+											:responseMessage => 'Something went wrong'
+											} 
+		end
+	end
+
+
+	def unblock_user
+		@group = Group.find_by_id_and_admin_id(params[:group_id], @user)
+		if @group.present?
+			@block = Block.find_by_id(params[:block_id])
+			if @block.present?
+				@unblock = @block.delete
+				@unblock.save!
+				message = "User unblocked successfully.."
+			else
+				message = "Something went wrong.."
+			end
+				render :json => {
+												:responseCode => 200,
+												:responseMessage => message
+												}
+			else
+				render :json => {
+												:responseCode => 500,
+												:responseMessage => 'Something went wrong..'
+												} 
 			end
 	end
 

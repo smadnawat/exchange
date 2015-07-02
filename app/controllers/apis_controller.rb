@@ -4,7 +4,7 @@ class ApisController < ApplicationController
 
  include CalculateDistance
 
-  before_filter :find_user, :only => [:upload_by_scanning_counts, :upload_multiple_reading_pref,:create_ratings, :get_ratings, :my_chat_list, :invitation_details,:upload_books, :get_uploaded_books, :delete_uploaded_books, :delete_reading_preferences, :upload_reading_preferences, :my_reading_preferences, :my_reading_preferences_for_author, :my_reading_preferences_for_genre, :user_profile, :update_profile, :search_potential_matches]
+  before_filter :find_user, :only => [:upload_by_scanning_counts, :my_library, :upload_multiple_reading_pref,:create_ratings, :get_ratings, :my_chat_list, :invitation_details,:upload_books, :get_uploaded_books, :delete_uploaded_books, :delete_reading_preferences, :upload_reading_preferences, :my_reading_preferences, :my_reading_preferences_for_author, :my_reading_preferences_for_genre, :user_profile, :update_profile, :search_potential_matches]
 
 	def register	
 		params[:picture] = User.image_data(params[:picture])
@@ -195,10 +195,13 @@ class ApisController < ApplicationController
 
   def search_potential_matches
   	 nearby_books = User.get_near_locations(params)#.as_json(only: [:title, :author, :genre, :id, :distance])
+
+  	 logger.info"============================#{nearby_books.count}================================"
   	 render :json => {
                        :responseCode => 200,
                        :responseMessage => 'Potential Matches',
-                       :potential_matches => nearby_books
+                       :potential_matches => nearby_books, 
+                       :total_no_records => nearby_books.count
   	                  }
 
   end
@@ -289,32 +292,42 @@ class ApisController < ApplicationController
   end 
 
   def create_ratings 
-	  @group_rating = Rating.new_group_rating(params, @user)
-	  	if @group_rating.save
-	  	  	 render :json => {
-		                       :responseCode => 200,
-		                       :responseMessage => 'Ratings generated successfully',
-		                       :group_rating => @group_rating
-		  	                  }
-	  	else
-	  	    	render :json => {
-			                     :responseCode => 200,
-			                     :responseMessage => 'Already rated this person'
-			  	                }
-	  	end
-	end
-
-  def get_ratings
-	  @group_rating = Rating.find_by_user_id_and_ratable_id(@user, params[:ratable_id])
-		if @group_rating.present?
-			render :json => {
+ 	@group = Group.find_by_id_and_admin_id(params[:group_id], @user)
+ 	if @group.present?
+ 		@rating = Rating.find_by_group_id_and_ratable_id(@group, params[:ratable_id])
+ 		@ratable  = User.find_by_id(params[:ratable_id])
+ 		if @rating.present?
+ 			message = "Already rated this person.."
+ 		else
+ 			@group_rating = Rating.new_group_rating(params, @user)
+ 			message = "Rating create successfully.."
+ 		end
+			  render :json => {
 	                       :responseCode => 200,
-	                       :responseMessage => 'Ratings fetched successfully',
-	                       :get_ratings => @group_rating
+	                       :user => @ratable.as_json(only: [:id, :username, :picture]),
+	                       :responseMessage => message
 	  	                  }
-	  else
+  	else
+  	    render :json => {
+		                     :responseCode => 500,
+		                     :responseMessage => 'Something went wrong'
+		  	                }
+  	end
+  end
+
+	def get_ratings
+	  @group_rating = Rating.find_by_group_id_and_ratable_id(params[:group_id], params[:ratable_id])
+		if @group_rating.present?
+			@ratable = User.find_by_id(params[:ratable_id])
+			render :json => {
+                       :responseCode => 200,
+                       :responseMessage => 'Ratings fetched successfully',
+                       :get_ratings => @group_rating.as_json(except: [:created_at,:updated_at]),
+                       :user => @ratable.as_json(only: [:id, :username, :picture]),
+  	                  }
+	  	else
 	  		render :json => {
-	                       :responseCode => 200,
+	                       :responseCode => 500,
 	                       :responseMessage => 'No record found'
 	  	                  }
 	  end
@@ -369,7 +382,7 @@ class ApisController < ApplicationController
 	end
 
 	def genre_search
-		@genre = Document.search(params[:name])		
+		@genre = Document.search_genre(params[:name])		
 	  render :json => {
                         :responseCode => 200,
                         :responseMessage => "Genre name's are fetched successfully!",
@@ -379,21 +392,26 @@ class ApisController < ApplicationController
 	end
 
 	def upload_book_title_search
-		  @title = Document.search_title(params[:title])
+			#@titles = Document.search(params[:title], star: true, page: params[:page], per_page: 15)
+      @titles = Document.search(params[:title], star: true)
 		   render :json => {
                         :responseCode => 200,
                         :responseMessage => "Book title's are fetched successfully!",
-                        :name => paging(@title, params[:page_no],params[:page_size]).map{|x|x.attributes.merge(about_us: x.overview.gsub(/<\/?[^>]*>/, ""))},
-                        :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }	                   
+                        #:name => @titles
+                        :name => paging(@titles, params[:page_no],params[:page_size]).map{|x|x.attributes.merge(about_us: x.overview.gsub(/<\/?[^>]*>/, ""))},
+                        :pagination => { page_no: params[:page_no],max_page_no: @max, total_no_records: @total}                  
 	                      } 
 	end
 
 	def upload_book_author_search
-		  @author = Document.search_author(params[:name])
+		  #@author = Document.search_author(params[:name])
+		  @author = Document.search(params[:name], star: true)
 		    render :json => {
                         :responseCode => 200,
                         :responseMessage => "Book author's are fetched successfully!",
-                        :name => paging(@author, params[:page_no],params[:page_size]).as_json(only: [:author, :isbn13]),
+                        #:name => @author
+                        #:name => paging(@author, params[:page_no],params[:page_size]).as_json(only: [:author, :isbn13]),
+                        :name => paging(@author, params[:page_no], params[:page_size]).map{|x|x.attributes.merge(about_us: x.overview.gsub(/<\/?[^>]*>/, ""))},
                         :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }	                   
 	                       } 
 	end
@@ -404,7 +422,8 @@ class ApisController < ApplicationController
 		 	   render :json => {
 	                        :responseCode => 200,
 	                        :responseMessage => "Book fetched successfully!",
-	                        :name => @book.as_json(only: [:author,:title, :isbn13, :isbn10, :subjects])
+	                        :name => @book.attributes.merge(about_us: @book.overview.gsub(/<\/?[^>]*>/, ""))
+	                        #:name => @book.as_json(only: [:author,:title, :isbn13, :isbn10, :subjects])
 	                       } 
 	    else
 	    	render :json => {
@@ -463,6 +482,15 @@ class ApisController < ApplicationController
                       :responseCode => 200,
                       :responseMessage => msg
 		  	            }
+	end
+
+	def my_library
+		@my_lib = @user.books.count	
+				render :json => {
+                         :responseCode => 200,
+                         :responseMessage => "Your library count!",
+                         :library_count => @my_lib
+		  	                 }
 	end
 
   private

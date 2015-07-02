@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150701062339) do
+ActiveRecord::Schema.define(version: 20150702120052) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -127,7 +127,7 @@ ActiveRecord::Schema.define(version: 20150701062339) do
   add_index "book2subjects", ["sub_subject", "sub_sub_subject"], name: "sub_subject", using: :btree
 
   create_table "books", force: :cascade do |t|
-    t.string   "title",                 limit: 255,                 null: false
+    t.text     "title",                 limit: 65535,               null: false
     t.string   "author",                limit: 255,                 null: false
     t.string   "genre",                 limit: 255,                 null: false
     t.string   "upload_type",           limit: 255,                 null: false
@@ -236,15 +236,15 @@ ActiveRecord::Schema.define(version: 20150701062339) do
   add_index "ratings", ["user_id"], name: "index_ratings_on_user_id", using: :btree
 
   create_table "reading_preferences", force: :cascade do |t|
-    t.string   "title",              limit: 255,                 null: false
-    t.string   "author",             limit: 255,                 null: false
-    t.string   "genre",              limit: 255,                 null: false
+    t.text     "title",              limit: 65535,                 null: false
+    t.string   "author",             limit: 255,                   null: false
+    t.string   "genre",              limit: 255,                   null: false
     t.integer  "user_id",            limit: 4
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
-    t.boolean  "book_deactivated",   limit: 1,   default: false
-    t.boolean  "author_deactivated", limit: 1,   default: false
-    t.boolean  "genre_deactivated",  limit: 1,   default: false
+    t.datetime "created_at",                                       null: false
+    t.datetime "updated_at",                                       null: false
+    t.boolean  "book_deactivated",   limit: 1,     default: false
+    t.boolean  "author_deactivated", limit: 1,     default: false
+    t.boolean  "genre_deactivated",  limit: 1,     default: false
     t.string   "isbn13",             limit: 255
     t.string   "image_path",         limit: 255
   end
