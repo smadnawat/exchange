@@ -194,14 +194,12 @@ class ApisController < ApplicationController
   end  
 
   def search_potential_matches
-  	 nearby_books = User.get_near_locations(params)#.as_json(only: [:title, :author, :genre, :id, :distance])
-
-  	 logger.info"============================#{nearby_books.count}================================"
+  	 nearby_books,count = User.get_near_locations(params)#.as_json(only: [:title, :author, :genre, :id, :distance])
   	 render :json => {
                        :responseCode => 200,
                        :responseMessage => 'Potential Matches',
                        :potential_matches => nearby_books, 
-                       :total_no_records => nearby_books.count
+                       :total_no_records => count
   	                  }
 
   end
