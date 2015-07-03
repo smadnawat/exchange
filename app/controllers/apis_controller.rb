@@ -71,7 +71,7 @@ class ApisController < ApplicationController
 	    if @books.save
         render_message 200, 'Book has been uploaded successfully!'
       else			
-        render_message 500, @books.errors.messages.first
+        render_message 500, @books.errors.full_messages.first
       end	
 	end
 
@@ -103,7 +103,7 @@ class ApisController < ApplicationController
 	     if @reading_pref.save
               render_message 200, 'Your Reading Preference has been uploaded successfully!'
        else			
-              render_message 500, @reading_pref.errors.messages.first
+              render_message 500, @reading_pref.errors.full_messages.first
        end	
 	end
 
@@ -195,7 +195,7 @@ class ApisController < ApplicationController
   end  
 
   def search_potential_matches
-  	 nearby_books,count = User.get_near_locations(params)#.as_json(only: [:title, :author, :genre, :id, :distance])
+  	 nearby_books,count = User.get_near_matches(params)#.as_json(only: [:title, :author, :genre, :id, :distance])
   	 render :json => {
                        :responseCode => 200,
                        :responseMessage => 'Potential Matches',

@@ -10,6 +10,8 @@ class User < ActiveRecord::Base
   has_many :ratings, :dependent => :destroy
   has_many :recieve_notifications, :class_name => 'Notice',:foreign_key => 'reciever_id', :dependent => :destroy
   has_and_belongs_to_many :groups ,:join_table => "users_groups"
+  has_many :messages, :class_name => 'Message',:foreign_key => 'sender_id',dependent: :destroy
+
   scope :users, -> { where(:is_block => false) }
   scope :blocked, -> { where(:is_block => true) }
 	A = 'normal'
@@ -53,16 +55,17 @@ class User < ActiveRecord::Base
       self.about_me = " "
   end
 
-  def self.get_near_locations params 
+  def self.get_near_matches params 
       hash = Hash.new
-      hash[:priority_first] = [] 
-      hash[:priority_second] = []
-      hash[:priority_third] = []
-      hash[:priority_forth] = []
-      hash[:priority_fifth] = []
-      hash[:priority_sixth] = []
-      hash[:priority_seventh] = []
-      hash[:priority_eighth] = [] 
+      priority_first = [] 
+      priority_second = []
+      priority_third = []
+      priority_forth = []
+      priority_fifth = []
+      priority_sixth = []
+      priority_seventh = []
+      priority_eighth = [] 
+      priority_nineth = []
 
       @user = User.includes(:books,:reading_preferences).where(:id => params[:user_id]).first
       @books_max_range = @user.books.near([params[:lat],params[:long]], params[:range_end], :units => :km)
@@ -81,25 +84,27 @@ class User < ActiveRecord::Base
 
                 if (other_user.reading_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:title).include?(book.title) && @user_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:title).include?(other_users_book.title))
                          
-                          hash[:priority_first]<<  self.matches_detail(other_user, book, other_users_book) 
+                          priority_first<<  self.matches_detail(other_user, book, other_users_book) 
                 
                 elsif (other_user.reading_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:author).include?(book.author) && @user_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:author).include?(other_users_book.author)) 
                          
-                          hash[:priority_second]<<  self.matches_detail(other_user, book, other_users_book)
+                          priority_second<<  self.matches_detail(other_user, book, other_users_book)
                 
                 elsif (other_user.reading_preferences.map{|x| x if x.genre_deactivated == false}.compact.map(&:genre).include?(book.genre) && @user_preferences.map{|x| x if x.genre_deactivated == false}.compact.map(&:genre).include?(other_users_book.genre))        
                           
-                          hash[:priority_third]<<  self.matches_detail(other_user, book, other_users_book)
+                          priority_third<<  self.matches_detail(other_user, book, other_users_book)
 
-                elsif ((['Computer Books and Technology Books','Engineering Books','Study Guides & Test Prep','Education & Training','Medical Books and Reference'] & other_user.reading_preferences.map(&:genre)).include?(book.genre))  
-                
+                elsif ((['Computer Books and Technology Books','Engineering Books','Study Guides & Test Prep','Education & Training','Medical Books and Reference'] & other_user.reading_preferences.map(&:genre)).include?(book.genre)) && (other_user.reading_preferences.map(&:isbn13).include?(book.isbn13)) 
+                          
+                          priority_forth<< self.matches_detail_for_genre_cases(other_user, book)
+
                 elsif (other_user.books.map(&:author).include?(book.author) && @books.map(&:author).include?(other_users_book.author)) 
                          
-                          hash[:priority_forth]<<   self.matches_detail(other_user, book, other_users_book)
+                          priority_fifth<<   self.matches_detail(other_user, book, other_users_book)
                
                 elsif (other_user.books.map(&:genre).include?(book.genre) && @books.map(&:genre).include?(other_users_book.genre))  
                           
-                          hash[:priority_fifth]<<   self.matches_detail(other_user, book, other_users_book)
+                          priority_sixth<<   self.matches_detail(other_user, book, other_users_book)
 
                 end
             end
@@ -107,27 +112,35 @@ class User < ActiveRecord::Base
         end
       end 
 
-      elsif @books.blank? 
-           @user_max_range = (User.near([params[:lat],params[:long]], params[:range_end], :units => :km).reject{|u| u.id == @user.id})
-           @user_min_range = (User.near([params[:lat],params[:long]], params[:range_start], :units => :km).reject{|u| u.id == @user.id})
-           @other_user = @user_max_range - @user_min_range unless @user_max_range.blank? && @user_min_range.blank?
+     elsif @books.blank? 
+             @user_max_range = (User.near([params[:lat],params[:long]], params[:range_end], :units => :km).reject{|u| u.id == @user.id})
+             @user_min_range = (User.near([params[:lat],params[:long]], params[:range_start], :units => :km).reject{|u| u.id == @user.id})
+             @other_user = @user_max_range - @user_min_range unless @user_max_range.blank? && @user_min_range.blank?
+           
            if @other_user.present?
-             @other_user.each do |other_userss|
-              if other_userss.books.blank?
-                if not(((other_userss.reading_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:author) & @user_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:author)).blank?) && ((other_userss.reading_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:genre) & @user_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:genre)).blank?)) 
-                  hash[:priority_sixth]<<  self.match_hash_detail(other_userss)   
-                elsif not((other_userss.reading_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:author) & @user_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:author)).blank?)
-                  hash[:priority_seventh]<<  self.match_hash_detail(other_userss)
-                elsif not((other_userss.reading_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:genre) & @user_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:genre)).blank?)          
-                  hash[:priority_eighth]<<  self.match_hash_detail(other_userss)
-                end
-              end
-             
+               @other_user.each do |other_userss|
+                  if other_userss.books.blank?
+
+                      if not(((other_userss.reading_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:author) & @user_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:author)).blank?) && ((other_userss.reading_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:genre) & @user_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:genre)).blank?)) 
+                       
+                        priority_seventh<<  self.match_hash_detail(other_userss)   
+                      
+                      elsif not((other_userss.reading_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:author) & @user_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:author)).blank?)
+                        
+                        priority_eighth<<  self.match_hash_detail(other_userss)
+                      
+                      elsif not((other_userss.reading_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:genre) & @user_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:genre)).blank?)          
+                        
+                        priority_nineth<<  self.match_hash_detail(other_userss)
+                      
+                      end
+                  end
+               end
            end
-      end
-    end
-      count = hash[:priority_first].count + hash[:priority_second].count + hash[:priority_third].count + hash[:priority_forth].count + hash[:priority_fifth].count + hash[:priority_sixth].count + hash[:priority_seventh].count + hash[:priority_eighth].count
-      return hash,count
+     end
+
+      hash[:matches] = priority_first + priority_second + priority_third + priority_forth + priority_fifth + priority_sixth + priority_seventh + priority_eighth + priority_nineth
+      return hash,hash[:matches].count
   end
 
   def self.matches_detail(other_user, book, other_users_book)
@@ -148,6 +161,15 @@ class User < ActiveRecord::Base
     match_hash
   end
 
+  def self.matches_detail_for_genre_cases(other_user, book)
+    match_hash = {}
+    match_hash[:other_user_detail] = other_user.as_json(:only => [:picture,:username,:id, :distance])
+    @rating = Rating.calculate_ratings(other_user)
+    match_hash[:user_rating] = @rating
+    match_hash[:book_to_give] = book.as_json(:only => [:title,:author,:genre, :image_path])
+    match_hash
+  end
+
   def update_via_social_media params
     self.update_attributes(username: params[:username],gender: params[:gender],email: params[:email],date_signup: params[:date_signup],picture: params[:picture], location: params[:location],latitude: params[:latitude], longitude: params[:longitude])
     unless self.devices.nil?
@@ -155,7 +177,7 @@ class User < ActiveRecord::Base
     end 
   end 
 
-  def self.search_group_user(search)
+  def self.search_user_to_add_group(search)
     if search
       where('username LIKE ?', "%#{search}%")
     else

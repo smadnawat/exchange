@@ -1,4 +1,9 @@
+require 'distance'
+
 class ChatsController < ApplicationController
+
+	include CalculateDistance
+
 	before_filter :find_user
 
 	def chat_exchange
@@ -46,7 +51,6 @@ class ChatsController < ApplicationController
 
 	def get_notification_list
 		@notifications = @user.recieve_notifications
-		#@notifications = @notifications.each{|n| n[:message] = Notification.alert(n.user,n.action_type)}
 		@notifications.each do |notification|
 			notification.message = Notice.alert(notification.user,notification.action_type)
 		end
@@ -75,9 +79,18 @@ class ChatsController < ApplicationController
 
 	def get_chat
 		@group = Group.find_by_id(params[:group_id])
-		if @group.present?
-			@chat = @group.messages.all.paginate(:page => params[:page_no],:per_page => params[:page_size])
-			render :json => {:responseCode => 200,:responseMessage => "Chat history fetched successfully",:chat => @chat		}
+		if @group
+			@chat = []
+			@group.messages.each do |msg|
+        @chat << msg.user.picture
+        @chat << msg
+			end
+      
+			render :json => {
+											:responseCode => 200,:responseMessage => "Chat history fetched successfully",
+											:chat => paging(@chat, params[:page_no],params[:page_size]).as_json(except: [:created_at,:updated_at]),
+								      :pagination => { page_no: params[:page_no],max_page_no: @max, total_no_records: @total }
+											}
 		else
 			render :json => {:responseCode => 500,:responseMessage => 'Something went wrong'} 
 		end
@@ -86,12 +99,23 @@ class ChatsController < ApplicationController
 	def group_detail
 		@group = Group.find_by_id(params[:group_id])
 		if @group
-			 @get_book_id = Book.find_by_id(@group.get_book_id)
-			 @give_book_id = Book.find_by_id(@group.give_book_id)
-			 @users = @group.users
-				render :json => {:responseCode => 200,:responseMessage => "Group details fetched successfully", :Group => @group,:get_book_id => @get_book_id, :give_book_id => @give_book_id, :users=> @users }
+			@get_book_id = Book.find_by_id(@group.get_book_id)
+			@give_book_id = Book.find_by_id(@group.give_book_id)
+			blocked_user_ids = @group.blocks.map(&:user_id)
+			@users = @group.users.map{|u| blocked_user_ids.include?(u.id) ? (u.attributes.except('created_at','updated_at','gender', 'email', 'password_digest','author_prefernce', 'genre_preference', 'location', 'date_signup', 'latitude', 'longitude', 'provider', 'u_id', 'device_used', 'is_block', 'reset_password_token', 'reset_password_sent_at').merge(blocked: 1) ): (u.attributes.except('created_at','updated_at','gender', 'email', 'password_digest','author_prefernce', 'genre_preference', 'location', 'date_signup', 'latitude', 'longitude', 'provider', 'u_id', 'device_used', 'is_block', 'reset_password_token', 'reset_password_sent_at').merge(blocked: 0)) }
+			 render :json => {
+											:responseCode => 200,
+											:responseMessage => "Group details fetched successfully",
+											:Group => @group.as_json(except: [:created_at,:updated_at, :get_book_id, :give_book_id]),
+											:book_to_get => @get_book_id.as_json(only: [:id,:title]), 
+											:book_to_give => @give_book_id.as_json(only: [:id,:title]),
+											:group_users => @users
+											}
 		else
-			render :json => {:responseCode => 500,:responseMessage => "Group not found" }
+			render :json => {
+											:responseCode => 500,
+											:responseMessage => "Group not found" 
+											}
 		end
 	end
 
@@ -120,33 +144,19 @@ class ChatsController < ApplicationController
 		end
 	end
 
-
 	def unblock_user
-		@group = Group.find_by_id_and_admin_id(params[:group_id], @user)
-		if @group.present?
-			@block = Block.find_by_id(params[:block_id])
-			if @block.present?
-				@unblock = @block.delete
-				@unblock.save!
-				message = "User unblocked successfully.."
-			else
-				message = "Something went wrong.."
-			end
-				render :json => {
-												:responseCode => 200,
-												:responseMessage => message
-												}
-			else
-				render :json => {
-												:responseCode => 500,
-												:responseMessage => 'Something went wrong..'
-												} 
-			end
+		@blocked_user = Block.find_by_id(params[:block_id])
+		if @blocked_user
+			@blocked_user.destroy
+			render :json => {:responseCode => 200,:responseMessage => "Successfully done"}
+	  else
+	  	render :json => {:responseCode => 200,:responseMessage => "this user is not found in the blocked list"}
+	  end
 	end
 
 	def search_user
-		@users = User.search_group_user(params[:user_name])
-		if @users
+		@users = User.search_user_to_add_group(params[:user_name])
+		if @users.present?
 			render :json => {
 							:responseCode => 200,
 							:responseMessage => "Users are are",
@@ -159,24 +169,24 @@ class ChatsController < ApplicationController
 
 	def add_user_to_group
 		@group = Group.find_by_id_and_admin_id(params[:group_id], @user.id)
-		if @group.present?
-			@member = User.find_by_id(params[:member_id])
-			if @group.users.include?(@member)
-				@message = "User is Already in group"
+			if @group.present?
+					@member = User.find_by_id(params[:member_id])
+							if @group.users.include?(@member)
+								@message = "User is Already in group"
+							else
+								@group.users << @member
+								@message = "User added successfully"
+							end
+					render :json => {
+														:responseCode => 200,
+														:responseMessage => @message
+													}
 			else
-				@group.users << @member
-				@message = "User added successfully"
-			end
-			render :json => {
-												:responseCode => 200,
-												:responseMessage => @message
-											}
-		else
-			render :json => {
-												:responseCode => 500,
-												:responseMessage => 'Something went wrong'
-											} 
-		end				
+					render :json => {
+														:responseCode => 500,
+														:responseMessage => 'Something went wrong'
+													} 
+			end				
 	end
 
 	private
