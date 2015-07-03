@@ -60,12 +60,13 @@ class ApisController < ApplicationController
 			render_message 401, 'Unauthorized access!'
 		end
 	end
+	#http://ec2-52-24-139-4.us-west-2.compute.amazonaws.com/covers/00/00/9780789020000.jpg
 
 	def upload_books
 	   @books = @user.books.build(books_params)
 	    if params[:isbn13].present?
 	      @isbn_last = params[:isbn13]
-        @books.image_path = "http://172.16.1.127:5000/Covers/#{@isbn_last.to_s[9..10]}/#{@isbn_last.to_s[11..12]}/#{@isbn_last}.jpg" 
+        @books.image_path = "http://ec2-52-24-139-4.us-west-2.compute.amazonaws.com/covers/#{@isbn_last.to_s[9..10]}/#{@isbn_last.to_s[11..12]}/#{@isbn_last}.jpg" 
       end 
 	    if @books.save
         render_message 200, 'Book has been uploaded successfully!'
@@ -97,7 +98,7 @@ class ApisController < ApplicationController
 	   @reading_pref = @user.reading_preferences.build(reading_pref_params)
 	      if params[:isbn13].present?
 	       @isbn_last = params[:isbn13]
-         @reading_pref.image_path = "http://172.16.1.127:5000/Covers/#{@isbn_last.to_s[9..10]}/#{@isbn_last.to_s[11..12]}/#{@isbn_last}.jpg" 
+         @reading_pref.image_path = "http://ec2-52-24-139-4.us-west-2.compute.amazonaws.com/covers/#{@isbn_last.to_s[9..10]}/#{@isbn_last.to_s[11..12]}/#{@isbn_last}.jpg" 
         end 
 	     if @reading_pref.save
               render_message 200, 'Your Reading Preference has been uploaded successfully!'
