@@ -56,6 +56,8 @@ Rails.application.routes.draw do
   post '/upload_multiple_reading_pref'=>'apis#upload_multiple_reading_pref', as: :upload_multiple_reading_pref
   post  '/upload_by_scanning_counts' => 'apis#upload_by_scanning_counts', as: :upload_by_scanning_counts
   get  '/my_library' => 'apis#my_library', as: :my_library
+  get  '/potential_mat_profile' => 'apis#potential_mat_profile', as: :potential_mat_profile
+  get '/view_my_review' => 'apis#view_my_review', as: :view_my_review
   get '/invitation_details' => 'apis#invitation_details'
   get '/my_chat_list' => 'apis#my_chat_list'
   post '/create_ratings' => 'apis#create_ratings'

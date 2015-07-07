@@ -4,7 +4,7 @@ class ApisController < ApplicationController
 
  include CalculateDistance
 
-  before_filter :find_user, :only => [:upload_by_scanning_counts, :my_library, :upload_multiple_reading_pref,:create_ratings, :get_ratings, :my_chat_list, :invitation_details,:upload_books, :get_uploaded_books, :delete_uploaded_books, :delete_reading_preferences, :upload_reading_preferences, :my_reading_preferences, :my_reading_preferences_for_author, :my_reading_preferences_for_genre, :user_profile, :update_profile, :search_potential_matches]
+  before_filter :find_user, :only => [:upload_by_scanning_counts, :view_my_review, :my_library, :potential_mat_profile, :upload_multiple_reading_pref,:create_ratings, :get_ratings, :my_chat_list, :invitation_details,:upload_books, :get_uploaded_books, :delete_uploaded_books, :delete_reading_preferences, :upload_reading_preferences, :my_reading_preferences, :my_reading_preferences_for_author, :my_reading_preferences_for_genre, :user_profile, :update_profile, :search_potential_matches]
 
 	def register	
 		params[:picture] = User.image_data(params[:picture])
@@ -60,7 +60,6 @@ class ApisController < ApplicationController
 			render_message 401, 'Unauthorized access!'
 		end
 	end
-	#http://ec2-52-24-139-4.us-west-2.compute.amazonaws.com/covers/00/00/9780789020000.jpg
 
 	def upload_books
 	   @books = @user.books.build(books_params)
@@ -380,12 +379,22 @@ class ApisController < ApplicationController
 	                   }  
 	end
 
+	# def genre_search
+	# 	@genre = Document.search_genre(params[:name])		
+	#   render :json => {
+ #                        :responseCode => 200,
+ #                        :responseMessage => "Genre name's are fetched successfully!",
+ #                        :name => paging(@genre, params[:page_no],params[:page_size]).as_json(only: [:subjects, :isbn13]),
+ #                        :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }	                   
+	#                    } 
+	# end
+
 	def genre_search
-		@genre = Document.search_genre(params[:name])		
+		@genre = Genre.search(params[:name])		
 	  render :json => {
                         :responseCode => 200,
                         :responseMessage => "Genre name's are fetched successfully!",
-                        :name => paging(@genre, params[:page_no],params[:page_size]).as_json(only: [:subjects, :isbn13]),
+                        :name => paging(@genre, params[:page_no],params[:page_size]).as_json(only: [:title]),
                         :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }	                   
 	                   } 
 	end
@@ -417,12 +426,11 @@ class ApisController < ApplicationController
 
 	def scanning_isbn
 		  @book = Document.where("isbn13 = ? or isbn10 = ?",params[:isbn_no],params[:isbn_no]).first
-		  if @book.present?
+		   if @book.present?
 		 	   render :json => {
 	                        :responseCode => 200,
 	                        :responseMessage => "Book fetched successfully!",
-	                        :name => @book.attributes.merge(about_us: @book.overview.gsub(/<\/?[^>]*>/, ""))
-	                        #:name => @book.as_json(only: [:author,:title, :isbn13, :isbn10, :subjects])
+	                        :name => @book.attributes.merge!(about_us: @book.overview.gsub(/<\/?[^>]*>/, ""),image_url: "http://ec2-52-24-139-4.us-west-2.compute.amazonaws.com/covers/#{@book.isbn13.to_s[9..10]}/#{@book.isbn13.to_s[11..12]}/#{@book.isbn13}.jpg")
 	                       } 
 	    else
 	    	render :json => {
@@ -445,12 +453,12 @@ class ApisController < ApplicationController
 	end
 
 	def reading_prf_searching     # Search by Book Name, Author name, isbn_no or genre
-		  @book = Document.searching_many(params[:name])
+		  @book = Document.search(params[:name], star: true).map{|x| x.attributes.merge!(image_url:  "http://ec2-52-24-139-4.us-west-2.compute.amazonaws.com/covers/#{x.isbn13.to_s[9..10]}/#{x.isbn13.to_s[11..12]}/#{x.isbn13}.jpg")}
 		  if @book.present?
 		  	 render :json => {
                             :responseCode => 200,
                             :responseMessage => "Books has been searched successfully!",
-                            :book => paging(@book, params[:page_no],params[:page_size]).as_json(only: [:author, :title,:subjects, :isbn13]),
+                            :book => paging(@book, params[:page_no],params[:page_size]).as_json(only: ["author", "title","subjects", "isbn13", :image_url]),
                             :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }	                   
 		  	                   }
 		  else
@@ -474,7 +482,7 @@ class ApisController < ApplicationController
 
 	def upload_multiple_reading_pref
 		if params[:reading_preference].present?
-		 	@reading_pref = @user.reading_preferences.create(params.permit(:reading_preference => [:title,:author,:genre])[:reading_preference])	
+		 	@reading_pref = @user.reading_preferences.create(params.permit(:reading_preference => [:title,:author,:genre, :image_path, :isbn13])[:reading_preference])	
 		 	msg = "Reading Preferences uploaded successfully"
 		end
 		render :json => {
@@ -485,11 +493,42 @@ class ApisController < ApplicationController
 
 	def my_library
 		@my_lib = @user.books.count	
-				render :json => {
+		@live_chats = @user.groups.count
+ 				render :json => {
                          :responseCode => 200,
                          :responseMessage => "Your library count!",
-                         :library_count => @my_lib
+                         :library_count => @my_lib,
+                         :live_chats => @live_chats
 		  	                 }
+	end
+
+	def potential_mat_profile
+		@user_profile = User.where(:id => params[:user_id]).includes(:reading_preferences, :books, :ratings)	
+		@rating = Rating.calculate_ratings(@user)
+		 render :json => {
+                       :responseCode => 200,
+                       :responseMessage => "Profile for Potential Matches",
+                       :profile => @user_profile.map{|x|x.attributes.merge(reading_preferences: x.reading_preferences.as_json(only: [:id, :title, :author, :genre]),books: x.books.as_json(only: [:id, :title]))},
+		                   :average_rating => @rating,  
+		                   :books_in_lib => @user.books.count,
+		                   :reading_preference_count => @user.reading_preferences.count,
+		                   :author_prefernce_count => @user.reading_preferences.pluck(:author).count
+		                  }
+	end
+
+	def view_my_review
+		@review = Rating.where('ratable_id = ?', @user)
+		if @review
+			@rating = Rating.calculate_ratings(@user)
+			render :json => {
+											:responseCode => 200,
+                      :responseMessage => 'Review details fetched successfully',
+                      :ratings => @rating,
+                      :Review => @review.as_json(only: [:comment],:include => {:user => {:only => [:picture, :username]}})
+                    	}
+		else
+			render :json => {:responseCode => 500,:responseMessage => 'Something went wrong'} 
+		end
 	end
 
   private

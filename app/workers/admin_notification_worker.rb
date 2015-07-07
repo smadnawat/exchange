@@ -32,7 +32,7 @@ class AdminPushWorker
          pusher.push(notification)
       elsif ( device_type == 'Android')  
         puts"=====================INSIDE ANDROID WORKER======="
-        gcm = GCM.new("AIzaSyBxpBq36vt59IElzWetgEL5Xcq0Cwq1iSQ")
+        gcm = GCM.new("AIzaSyA1KAy9NhC66EXcXErDwF4rSh5lafdoCi4")
         registration_ids= ["#{device_id}"]    
         options = {
           'data' => {

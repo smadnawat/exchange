@@ -8,8 +8,7 @@ class Book < ActiveRecord::Base
 	scope :details, -> {Book.order(:upload_date_for_admin).map{|x| x}.uniq{|x| x.upload_date_for_admin}}
 	before_save :update_date_admin, :if => :new_record?
     
-  validates_uniqueness_of :title, :message => "already exists."
-  validates_uniqueness_of :isbn13, :message => "should be unique."
+    validates_uniqueness_of :title, :allow_blank => true, :message => "already exists."
 
 	def update_date_admin
 	  self.upload_date_for_admin = Date.today		

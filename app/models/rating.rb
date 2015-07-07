@@ -1,5 +1,7 @@
 class Rating < ActiveRecord::Base
   belongs_to :user
+  belongs_to :user, :class_name => "User", :foreign_key => :ratable_id
+  belongs_to :group, :class_name => "Group", :foreign_key => :group_id
   validates :user_id, uniqueness: {scope: :ratable_id}
 
 	def self.new_group_rating(params, user)
@@ -9,17 +11,8 @@ class Rating < ActiveRecord::Base
 		:group_id => params[:group_id])
 	end
 
-	# def self.calculate_ratings user
-	# 	@rating = find_by_user_id(user)
-	# 	if @rating
-	# 		@ratings = (@rating.insights + @rating.contributor + @rating.social + @rating.overallexperience)/4
-	# 	else
-	# 		@ratings = 0
-	# 	end
-	# end
-
 	def self.calculate_ratings user 
-    @user_rate = user.ratings#{|x| x if x.approved == true}.compact
+    @user_rate = user.ratings
     unless @user_rate.blank?
 
       rate_arr = []

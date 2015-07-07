@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150702120052) do
+ActiveRecord::Schema.define(version: 20150707053121) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -137,7 +137,7 @@ ActiveRecord::Schema.define(version: 20150702120052) do
     t.float    "latitude",              limit: 24,    default: 0.0, null: false
     t.float    "longitude",             limit: 24,    default: 0.0, null: false
     t.string   "address",               limit: 255,   default: "",  null: false
-    t.integer  "upload_date",           limit: 4
+    t.datetime "upload_date"
     t.date     "upload_date_for_admin"
     t.string   "isbn13",                limit: 255
     t.string   "image_path",            limit: 255
@@ -155,6 +155,11 @@ ActiveRecord::Schema.define(version: 20150702120052) do
   add_index "devices", ["user_id"], name: "index_devices_on_user_id", using: :btree
 
   create_table "documents", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "genres", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -300,6 +305,7 @@ ActiveRecord::Schema.define(version: 20150702120052) do
     t.string   "address",                limit: 255,   default: "",    null: false
     t.text     "about_me",               limit: 65535
     t.boolean  "is_block",               limit: 1,     default: false
+    t.date     "weekly_date"
   end
 
   create_table "users_groups", id: false, force: :cascade do |t|

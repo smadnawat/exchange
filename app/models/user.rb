@@ -8,6 +8,7 @@ class User < ActiveRecord::Base
 	has_many :reading_preferences, :dependent => :destroy
 	has_many :devices, :dependent => :destroy
   has_many :ratings, :dependent => :destroy
+  has_many :ratings, :class_name => "Rating", :foreign_key => :ratable_id, dependent: :destroy
   has_many :recieve_notifications, :class_name => 'Notice',:foreign_key => 'reciever_id', :dependent => :destroy
   has_and_belongs_to_many :groups ,:join_table => "users_groups"
   has_many :messages, :class_name => 'Message',:foreign_key => 'sender_id',dependent: :destroy
@@ -21,6 +22,7 @@ class User < ActiveRecord::Base
   reverse_geocoded_by :latitude, :longitude
   after_validation :reverse_geocode 
   before_save :about_me_update, :if => :new_record?
+  before_save :weekly_date_update, :if => :new_record?
   validates :email, presence: true,  
 						format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i , 
 						message: "address should be valid."}
@@ -53,6 +55,10 @@ class User < ActiveRecord::Base
 
   def about_me_update
       self.about_me = " "
+  end
+
+  def weekly_date_update
+      self.weekly_date = Date.current    
   end
 
   def self.get_near_matches params 
@@ -138,24 +144,25 @@ class User < ActiveRecord::Base
                end
            end
      end
-
       hash[:matches] = priority_first + priority_second + priority_third + priority_forth + priority_fifth + priority_sixth + priority_seventh + priority_eighth + priority_nineth
       return hash,hash[:matches].count
   end
 
   def self.matches_detail(other_user, book, other_users_book)
     match_hash = {}
-    match_hash[:other_user_detail] = other_user.as_json(:only => [:picture,:username,:id, :distance])
+    dis = other_user.distance.round(2)
+    match_hash[:other_user_detail] = other_user.as_json(:only => [:picture,:username,:id]).merge(distance: dis)
     @rating = Rating.calculate_ratings(other_user)
     match_hash[:user_rating] = @rating
-    match_hash[:book_to_give] = book.as_json(:only => [:title,:author,:genre, :image_path])
-    match_hash[:book_to_get] = other_users_book.as_json(:only => [:title,:author,:genre, :image_path])
+    match_hash[:book_to_give] = book.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path])
+    match_hash[:book_to_get] = other_users_book.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path])
     match_hash
   end
 
   def self.match_hash_detail(other_user)
     match_hash = {}
-    match_hash[:other_user_detail] = other_user.as_json(:only => [:picture,:username,:id, :distance])
+    dis = other_user.distance.round(2)
+    match_hash[:other_user_detail] = other_user.as_json(:only => [:picture,:username,:id]).merge(distance: dis)
     @rating = Rating.calculate_ratings(other_user)
     match_hash[:user_rating] = @rating
     match_hash
@@ -163,10 +170,11 @@ class User < ActiveRecord::Base
 
   def self.matches_detail_for_genre_cases(other_user, book)
     match_hash = {}
-    match_hash[:other_user_detail] = other_user.as_json(:only => [:picture,:username,:id, :distance])
+    dis = other_user.distance.round(2)
+    match_hash[:other_user_detail] = other_user.as_json(:only => [:picture,:username,:id]).merge(distance: dis)
     @rating = Rating.calculate_ratings(other_user)
     match_hash[:user_rating] = @rating
-    match_hash[:book_to_give] = book.as_json(:only => [:title,:author,:genre, :image_path])
+    match_hash[:book_to_give] = book.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path])
     match_hash
   end
 
