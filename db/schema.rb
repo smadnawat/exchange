@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150707053121) do
+ActiveRecord::Schema.define(version: 20150708130359) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -181,6 +181,7 @@ ActiveRecord::Schema.define(version: 20150707053121) do
     t.string   "status",          limit: 255
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
+    t.integer  "book_to_get",     limit: 4
   end
 
   add_index "invitations", ["book_id"], name: "index_invitations_on_book_id", using: :btree
@@ -306,6 +307,7 @@ ActiveRecord::Schema.define(version: 20150707053121) do
     t.text     "about_me",               limit: 65535
     t.boolean  "is_block",               limit: 1,     default: false
     t.date     "weekly_date"
+    t.boolean  "notification_status",    limit: 1,     default: true
   end
 
   create_table "users_groups", id: false, force: :cascade do |t|

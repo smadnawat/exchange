@@ -3,7 +3,7 @@ require './config/boot'
 require './config/environment'
 include Clockwork
 
-every(30.seconds,'weekly_worker called', :tz => 'UTC') { WeeklyWorker.perform_async }
+Clockwork.every(1.day,'weekly_worker called', :at => '14:19', :tz => 'UTC') { WeeklyWorker.perform_async }
 
 	
     

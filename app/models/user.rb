@@ -12,6 +12,7 @@ class User < ActiveRecord::Base
   has_many :recieve_notifications, :class_name => 'Notice',:foreign_key => 'reciever_id', :dependent => :destroy
   has_and_belongs_to_many :groups ,:join_table => "users_groups"
   has_many :messages, :class_name => 'Message',:foreign_key => 'sender_id',dependent: :destroy
+  has_many :blocks, :class_name => "Block", :foreign_key => :user_id, dependent: :destroy
 
   scope :users, -> { where(:is_block => false) }
   scope :blocked, -> { where(:is_block => true) }
@@ -48,7 +49,7 @@ class User < ActiveRecord::Base
   def self.send_token user 
     @user = user  
     if @user
-      @user.update_attributes(:reset_password_token => Random.new.bytes(4).bytes.join[0,4])
+      @user.update_attributes(:reset_password_token => Random.new.bytes(4).bytes.join[0,4], :reset_password_sent_at => Time.now)
       UserMailer.reset_password_mail(@user).deliver
     end  
   end  

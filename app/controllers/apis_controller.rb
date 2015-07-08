@@ -4,7 +4,7 @@ class ApisController < ApplicationController
 
  include CalculateDistance
 
-  before_filter :find_user, :only => [:upload_by_scanning_counts, :view_my_review, :my_library, :potential_mat_profile, :upload_multiple_reading_pref,:create_ratings, :get_ratings, :my_chat_list, :invitation_details,:upload_books, :get_uploaded_books, :delete_uploaded_books, :delete_reading_preferences, :upload_reading_preferences, :my_reading_preferences, :my_reading_preferences_for_author, :my_reading_preferences_for_genre, :user_profile, :update_profile, :search_potential_matches]
+  before_filter :find_user, :only => [:upload_by_scanning_counts, :view_my_review, :notification_status, :my_library, :potential_mat_profile, :upload_multiple_reading_pref,:create_ratings, :get_ratings, :my_chat_list, :invitation_details,:upload_books, :get_uploaded_books, :delete_uploaded_books, :delete_reading_preferences, :upload_reading_preferences, :my_reading_preferences, :my_reading_preferences_for_author, :my_reading_preferences_for_genre, :user_profile, :update_profile, :search_potential_matches]
 
 	def register	
 		params[:picture] = User.image_data(params[:picture])
@@ -290,11 +290,9 @@ class ApisController < ApplicationController
   end 
 
   def create_ratings 
- 	@group = Group.find_by_id_and_admin_id(params[:group_id], @user)
- 	if @group.present?
- 		@rating = Rating.find_by_group_id_and_ratable_id(@group, params[:ratable_id])
+ 		@rating = Rating.find_by_group_id_and_ratable_id(params[:group_id], params[:ratable_id])
  		@ratable  = User.find_by_id(params[:ratable_id])
- 		if @rating.present?
+ 		if @rating
  			message = "Already rated this person.."
  		else
  			@group_rating = Rating.new_group_rating(params, @user)
@@ -305,12 +303,6 @@ class ApisController < ApplicationController
 	                       :user => @ratable.as_json(only: [:id, :username, :picture]),
 	                       :responseMessage => message
 	  	                  }
-  	else
-  	    render :json => {
-		                     :responseCode => 500,
-		                     :responseMessage => 'Something went wrong'
-		  	                }
-  	end
   end
 
 	def get_ratings
@@ -331,22 +323,45 @@ class ApisController < ApplicationController
 	  end
 	end
 
+	# def invitation_details
+	# 	@invitation = Notice.find_by_id(params[:notification_id])
+	# 	if @invitation.present?
+	# 		@book = Book.find_by_id(@invitation.book_id)
+	# 		@user = User.find_by_id(@invitation.user_id)
+	# 		@rating = Rating.calculate_ratings(@user)
+	# 		render :json => {
+ #                       :responseCode => 200,
+ #                       :responseMessage => 'Invitation details fetched successfully',
+ #                       :book => @book.as_json(only: [:id, :title, :author, :image_path]),
+ #                       :ratings => @rating,
+ #                       :sender => @user.as_json(only: [:id, :username, :picture])
+ #  	                  }
+ #  	else
+ #    	render :json => {
+ #                     :responseCode => 200,
+ #                     :responseMessage => 'No record found'
+ #  	                	}
+ #  	end
+	# end
+
 	def invitation_details
 		@invitation = Notice.find_by_id(params[:notification_id])
 		if @invitation.present?
-			@book = Book.find_by_id(@invitation.book_id)
+			@book_to_get = Book.find_by_id(Invitation.find(@invitation.invitation_id).book_to_get.to_i)
+			@book_to_give = Book.find_by_id(@invitation.book_id)
 			@user = User.find_by_id(@invitation.user_id)
 			@rating = Rating.calculate_ratings(@user)
 			render :json => {
                        :responseCode => 200,
                        :responseMessage => 'Invitation details fetched successfully',
-                       :book => @book.as_json(only: [:id, :title, :author, :image_path]),
+                       :book_to_get => @book_to_get.as_json(only: [:id, :title, :author]),
+                       :book_to_give => @book_to_give.as_json(only: [:id, :title, :author]),
                        :ratings => @rating,
                        :sender => @user.as_json(only: [:id, :username, :picture])
   	                  }
   	else
     	render :json => {
-                     :responseCode => 200,
+                     :responseCode => 500,
                      :responseMessage => 'No record found'
   	                	}
   	end
@@ -529,6 +544,16 @@ class ApisController < ApplicationController
 		else
 			render :json => {:responseCode => 500,:responseMessage => 'Something went wrong'} 
 		end
+	end
+
+	def notification_status
+			if @user.notification_status.eql? true
+			   @user.update_attributes(:notification_status => params[:notification_status])	
+			   render :json => {:responseCode => 200, :responseMessage => "Notification has been turned off successfully!."}	
+			else
+			  @user.update_attributes(:notification_status => params[:notification_status])
+			  render :json => {:responseCode => 200, :responseMessage => "Notification has been turned on successfully!."}  
+			end
 	end
 
   private

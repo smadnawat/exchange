@@ -6,28 +6,71 @@ class ChatsController < ApplicationController
 
 	before_filter :find_user
 
+	# def chat_exchange
+	# 	@invitation = @user.invitations.build(:attendee => params[:reciever_id],:invitation_type =>	params[:invitation_type],:status => "pending",:book_id => params[:book_id])
+	# 	if @invitation.save!
+	# 		Notice.create_Notice(@user,params[:reciever_id],params[:invitation_type],params[:book_id],@invitation)
+	# 		render :json => {:responseCode => 200,:responseMessage => 'Invitation is successfully sent'} 
+	# 	else
+	# 		render :json => {:responseCode => 500,:responseMessage => 'Something went wrong'} 			 
+	# 	end
+	# end
+
 	def chat_exchange
-		@invitation = @user.invitations.build(:attendee => params[:reciever_id],:invitation_type =>	params[:invitation_type],:status => "pending",:book_id => params[:book_id])
-		if @invitation.save!
+		@invitation = @user.invitations.build(:attendee => params[:reciever_id],:invitation_type =>	params[:invitation_type],:status => "pending",:book_id => params[:book_to_give], :book_to_get => params[:book_to_get])
+		if @invitation.save
 			Notice.create_Notice(@user,params[:reciever_id],params[:invitation_type],params[:book_id],@invitation)
 			render :json => {:responseCode => 200,:responseMessage => 'Invitation is successfully sent'} 
 		else
-			render :json => {:responseCode => 500,:responseMessage => 'Something went wrong'} 			 
+			render :json => {:responseCode => 500,:responseMessage => 'Something went wrong'} 
 		end
 	end
+
+	# def accept_decline 
+	# @invitation = Invitation.find_by_id(params[:invitation_id])
+	# 	if @invitation.update_column(:status,params[:action_type])
+	# 		Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_id],@invitation)
+	# 		book = Book.find(params[:book_id])
+	# 		if params[:action_type] == "Accept"
+	# 		@group = Group.find_by_name_and_admin_id("#{book.title}", @invitation.user_id)
+	# 		 if @group
+	# 		 	@group.users << @user
+	# 		 else
+	# 		@group = Group.create(:name => book.title, :admin_id => @invitation.user_id,
+	# 		:get_book_id => params[:get_book_id], :give_book_id => params[:give_book_id])
+	# 			if !@group.users.include?(params[:user_id])
+ #          @sender = User.find(@invitation.user_id)
+	# 				@group.users << @user
+	# 				@group.users << @sender
+	# 			end
+	# 		 end
+	# 		end
+	# 	render :json => 
+	# 	               {
+	#                	 :responseCode => 200,
+	#                	 :responseMessage => "Request is successfully #{params[:action_type]}",
+ #                   :group_id => @group.id
+	# 	               }
+	# 	else
+	# 		render :json => {
+	# 										:responseCode => 500,
+	# 										:responseMessage => 'Something went wrong'
+	# 										} 
+	# 	end
+	# end
 
 	def accept_decline 
 	@invitation = Invitation.find_by_id(params[:invitation_id])
 		if @invitation.update_column(:status,params[:action_type])
-			Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_id],@invitation)
-			book = Book.find(params[:book_id])
+			Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_to_give],@invitation)
+			book = Book.find_by_id(params[:book_to_give])
 			if params[:action_type] == "Accept"
-			@group = Group.find_by_name_and_admin_id("#{book.title}", @invitation.user_id)
-			 if @group
-			 	@group.users << @user
+			@is_group = Group.find_by_name_and_admin_id("#{book.title}", @invitation.user_id)
+			 if @is_group
+			 	@is_group.users << @user
 			 else
 			@group = Group.create(:name => book.title, :admin_id => @invitation.user_id,
-			:get_book_id => params[:get_book_id], :give_book_id => params[:give_book_id])
+			:get_book_id => params[:book_to_get], :give_book_id => params[:book_to_get])
 				if !@group.users.include?(params[:user_id])
           @sender = User.find(@invitation.user_id)
 					@group.users << @user
@@ -39,7 +82,7 @@ class ChatsController < ApplicationController
 		               {
 	               	 :responseCode => 200,
 	               	 :responseMessage => "Request is successfully #{params[:action_type]}",
-                   :group_id => @group.id
+                   :group_id => @group.as_json(only: [:id]) 
 		               }
 		else
 			render :json => {
@@ -152,34 +195,40 @@ class ChatsController < ApplicationController
 	end
 
 	def search_user
-		@user = User.search_user_to_add_group(params[:user_name])
+		@group = Group.find_by_id(params[:group_id])
+		@users = @group.users
+		@all_users = User.search_user_to_add_group(params[:user_name])
+		@blocked = Block.where('group_id = ?', @group.id ).pluck(:user_id)
+		@block = User.where(id: @blocked)
+		@search_result = @all_users - @users
+		@final_result = @search_result - @block
 		render :json => {
-						:responseCode => 200,
-						:responseMessage => "Successfully fetched users",
-						:search_result => paging(@user, params[:page_no],params[:page_size]).as_json(only: [:id, :username, :picture, :email, :gender]) 
-						}
+										:responseCode => 200,
+										:responseMessage => "Successfully fetched users",
+										:search_result => paging(@final_result , params[:page_no],params[:page_size]).as_json(only: [:id, :username, :picture, :email, :gender]) 
+										}
 	end
 
-	def add_user_to_group
-		@group = Group.find_by_id_and_admin_id(params[:group_id], @user.id)
-			if @group.present?
-					@member = User.find_by_id(params[:member_id])
-							if @group.users.include?(@member)
-								@message = "User is Already in group"
-							else
-								@group.users << @member
-								@message = "User added successfully"
-							end
-					render :json => {
-														:responseCode => 200,
-														:responseMessage => @message
-													}
+def add_user_to_group
+		@group = Group.find_by_id_and_admin_id(params[:group_id], @user)
+		if @group
+			@member = User.where(id: params[:member_id])
+			if @member == []
+				message = "No user added"
 			else
-					render :json => {
-														:responseCode => 500,
-														:responseMessage => 'Something went wrong'
-													} 
-			end				
+				@group.users << @member
+				message = "User added successfully"
+			end
+			render :json => {
+											:responseCode => 200,
+											:responseMessage => message
+											}
+		else
+			render :json => {
+											:responseCode => 500,
+											:responseMessage => 'Something went wrong'
+											}
+		end	
 	end
 
 	private

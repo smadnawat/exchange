@@ -4,16 +4,14 @@ class AndroidPushWorker
   include Sidekiq::Worker
 
   def perform(reciever,alert,badges,device_id,type,invitation)
-
-    p"==============#{device_id}=================IN ANDROID WORKER"
+  logger.info"===================#{reciever.inspect}===#{alert.inspect}==========#{badges.inspect}==============#{device_id.inspect}==========#{type.inspect}============#{invitation.inspect}"
+     p"==============#{device_id}=================IN ANDROID WORKER"
     gcm = GCM.new("AIzaSyA1KAy9NhC66EXcXErDwF4rSh5lafdoCi4")
     registration_ids = ["#{device_id}"]         
     options = {
           'data' => {
-          'badge'=>  badges,
-          'alert' => alert,
-          'invitation_id' => invitation
-         },
+            'message' => ['badge'=>  badges,'alert' => alert,'invitation_id' => invitation]
+          },
         "time_to_live" => 108,
         "delay_while_idle" => true,
         "collapse_key" => 'updated_state'

@@ -89,6 +89,10 @@ GEM
     coffee-script-source (1.9.1.1)
     columnize (0.9.0)
     connection_pool (2.2.0)
+    daemons (1.2.3)
+    daemons-rails (1.2.1)
+      daemons
+      multi_json (~> 1.0)
     debug_inspector (0.0.2)
     devise (3.5.1)
       bcrypt (~> 3.0)
@@ -287,6 +291,7 @@ DEPENDENCIES
   clockwork
   cloudinary
   coffee-rails (~> 4.1.0)
+  daemons-rails
   devise
   gcm
   geocoder
