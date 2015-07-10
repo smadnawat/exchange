@@ -17,6 +17,8 @@ module ApplicationHelper
        return $arr.flatten.join(',')  
     end    
 
-
+   def options_for_country_select
+      [ "India", "Singapore", "USA", "Japan", "Others" ]
+   end
 
 end

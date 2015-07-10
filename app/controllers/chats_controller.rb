@@ -19,7 +19,7 @@ class ChatsController < ApplicationController
 	def chat_exchange
 		@invitation = @user.invitations.build(:attendee => params[:reciever_id],:invitation_type =>	params[:invitation_type],:status => "pending",:book_id => params[:book_to_give], :book_to_get => params[:book_to_get])
 		if @invitation.save
-			Notice.create_Notice(@user,params[:reciever_id],params[:invitation_type],params[:book_id],@invitation)
+			Notice.create_Notice(@user,params[:reciever_id],params[:invitation_type],params[:book_to_give],@invitation)
 			render :json => {:responseCode => 200,:responseMessage => 'Invitation is successfully sent'} 
 		else
 			render :json => {:responseCode => 500,:responseMessage => 'Something went wrong'} 
@@ -68,6 +68,7 @@ class ChatsController < ApplicationController
 			@is_group = Group.find_by_name_and_admin_id("#{book.title}", @invitation.user_id)
 			 if @is_group
 			 	@is_group.users << @user
+			 	@group = @is_group
 			 else
 			@group = Group.create(:name => book.title, :admin_id => @invitation.user_id,
 			:get_book_id => params[:book_to_get], :give_book_id => params[:book_to_get])
@@ -184,8 +185,8 @@ class ChatsController < ApplicationController
 		end
 	end
 
-	def unblock_user
-		@blocked_user = Block.find_by_id(params[:block_id])
+  def unblock_user
+		@blocked_user = Block.find_by_user_id_and_group_id(params[:member_id], params[:group_id])
 		if @blocked_user
 			@blocked_user.destroy
 			render :json => {:responseCode => 200,:responseMessage => "Successfully done"}
@@ -205,20 +206,45 @@ class ChatsController < ApplicationController
 		render :json => {
 										:responseCode => 200,
 										:responseMessage => "Successfully fetched users",
-										:search_result => paging(@final_result , params[:page_no],params[:page_size]).as_json(only: [:id, :username, :picture, :email, :gender]) 
+										:search_result => paging(@final_result , params[:page_no],params[:page_size]).as_json(only: [:id, :username, :picture, :email, :gender]),
+										:pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }
 										}
 	end
 
-def add_user_to_group
+# def add_user_to_group
+# 		@group = Group.find_by_id_and_admin_id(params[:group_id], @user)
+# 		if @group
+# 			@member = User.where(id: params[:member_id])
+# 			if @member == []
+# 				message = "No user added"
+# 			else
+# 				@group.users << @member
+# 				message = "User added successfully"
+# 			end
+# 			render :json => {
+# 											:responseCode => 200,
+# 											:responseMessage => message
+# 											}
+# 		else
+# 			render :json => {
+# 											:responseCode => 500,
+# 											:responseMessage => 'Something went wrong'
+# 											}
+# 		end	
+# 	end
+
+	def add_user_to_group
 		@group = Group.find_by_id_and_admin_id(params[:group_id], @user)
-		if @group
-			@member = User.where(id: params[:member_id])
-			if @member == []
-				message = "No user added"
-			else
-				@group.users << @member
-				message = "User added successfully"
-			end
+			if @group
+				if params[:members].present?
+				
+					params[:members].as_json(only: [:id]).each do |t|
+						@group.users << User.find(t.values)
+					end
+					message = "User added successfully"
+				else
+					message = "No user added"
+				end
 			render :json => {
 											:responseCode => 200,
 											:responseMessage => message
@@ -230,6 +256,7 @@ def add_user_to_group
 											}
 		end	
 	end
+
 
 	private
 

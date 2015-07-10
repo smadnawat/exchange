@@ -1,14 +1,14 @@
 class MypasswordsController < ApplicationController
 
-    def create
-				@user = User.find_by(:email => params[:email])
-				if @user
-					User.send_token(@user)
-					render :json => {:responseCode => 200,:responseMessage => "Email instructions has been sent successfully."}
-				else
-					render :json => {:responseCode => 500,:responseMessage => "Please check email, it doesn't exist."}
-				end	 
-	  end
+  def create
+			@user = User.find_by(:email => params[:email])
+			if @user
+				User.send_token(@user)
+				render :json => {:responseCode => 200,:responseMessage => "Email instructions has been sent successfully."}
+			else
+				render :json => {:responseCode => 500,:responseMessage => "Please check email, it doesn't exist."}
+			end	 
+	end
 
 	def update
 		@user = User.find_by_reset_password_token(params[:reset_password_token])

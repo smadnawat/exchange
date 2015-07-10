@@ -345,19 +345,19 @@ class ApisController < ApplicationController
 	# end
 
 	def invitation_details
-		@invitation = Notice.find_by_id(params[:notification_id])
+		@invitation = Invitation.find_by_id(params[:notification_id])
 		if @invitation.present?
-			@book_to_get = Book.find_by_id(Invitation.find(@invitation.invitation_id).book_to_get.to_i)
+			@book_to_get = Book.find_by_id(@invitation.book_to_get.to_i)
 			@book_to_give = Book.find_by_id(@invitation.book_id)
 			@user = User.find_by_id(@invitation.user_id)
 			@rating = Rating.calculate_ratings(@user)
 			render :json => {
-                       :responseCode => 200,
-                       :responseMessage => 'Invitation details fetched successfully',
-                       :book_to_get => @book_to_get.as_json(only: [:id, :title, :author]),
-                       :book_to_give => @book_to_give.as_json(only: [:id, :title, :author]),
-                       :ratings => @rating,
-                       :sender => @user.as_json(only: [:id, :username, :picture])
+                     :responseCode => 200,
+                     :responseMessage => 'Invitation details fetched successfully',
+                     :book_to_get => @book_to_get,
+                     :book_to_give => @book_to_give,
+                     :ratings => @rating,
+                     :sender => @user.as_json(only: [:id, :username, :picture])
   	                  }
   	else
     	render :json => {

@@ -96,6 +96,13 @@ Rails.application.routes.draw do
   post 'notifications/popup'=> 'notifications#popup'
   #get '*notfound'         => 'notifications#notfound'
   post '/do_create'    =>   'notifications#do_create', as: 'do_create'
-  #root :to => 'notifications#welcome'
+  root :to => 'home#dashboard'
+  get '/privacy_policy' => 'home#privacy_policy'
+  get '/terms_of_use' => 'home#terms_of_use'
+  get '/about_us' => 'home#about_us'
+  post '/contact_us' => 'home#contact_us', as: "contact_us"
+  get '/thank_you' => 'home#thank_you'
+  # post '/download_csv' => 'home#download_csv'
+  get "/download_csv",:to => "home#download_csv",:as => "download_csv"
 
 end

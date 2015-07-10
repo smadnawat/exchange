@@ -14,5 +14,32 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require active_admin
+//= require_tree .
 
 
+$(document).ready(function(){
+	$("#contact-form").validate({
+        // Specify the validation rules
+        rules: {
+            "contact_us[email]": {
+                required: true,
+                 email: true
+            },
+            "contact_us[name]": {
+                required: true,
+            },
+        },
+        
+        // Specify the validation error messages
+        messages: {
+            "contact_us[name]": {
+                required: "Please provide a name"
+            },
+            "contact_us[email]": "Please enter a valid email address",
+        },
+        
+        submitHandler: function(form) {
+            form.submit();
+        }
+    });
+});  
