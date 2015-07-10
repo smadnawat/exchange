@@ -680,7 +680,7 @@ padding-right: 17px;
 }
 .vdo-sec {
  position: relative;
- padding-bottom: 56.25%; / 16:9 /
+ padding-bottom: 56.25%; 
  padding-top: 25px;
  height: 0;
 }
@@ -1059,4 +1059,4 @@ outline:none;
     right: 7%!important;
     top: 86%!important;
 }
-
+}
