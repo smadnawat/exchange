@@ -145,6 +145,7 @@ class User < ActiveRecord::Base
                end
            end
      end
+      logger.info"==========#{priority_first.count}====================#{priority_second.count}=======================#{priority_third.count}"
       hash[:matches] = priority_first + priority_second + priority_third + priority_forth + priority_fifth + priority_sixth + priority_seventh + priority_eighth + priority_nineth
       return hash,hash[:matches].count
   end

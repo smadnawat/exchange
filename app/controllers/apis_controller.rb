@@ -567,7 +567,7 @@ class ApisController < ApplicationController
 	end
 
 	def reading_pref_params
-	   params.permit(:title,:author,:genre, :isbn13)
+	   params.permit(:title,:author,:genre, :isbn13, :image_path)
 	end
 
 end

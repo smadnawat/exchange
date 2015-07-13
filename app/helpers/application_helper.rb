@@ -1,18 +1,18 @@
 module ApplicationHelper
 
-	 def average_rating(send,accepted)
+   def average_rating(send,accepted)
       if send > 0 && accepted > 0
         @result =  ((accepted*100)/send).round
       else
          @result = 0
-		  end
+      end
     end
 
     def book_count(book)
-    	$arr = []
+      $arr = []
         book.each do |key , value|
-        	$arr << "#{key.split(',').last}" "-" "#{value}"
-        	p"#{value.inspect}====================="
+          $arr << "#{key.split(',').last}" "-" "#{value}"
+          p"#{value.inspect}====================="
         end
        return $arr.flatten.join(',')  
     end    
