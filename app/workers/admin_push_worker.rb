@@ -33,6 +33,7 @@ class AdminPushWorker
       elsif ( device_type == 'Android')  
         puts"=====================INSIDE ANDROID WORKER======="
         gcm = GCM.new("AIzaSyA1KAy9NhC66EXcXErDwF4rSh5lafdoCi4")
+        
         registration_ids= ["#{device_id}"]    
         options = {
           'data' => {

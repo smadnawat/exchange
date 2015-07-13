@@ -15,7 +15,9 @@ index :title => 'Blocked User ' do
   end
   column "Profile pic",:picture do |f|
     # f.picture
-      f.picture.present? ? image_tag(f.picture.url(:thumb)) : img(src:'http://res.cloudinary.com/abhicloud/image/upload/c_scale,h_100,w_150/v1434012609/no_image_obxfvr.jpg');
+      # f.picture.present? ? image_tag(f.picture.url(:thumb)) : img(src:'http://res.cloudinary.com/abhicloud/image/upload/c_scale,h_100,w_150/v1434012609/no_image_obxfvr.jpg');
+      f.picture.present? ? image_tag(f.picture.url, :width => 150, :height => 100) : image_tag("no_image.jpg", :width => 150, :height => 100);
+      
     
   end
   column :gender do |f|

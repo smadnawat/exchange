@@ -7,13 +7,12 @@ class WeeklyWorker
 
     def perform
    	 	puts"====================Inside Weekly Worker======="	
-      priority_first =0
+      priority_first = 0
        @users = User.includes(:books, :reading_preferences).all 
          unless @users.blank?
     	        @users.each do |user|
 
     		        	other_users = User.includes(:books, :reading_preferences).all.reject{|u| u.id == user.id}
-                  logger.info"=======================#{other_users.inspect}===========Other User"
                     @user_preferences = user.reading_preferences
                        @user_author_pref = user.author_prefernce
                          @user_genre_pref = user.genre_preference
@@ -24,33 +23,27 @@ class WeeklyWorker
                                             unless user.books.blank?
                               					       	 user.books.each do |book|
                                                         
-                                                      unless other_user.reading_preferences.blank?
+                                                      if other_user.reading_preferences.present?  && other_user.books.present?
 
 
                                                     if (other_user.reading_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:title).include?(book.title) && @user_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:title).include?(other_users_book.title))
                                                             priority_first +=1  
-                                                      logger.info"=========================#{priority_first.inspect}=======================1111"
           
                                                     elsif (other_user.reading_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:author).include?(book.author) && @user_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:author).include?(other_users_book.author)) 
                                                             priority_first +=1      
-                                                          logger.info"=========================#{priority_first.inspect}=======================2222"
                                                     
                                                     elsif (other_user.reading_preferences.map{|x| x if x.genre_deactivated == false}.compact.map(&:genre).include?(book.genre) && @user_preferences.map{|x| x if x.genre_deactivated == false}.compact.map(&:genre).include?(other_users_book.genre))        
                                                             priority_first +=1
-                                                            logger.info"=========================#{priority_first.inspect}=======================3333"
 
 
                                                     elsif ((['Computer Books and Technology Books','Engineering Books','Study Guides & Test Prep','Education & Training','Medical Books and Reference'] & other_user.reading_preferences.map(&:genre)).include?(book.genre)) && (other_user.reading_preferences.map(&:isbn13).include?(book.isbn13)) 
                                                             priority_first +=1
-                                                            logger.info"=========================#{priority_first.inspect}=======================44444"
 
-                                                    elsif (other_user.books.map(&:author).include?(book.author) && @books.map(&:author).include?(other_users_book.author)) 
+                                                    elsif (other_user.books.map(&:author).include?(book.author) && user.books.map(&:author).include?(other_users_book.author))  
                                                              priority_first +=1        
-                                                                 logger.info"=========================#{priority_first.inspect}=======================5555"
        
-                                                    elsif (other_user.books.map(&:genre).include?(book.genre) && @books.map(&:genre).include?(other_users_book.genre))  
+                                                    elsif (other_user.books.map(&:genre).include?(book.genre) && user.books.map(&:genre).include?(other_users_book.genre))  
                                                              priority_first +=1
-                                                                 logger.info"=========================#{priority_first.inspect}=======================6666"
 
                                                     end
 
@@ -62,21 +55,27 @@ class WeeklyWorker
                                     end       
                                 end   
                              
-              end
+             
 
             logger.info"=========================#{priority_first.inspect}=======================7777"
 
-            @devices = User.find(user.id).devices
-              unless @devices.nil?
-                @devices.each do |device|
-                  if device.device_type == "Android"
-                    puts "======#{device.device_id}========"
-                    #AndroidPushWorker.perform_async(user.id, alert, priority_first, device.device_id, type, invitation_id)
-                  else
-                    #ApplePushWorker.perform_async(user.id, alert, priority_first, device.device_id, type, invitation_id)
-                  end
-                end
-              end    
+                  @user = User.find(user.id)
+                   if @user.notification_status.eql? true
+                        @devices =  @user.devices
+                          unless @devices.nil?
+                            @devices.each do |device|
+                              if device.device_type == "Android"
+                                puts "======#{device.device_id}========"
+                                alert = "Your potential matches for this week is "
+                                AndroidPushWorker.perform_async(user.id, alert, priority_first, device.device_id, nil, nil)
+                              else
+                                ApplePushWorker.perform_async(user.id, alert, priority_first, device.device_id, nil, nil)
+                              end
+                            end
+                          end
+                   end   
+
+           end      
                  
          end
     end

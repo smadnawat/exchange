@@ -35,7 +35,9 @@ end
     f.inputs "Ad Banner", :multipart => true do
 
       
-    f.input :image ,:as => :file,:hint => f.content_tag(:span, image_tag("http://res.cloudinary.com/abhicloud/image/upload/c_scale,h_100,w_150/v1434012609/no_image_obxfvr.jpg", id: 'my_image')) 
+    # f.input :image ,:as => :file,:hint => f.content_tag(:span, image_tag("http://res.cloudinary.com/abhicloud/image/upload/c_scale,h_100,w_150/v1434012609/no_image_obxfvr.jpg", id: 'my_image')) 
+    f.input :image ,:as => :file,:hint => f.content_tag(:span, image_tag("no_image.jpg", :width => 150, :height => 10, id: 'my_image')) 
+    
 
       f.input :image_cache, :as => :hidden 
       

@@ -19,20 +19,20 @@ ActiveAdmin.register_page "Aggregate Data" do
 	              th {"Percentage of Invites Accepted"}
 
 	  	         end
-	  	        @collection = Kaminari.paginate_array(Book.details).page(params[:page]).per(1)
+	  	        @collection = Kaminari.paginate_array(Book.details).page(params[:page]).per(5)
 	  	        @collection.each do |book|
-                books = Book.where(:upload_date => book.upload_date).group('address').count
+                books = Book.where(:upload_date_for_admin => book.upload_date_for_admin).group('address').count
 
 	                  tr do
 	                  	send = Invitation.pluck(:created_at).map{|x| x.to_date.eql? book.upload_date_for_admin}.reject{|x| x.eql? false}.count
-	         			accept  =   Invitation.pluck(:created_at).map{|x| x.to_date.eql? book.upload_date_for_admin and Invitation.find_by_created_at(x).status == "Decline"}.reject{|x| x.eql? false}.count       	
+	         			accept  =   Invitation.pluck(:created_at).map{|x| x.to_date.eql? book.upload_date_for_admin and Invitation.find_by_created_at(x).status == "Accept"}.reject{|x| x.eql? false}.count       	
 	                     td {book.upload_date_for_admin} 
-	                     td {Message.where('created_at > ? ', book.upload_date_for_admin - 7.days).map{|m|  m.sender_id }.uniq.count} 
+	                     td {Message.where('created_at >= ? ', book.upload_date_for_admin - 7.days).map{|m|  m.group_id }.uniq.count} 
                         
 	                     td {book_count(books)} 
 	                     td { } 
 	                     td { Invitation.pluck(:created_at).map{|x| x.to_date.eql? book.upload_date_for_admin}.reject{|x| x.eql? false}.count} 
-	                     td {Invitation.pluck(:created_at).map{|x| x.to_date.eql? book.upload_date_for_admin and Invitation.find_by_created_at(x).status == "Decline"}.reject{|x| x.eql? false}.count} 
+	                     td {Invitation.pluck(:created_at).map{|x| x.to_date.eql? book.upload_date_for_admin and Invitation.find_by_created_at(x).status == "Accept"}.reject{|x| x.eql? false}.count} 
 	                     # td {book.upload_date} 
 	                     td{ average_rating(send ,accept )}
 	                    
@@ -41,7 +41,7 @@ ActiveAdmin.register_page "Aggregate Data" do
 	               end
 
 	           end #table
-              paginated_collection(Kaminari.paginate_array(Book.details).page(params[:page]).per(1)).each do
+              paginated_collection(Kaminari.paginate_array(Book.details).page(params[:page]).per(5)).each do
              end
                
            end

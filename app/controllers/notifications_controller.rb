@@ -6,10 +6,12 @@ class NotificationsController < ApplicationController
   def do_create
     if params[:Author].present?
        rpuser = ReadingPreference.where(:author =>  params[:Author] ).map{|rpm| rpm.user if rpm.user.is_block == false}.uniq.compact
-       unless rpuser.blank?
+       unless rpuser.blank? 
           rpuser.each do |rp|
-             rp.devices.select {|rpm| AdminPushWorker.perform_async(rpm.device_id,rpm.device_type, "#{params[:notification][:subject]}", "#{params[:notification][:content]}"  ) } 
-             flash[:notice]= 'Notification Send'
+            if rp.notification_status.eql? true
+               rp.devices.select {|rpm| AdminPushWorker.perform_async(rpm.device_id,rpm.device_type, "#{params[:notification][:subject]}", "#{params[:notification][:content]}"  ) } 
+               flash[:notice]= 'Notification Send'
+            end   
           end
        else
             flash[:notice]= 'Notification cant be Sent because all users are blocked'
@@ -19,8 +21,10 @@ class NotificationsController < ApplicationController
       rpuser = ReadingPreference.where(:genre =>  params[:genre] ).map{|rpm| rpm.user if rpm.user.is_block == false}.uniq.compact
       unless rpuser.blank?
          rpuser.each do |rp|
-           rp.devices.select {|rpm| AdminPushWorker.perform_async(rpm.device_id,rpm.device_type, "#{params[:notification][:subject]}", "#{params[:notification][:content]}"  ) } 
-           flash[:notice]= 'Notification Send'
+            if rp.notification_status.eql? true
+             rp.devices.select {|rpm| AdminPushWorker.perform_async(rpm.device_id,rpm.device_type, "#{params[:notification][:subject]}", "#{params[:notification][:content]}"  ) } 
+             flash[:notice]= 'Notification Send'
+            end 
          end
       else
           flash[:notice]= 'Notification cant be Sent because all users are blocked'
@@ -31,8 +35,10 @@ class NotificationsController < ApplicationController
        rpuser =  User.where(:location => params[:location], is_block: 'false').uniq
        if rpuser.present?
          rpuser.each do |rp|
-           rp.devices.select {|rpm| AdminPushWorker.perform_async(rpm.device_id,rpm.device_type, "#{params[:notification][:subject]}", "#{params[:notification][:content]}"  ) } 
-           flash[:notice]= 'Notification Send'
+           if rp.notification_status.eql? true
+             rp.devices.select {|rpm| AdminPushWorker.perform_async(rpm.device_id,rpm.device_type, "#{params[:notification][:subject]}", "#{params[:notification][:content]}"  ) } 
+             flash[:notice]= 'Notification Send'
+           end  
          end
       else
           flash[:notice]= 'Notification cant be Sent because all users are blocked'
@@ -42,8 +48,10 @@ class NotificationsController < ApplicationController
        rpuser = User.all.where(:is_block => 'false').uniq
        if rpuser.present?
          rpuser.each do |rp|
-            rp.devices.select {|rpm| AdminPushWorker.perform_async(rpm.device_id,rpm.device_type, "#{params[:notification][:subject]}", "#{params[:notification][:content]}"  ) } 
-            flash[:notice]= 'Notification Send'
+          if rp.notification_status.eql? true 
+              rp.devices.select {|rpm| AdminPushWorker.perform_async(rpm.device_id,rpm.device_type, "#{params[:notification][:subject]}", "#{params[:notification][:content]}"  ) } 
+              flash[:notice]= 'Notification Send'
+          end   
          end
       else
           flash[:notice]= 'Notification cant be Sent because all users are blocked'
@@ -57,7 +65,7 @@ class NotificationsController < ApplicationController
   
 	def notfound
       flash[:notice] = "Invalid Path"
-          redirect_to admin_users_path
+      redirect_to admin_users_path
   end 
 
   def welcome

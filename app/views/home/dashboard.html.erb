@@ -1,3 +1,6 @@
+ 
+  
+
     <!-- Navigation -->
    <nav class="navbar navbar-default navbar-fixed-top topnav navi navbar-2" role="navigation " data-0="background-color:rgba(0,0,0,0); " data-300=" background-color:rgba(0,0,0,1);">
         <div class="container topnav">
@@ -327,7 +330,7 @@
 			  </div>
 			   <div class="form-group">
 				<label class="label-txt" for="exampleInputEmail1">Country</label>
-				<%= f.select :country, options_for_country_select,{prompt: "Select Country"},:html_options => {:class => 'form-control'}%>  
+				<%= (f.select :country, options_for_country_select,{prompt: "Select Country"},:class => 'form-control') %>  
 
 			  </div>
 			  <div class="form-group">

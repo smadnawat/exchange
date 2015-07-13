@@ -710,6 +710,13 @@ background-color:#000;}
 .carousel-inner .item img {
     width: 100% !important;
 }
+
+/*=================last */
+.form-control {
+    width: 100% !important;
+}
+/*==========================*/
+
 /*=====================================Responsive====================================*/
 
 @media(min-width:320px) and (max-width:480px){

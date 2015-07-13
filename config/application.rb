@@ -15,6 +15,9 @@ module ExchangeApp
 
     # config.assets.paths << Rails.root.join('vendor', 'assets')
     config.serve_static_files = true 
+
+
+    # config.autoload_paths += %W(#{config.root}/app/workers)
     # config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.

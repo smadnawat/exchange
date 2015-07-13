@@ -13,9 +13,10 @@ index :title => 'User Profiles and Data' do
     end
 
     column :picture do |f|
-      f.picture.present? ? image_tag(f.picture.url(:thumb)) : img(src:'http://res.cloudinary.com/abhicloud/image/upload/c_scale,h_100,w_150/v1434012609/no_image_obxfvr.jpg');
+      # f.picture.present? ? image_tag(f.picture.url(:thumb)) : img(src:'http://res.cloudinary.com/abhicloud/image/upload/c_scale,h_100,w_150/v1434012609/no_image_obxfvr.jpg');
       # image_tag(f.picture.url(:thumb)) if f.picture.present?http://res.cloudinary.com/abhicloud/image/upload/v1434012609/no_image_obxfvr.jpg
-
+      f.picture.present? ? image_tag(f.picture.url, :width => 150, :height => 100) : image_tag("no_image.jpg", :width => 150, :height => 100);
+    
     end
 
     column :gender do |f|
@@ -31,7 +32,7 @@ index :title => 'User Profiles and Data' do
     end
 
     column :date_signup do |f|
-      f.date_signup.to_date
+      f.date_signup
     end
   
   column "Author Preference",:author  do |f|
@@ -57,21 +58,21 @@ index :title => 'User Profiles and Data' do
   end
 
   column "Number of Books Exchange Initiated"  do |f|
-     Invitation.where(user_id: f, invitation_type: 'Exchange').present? ? Invitation.where(user_id: f, invitation_type: 'Exchange').count : '0'
+     Invitation.where(user_id: f, invitation_type: 'exchange').present? ? Invitation.where(user_id: f, invitation_type: 'exchange').count : '0'
   end
 
   column "No. of Chat Invites Initiated"  do |f|
-     Invitation.where(user_id: f, invitation_type: 'Chat').present? ? Invitation.where(user_id: f, invitation_type: 'Chat').count : '0'
+     Invitation.where(user_id: f, invitation_type: 'start chat').present? ? Invitation.where(user_id: f, invitation_type: 'start chat').count : '0'
      
   end
 
   column "No. of Book Exchange Invites Accepted"  do |f|
-     Invitation.where(user_id: f, invitation_type: 'Exchange', status: 'Accept').present? ? Invitation.where(user_id: f, invitation_type: 'Exchange', status: 'Accept').count : '0'
+     Invitation.where(user_id: f, invitation_type: 'exchange', status: 'Accept').present? ? Invitation.where(user_id: f, invitation_type: 'exchange', status: 'Accept').count : '0'
     
   end
 
   column "No. of Chat Invites Accepted"  do |f|
-     Invitation.where(user_id: f, invitation_type: 'Chat', status: 'Accept').present? ? Invitation.where(user_id: f, invitation_type: 'Chat', status: 'Accept').count : '0'
+     Invitation.where(user_id: f, invitation_type: 'start chat', status: 'Accept').present? ? Invitation.where(user_id: f, invitation_type: 'start chat', status: 'Accept').count : '0'
     
   end
 

@@ -1,10 +1,10 @@
 module ApplicationHelper
 
 	 def average_rating(send,accepted)
-              if send > 0 && accepted > 0
-              	@result =  (send.to_f/accepted.to_f).round
-              else
-              	@result = 0
+      if send > 0 && accepted > 0
+        @result =  ((accepted*100)/send).round
+      else
+         @result = 0
 		  end
     end
 

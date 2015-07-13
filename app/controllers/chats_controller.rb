@@ -105,7 +105,6 @@ class ChatsController < ApplicationController
 			            } 
 	end
 
-
 	def group_chat
 		if Block.find_by_user_id_and_group_id(params[:user_id], params[:group_id]).present?
 			render :json => {:responseCode => 200,:responseMessage => "You are blocked by the admin"}
