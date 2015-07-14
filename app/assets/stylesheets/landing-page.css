@@ -713,6 +713,9 @@ background-color:#000;}
 
 /*=================last */
 .form-control {
+    width: 100% ;
+}
+.form-c {
     width: 100% !important;
 }
 /*==========================*/

@@ -325,12 +325,12 @@
 
 			  <div class="form-group">
 				<label for="exampleInputEmail1" class="label-txt">Name</label>
-				 <%= f.text_field :name, autofocus: true, :class => "form-control" %>
+				 <%= f.text_field :name, autofocus: true, :class => "form-control form-c" %>
 				 <span class="error-name error"></span>
 			  </div>
 			  <div class="form-group">
 				<label class="label-txt" for="exampleInputEmail1">Email</label>
-				<%= f.text_field :email, :class=> "form-control"  %>
+				<%= f.text_field :email, :class=> "form-control form-c"  %>
 				<span class="error-email error"></span>
 			  </div>
 			   <div class="form-group">
@@ -355,7 +355,7 @@
 			</div>
 			<div class="form-group">
 				<label class="label-txt" for="exampleInputEmail1">Author Code (if any)</label>
-				<%= f.text_field :author_code, :class=> "form-control"  %>
+				<%= f.text_field :author_code, :class=> "form-control form-c"  %>
 			</div>
 			  
 			
@@ -426,3 +426,14 @@ $(window).scroll(function() {
         })
      });
 </script>
+
+ <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-64454858-1', 'auto');
+  ga('send', 'pageview');
+
+ </script>

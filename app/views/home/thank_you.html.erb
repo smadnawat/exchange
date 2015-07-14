@@ -100,7 +100,7 @@
     </footer>
 
 
-<div class="modal fade" id="contact_us" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+  <div class="modal fade" id="contact_us" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
 
         <div role="document" class="modal-dialog">
 		<div class="modal-content">
@@ -109,18 +109,21 @@
 			<h4 id="exampleModalLabel" class="modal-title">Your Details</h4>
 		  </div>
 		  <div class="modal-body">
-			<%= form_for :contact_us,url: contact_us_path, :html=>{:class => "contact_us_form"} do |f| %>
+			<%= form_for :contact_us,url: contact_us_path, :html=>{:class => "contact_us_form",id: "contact-form"} do |f| %>
+
 			  <div class="form-group">
-				<label class="label-txt" for="exampleInputEmail1">Name</label>
-				 <%= f.text_field :name, autofocus: true, :class=> "form-control" %>
+				<label for="exampleInputEmail1" class="label-txt">Name</label>
+				 <%= f.text_field :name, autofocus: true, :class => "form-control form-c" %>
+				 <span class="error-name error"></span>
 			  </div>
 			  <div class="form-group">
 				<label class="label-txt" for="exampleInputEmail1">Email</label>
-				<%= f.text_field :email, :class=> "form-control"  %>
+				<%= f.text_field :email, :class=> "form-control form-c"  %>
+				<span class="error-email error"></span>
 			  </div>
 			   <div class="form-group">
 				<label class="label-txt" for="exampleInputEmail1">Country</label>
-				<%= f.select :country, options_for_country_select,{prompt: "Select Country"},:html_options => {:class => 'form-control'}%>  
+				<%= country_list%>  
 
 			  </div>
 			  <div class="form-group">
@@ -140,33 +143,22 @@
 			</div>
 			<div class="form-group">
 				<label class="label-txt" for="exampleInputEmail1">Author Code (if any)</label>
-				<%= f.text_field :author_code, :class=> "form-control"  %>
+				<%= f.text_field :author_code, :class=> "form-control form-c"  %>
 			</div>
 			  
 			
 		  </div>
 		  <div class="modal-footer put-center">
-		  	<a href="#" class="btn btn-default btn-red" type="button" onclick="$('.contact_us_form').submit();">Journey With Us</a>
-		  	
+		  	<a href="#" class="btn btn-default btn-red" type="button" id = "contact_us_valid" onclick="$('.contact_us_form').submit();">Journey With Us</a>
+      </div>
+     <% end %>
 		</div>
-		 <% end %>
-				</div>
-			  </div>
-		  </div>
+	  </div>
+  </div>
 
 
 
 
-	<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-64454858-1', 'auto');
-  ga('send', 'pageview');
-
-</script>
 
     <!-- Bootstrap Core JavaScript -->
 

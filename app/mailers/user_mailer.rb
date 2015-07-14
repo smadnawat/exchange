@@ -8,6 +8,7 @@ class UserMailer < ApplicationMailer
   def sending_contact_details(user)
   	@user = user
   	mail(:to => "talktome@makasharcreative.com", :subject => 'Contact Us Form!')
+  	#mail(:to => "rahul.pakhre@mobiloittegroup.com", :subject => 'Contact Us Form!')
   end
 
 end
