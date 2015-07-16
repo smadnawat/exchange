@@ -67,11 +67,17 @@ class ApisController < ApplicationController
 	      @isbn_last = params[:isbn13]
         @books.image_path = "http://ec2-52-24-139-4.us-west-2.compute.amazonaws.com/covers/#{@isbn_last.to_s[9..10]}/#{@isbn_last.to_s[11..12]}/#{@isbn_last}.jpg" 
       end 
-	    if @books.save
-        render_message 200, 'Book has been uploaded successfully!'
-      else			
-        render_message 500, @books.errors.full_messages.first
-      end	
+		    if @books.save
+		           if params[:upload_type].eql? "scanning" and params[:reading_pref_upload].eql? true and params[:isbn13].present?
+		           	  @isbn_last = params[:isbn13] 
+		              @reading_pref = @user.reading_preferences.build(:title => " ", :author => params[:author], :genre => params[:genre], :isbn13 => params[:isbn13])
+		              @reading_pref.image_path = "http://ec2-52-24-139-4.us-west-2.compute.amazonaws.com/covers/#{@isbn_last.to_s[9..10]}/#{@isbn_last.to_s[11..12]}/#{@isbn_last}.jpg" 
+			                @reading_pref.save
+		           end
+		      render_message 200, 'Book has been uploaded successfully!'     
+	      else			
+	        render_message 500, @books.errors.full_messages.first[5..28] #@books.errors.full_messages.first
+	      end	
 	end
 
 	def get_uploaded_books
@@ -323,27 +329,6 @@ class ApisController < ApplicationController
 	  end
 	end
 
-	# def invitation_details
-	# 	@invitation = Notice.find_by_id(params[:notification_id])
-	# 	if @invitation.present?
-	# 		@book = Book.find_by_id(@invitation.book_id)
-	# 		@user = User.find_by_id(@invitation.user_id)
-	# 		@rating = Rating.calculate_ratings(@user)
-	# 		render :json => {
- #                       :responseCode => 200,
- #                       :responseMessage => 'Invitation details fetched successfully',
- #                       :book => @book.as_json(only: [:id, :title, :author, :image_path]),
- #                       :ratings => @rating,
- #                       :sender => @user.as_json(only: [:id, :username, :picture])
- #  	                  }
- #  	else
- #    	render :json => {
- #                     :responseCode => 200,
- #                     :responseMessage => 'No record found'
- #  	                	}
- #  	end
-	# end
-
 	def invitation_details
 		@invitation = Invitation.find_by_id(params[:notification_id])
 		if @invitation.present?
@@ -445,13 +430,15 @@ class ApisController < ApplicationController
 		 	   render :json => {
 	                        :responseCode => 200,
 	                        :responseMessage => "Book fetched successfully!",
-	                        :name => @book.attributes.merge!(about_us: @book.overview.gsub(/<\/?[^>]*>/, ""),image_url: "http://ec2-52-24-139-4.us-west-2.compute.amazonaws.com/covers/#{@book.isbn13.to_s[9..10]}/#{@book.isbn13.to_s[11..12]}/#{@book.isbn13}.jpg")
+	                        :name => @book.attributes.merge!(about_us: @book.overview.gsub(/<\/?[^>]*>/, ""),image_url: "http://ec2-52-24-139-4.us-west-2.compute.amazonaws.com/covers/#{@book.isbn13.to_s[9..10]}/#{@book.isbn13.to_s[11..12]}/#{@book.isbn13}.jpg"),
+	                        :subjects => ScanningSubject.pluck(:title)
 	                       } 
 	    else
 	    	render :json => {
 	    		                :responseCode => 500,
 	    		                :responseMessage => "Book not available for this isbn no.!",
-	    		                :name => []
+	    		                :name => [],
+	    		                :subjects => []
 	    	                 }
 	    end                   
 	end
@@ -497,8 +484,8 @@ class ApisController < ApplicationController
 
 	def upload_multiple_reading_pref
 		if params[:reading_preference].present?
-		 	@reading_pref = @user.reading_preferences.create(params.permit(:reading_preference => [:title,:author,:genre, :image_path, :isbn13])[:reading_preference])	
-		 	msg = "Reading Preferences uploaded successfully"
+		 		@reading_pref = @user.reading_preferences.create(params.permit(:reading_preference => [:title,:author,:genre, :image_path, :isbn13])[:reading_preference])	
+		 		msg = "Reading Preferences uploaded successfully"
 		end
 		render :json => {
                       :responseCode => 200,

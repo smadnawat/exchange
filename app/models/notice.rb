@@ -5,7 +5,7 @@ class Notice < ActiveRecord::Base
   attr_accessor :message
 
 	def self.create_Notice(user,reciever,type,book_id,invitation)
-		p"================inside notice=============="
+		p"================inside notice====================="
 	        user.notices.create(:action_type => type,:reciever_id => reciever,:pending=> true,:book_id => book_id,:invitation_id => invitation.id)
 	        @alert = alert(user,type)
 	        logger.info"====================#{@alert.inspect}-----------------------------"
