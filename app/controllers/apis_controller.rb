@@ -14,6 +14,7 @@ class ApisController < ApplicationController
 			else	
 				@user = User.new(permitted_params)
 					if @user.save	
+						User.generate_sign_in_token(@user)
 						Device.total_devices(params[:device_id],params[:device_type],@user.id) unless params[:device_id].nil?
 						render :json => {:responseCode => 200,:responseMessage => 'Your registration process is successfull.', :user_id => @user.id	} 
 					else
@@ -53,8 +54,8 @@ class ApisController < ApplicationController
 			  else     
 				   #@user = User.create_via_social_media(params) # create_via_social_media is a class method in User Model
 				    @user = User.create(permitted_params)
-				     Device.total_devices(params[:device_id],params[:device_type],@user.id) unless params[:device_id].nil?
-				   render :json => {:responseCode => 200,:responseMessage => 'Signed-up successfully.', :user_id => @user.id	}	
+				      Device.total_devices(params[:device_id],params[:device_type],@user.id) unless params[:device_id].nil?
+				      render :json => {:responseCode => 200,:responseMessage => 'Signed-up successfully.', :user_id => @user.id	}	
 				end		
 		else
 			render_message 401, 'Unauthorized access!'
@@ -547,11 +548,16 @@ class ApisController < ApplicationController
 			  render :json => {:responseCode => 200, :responseMessage => "Notification has been turned on successfully!."}  
 			end
 	end
+  
+  def update_sign_in_token
+  	@user = User.find_by_sign_in_token(params[:format])
+  	@user.update_attributes(:sign_in_token => nil)
+  end
 
   private
 
 	def permitted_params
-	   params.permit(:email, :username, :password, :password_confirmation, :gender, :location, :picture, :about_me, :reset_password_token, :author_prefernce, :genre_preference, :date_signup,:device_used, :latitude, :longitude, :provider, :u_id)
+	   params.permit(:email, :username, :password, :password_confirmation, :sign_in_token, :gender, :location, :picture, :about_me, :reset_password_token, :author_prefernce, :genre_preference, :date_signup,:device_used, :latitude, :longitude, :provider, :u_id)
 	end
 
 	def books_params

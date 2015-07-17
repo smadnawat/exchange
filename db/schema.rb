@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150716053416) do
+ActiveRecord::Schema.define(version: 20150717100347) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -323,6 +323,7 @@ ActiveRecord::Schema.define(version: 20150716053416) do
     t.boolean  "is_block",               limit: 1,     default: false
     t.date     "weekly_date"
     t.boolean  "notification_status",    limit: 1,     default: true
+    t.string   "sign_in_token",          limit: 255
   end
 
   create_table "users_groups", id: false, force: :cascade do |t|

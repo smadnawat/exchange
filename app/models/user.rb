@@ -46,6 +46,14 @@ class User < ActiveRecord::Base
     end 
   end	
 
+  def self.generate_sign_in_token(user)
+    @user = user
+    if @user
+      @user.update_attributes(:sign_in_token => SecureRandom.urlsafe_base64)
+      UserMailer.registration_confirmation(@user, "#{@user.sign_in_token}").deliver
+    end
+  end
+
   def self.send_token user 
     @user = user  
     if @user

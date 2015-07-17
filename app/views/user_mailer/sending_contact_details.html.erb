@@ -6,6 +6,6 @@ Email : <b>  <%= @user.email %> </b> <br>
 Country Name : <b> <%= @user.country %> </b> <br>
 Author Code : <b> <%= @user.author_code%> </b> <br>
 
-Please click on the following link to download the CSV : <%#= link_to "Download_CSV", download_csv_path %>
+Please click on the following link to download the CSV : 
 
 <%= link_to "Download_CSV", download_csv_url(format: "csv"),:controller => "home",:action => "download_csv"%>
