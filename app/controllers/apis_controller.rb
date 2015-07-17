@@ -113,26 +113,30 @@ class ApisController < ApplicationController
 	end
 
 	def my_reading_preferences
-		 @reading_pref = @user.reading_preferences
-		 if @reading_pref.present?
-		    render :json => {    
-		    	                :responseCode => 200,
-		    	                :responseMessage => 'Your uploaded reading preferences!',
-		    	                :Preferences => paging(@reading_pref, params[:page_no],params[:page_size]).as_json(only: [:title, :author, :genre, :id, :book_deactivated, :image_path]),
-		    	                :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }
-		                     }
-	   else
-	         render :json =>    {    
-			    	                :responseCode => 200,
-			    	                :responseMessage => 'Your uploaded reading preferences!',
-			    	                :Preferences => [],
-			    	                :total_uploaded_books => 0
-			                     }  
-	   end
+			#@reading_pref = @user.reading_preferences
+		  @user = User.includes(:reading_preferences).where(:id => params[:user_id]).first
+		  @user_preferences = @user.reading_preferences
+			  @reading_pref = @user_preferences.where("title != ? and genre = ? and author = ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre = ? and author != ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre != ? and author = ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre != ? and author != ? ", " ", " ", " ")
+				 if @reading_pref.present?
+				    render :json => {    
+				    	                :responseCode => 200,
+				    	                :responseMessage => 'Your uploaded reading preferences!',
+				    	                :Preferences => paging(@reading_pref, params[:page_no],params[:page_size]).as_json(only: [:title, :author, :genre, :id, :book_deactivated, :image_path]),
+				    	                :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }
+				                     }
+			   else
+			         render :json =>    {    
+					    	                :responseCode => 200,
+					    	                :responseMessage => 'Your uploaded reading preferences!',
+					    	                :Preferences => [],
+					    	                :total_uploaded_books => 0
+					                     }  
+			   end
 	end
 
 	def my_reading_preferences_for_author
-		@authors = @user.reading_preferences.where('author != ?', " ").select(:id, :author, :author_deactivated)
+		@authors = ReadingPreference.where("user_id = ? and title = ? and genre = ? and author != ? ", params[:user_id], " ", " ", " ").select(:id, :author, :author_deactivated)
+    #@authors = @user.reading_preferences.where('author != ?', " ").select(:id, :author, :author_deactivated)
 		if @authors.present?
 			 render :json => {    
 		    	                :responseCode => 200,
@@ -152,7 +156,8 @@ class ApisController < ApplicationController
 	end
   
 	def my_reading_preferences_for_genre
-		@genres = @user.reading_preferences.where('genre != ?', " ").select(:id, :genre, :genre_deactivated)
+		@genres = ReadingPreference.where("user_id = ? and title = ? and genre != ? and author = ? ", params[:user_id], " ", " ", " ").select(:id, :genre, :genre_deactivated)
+		#@genres = @user.reading_preferences.where('genre != ?', " ").select(:id, :genre, :genre_deactivated)
 		if @genres.present?
 			 render :json => {    
 		    	                :responseCode => 200,
@@ -437,7 +442,7 @@ class ApisController < ApplicationController
 	    	render :json => {
 	    		                :responseCode => 500,
 	    		                :responseMessage => "Book not available for this isbn no.!",
-	    		                :name => [],
+	    		                :name => {},
 	    		                :subjects => []
 	    	                 }
 	    end                   

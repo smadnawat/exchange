@@ -14,7 +14,7 @@ class SessionsController < ApplicationController
 
 	def destroy  
 	    if @user  
-	      auth = Device.where(:user_id => @user.id, :device_type=>params[:device_type])      
+	      auth = Device.where(:user_id => @user.id)      
 	      Rails.logger.info"=====#{params.inspect}=======#{auth.inspect}======"
 	      auth.destroy_all  unless auth.blank?   
 	  		render :json => { :responseCode => 200,:responseMessage => "You've been logged out successfully!." }

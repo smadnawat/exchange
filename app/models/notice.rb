@@ -4,15 +4,15 @@ class Notice < ActiveRecord::Base
   belongs_to :book
   attr_accessor :message
 
-	def self.create_Notice(user,reciever,type,book_id,invitation)
+	def self.create_Notice(user,reciever,type,book_id,invitation,group_id)
 		p"================inside notice====================="
 	        user.notices.create(:action_type => type,:reciever_id => reciever,:pending=> true,:book_id => book_id,:invitation_id => invitation.id)
 	        @alert = alert(user,type)
 	        logger.info"====================#{@alert.inspect}-----------------------------"
-	        send_push_Notice(user,reciever,@alert,type,invitation.id)
+	        send_push_Notice(user,reciever,@alert,type,invitation.id,group_id)
 	end
 
-	def self.send_push_Notice(sender,reciever,alert,type,invitation_id)
+	def self.send_push_Notice(sender,reciever,alert,type,invitation_id,group_id)
         @badges = Notice.where(:reciever_id => reciever, :pending => true).count
         @reciever_user = User.find(reciever)
         if @reciever_user.notification_status.eql? true
@@ -21,9 +21,9 @@ class Notice < ActiveRecord::Base
 		        @devices.each do |device|
 			        if device.device_type == "Android"
 			        	puts "======#{device.device_id}========"
-			          AndroidPushWorker.perform_async(reciever, alert,@badges,device.device_id,type,invitation_id)
+			          AndroidPushWorker.perform_async(reciever, alert,@badges,device.device_id,type,invitation_id,group_id)
 			        else
-			          ApplePushWorker.perform_async(reciever, alert,@badges,device.device_id,type,invitation_id)
+			          ApplePushWorker.perform_async(reciever, alert,@badges,device.device_id,type,invitation_id,group_id)
 			        end
 			    end
 	        end

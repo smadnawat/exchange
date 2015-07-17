@@ -2,7 +2,7 @@ class ApplePushWorker
 	include Sidekiq::Worker
   #sidekiq_options  :retry => false
 
-  def perform(reciever,alert,badges,device,type,invitation)
+  def perform(reciever,alert,badges,device,type,invitation,group_id)
     
     p"---------------INSIDE ApplePushWorker---------------------------"
 
@@ -17,7 +17,7 @@ class ApplePushWorker
     notification = Grocer::Notification.new(
       :device_token => device.to_s,
       :alert =>  alert,
-      custom: {:alert_type => type,:invitation_id => invitation},
+      custom: {:alert_type => type,:invitation_id => invitation,:group_id => group_id},
       :badge => badges,
       :sound => "siren.aiff",         # optional
       :expiry => Time.now + 60*60,     # optional; 0 is default, meaning the message is not stored
