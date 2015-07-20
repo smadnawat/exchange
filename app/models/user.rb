@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
 	has_many :reading_preferences, :dependent => :destroy
 	has_many :devices, :dependent => :destroy
   has_many :ratings, :dependent => :destroy
-  has_many :ratings, :class_name => "Rating", :foreign_key => :ratable_id, dependent: :destroy
+  has_many :rev_ratings, :class_name => "Rating", :foreign_key => :ratable_id, dependent: :destroy
   has_many :recieve_notifications, :class_name => 'Notice',:foreign_key => 'reciever_id', :dependent => :destroy
   has_and_belongs_to_many :groups ,:join_table => "users_groups"
   has_many :messages, :class_name => 'Message',:foreign_key => 'sender_id',dependent: :destroy
