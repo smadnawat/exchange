@@ -183,13 +183,18 @@ class ApisController < ApplicationController
 	end
 
 	def user_profile
+    @user = User.includes(:reading_preferences).where(:id => params[:user_id]).first
+		  @user_preferences = @user.reading_preferences
+			  @reading_pref = @user_preferences.where("title != ? and genre = ? and author = ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre = ? and author = ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre = ? and author != ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre != ? and author = ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre != ? and author != ? ", " ", " ", " ")
+				 	@authors = @user_preferences.where("title = ? and genre = ? and author != ? ", " ", " ", " ") + @user_preferences.where("title = ? and genre != ? and author != ? ", " ", " ", " ") 
+            	@genres = @user_preferences.where("title = ? and genre != ? and author = ? ", " ", " ", " ") + @user_preferences.where("title = ? and genre != ? and author != ? ", " ", " ", " ") 
 		  		render :json => { 
 						               :responseCode => 200,
 						               :responseMessage => 'User profile.',
 						               :user_profile => @user.as_json(only: [:username,:email,:gender, :picture, :about_me]),
-						               :books => @user.reading_preferences.count,
-						               :authors => @user.reading_preferences.pluck(:author).count,
-						               :genres => @user.reading_preferences.pluck(:genre).count
+						               :books => @reading_pref.count,
+						               :authors => @authors.count,
+						               :genres => @genres.count
 				                  }	                
 	end
 
@@ -308,7 +313,7 @@ class ApisController < ApplicationController
   end 
 
   def create_ratings 
- 		@rating = Rating.find_by_group_id_and_ratable_id(params[:group_id], params[:ratable_id])
+ 		@rating = Rating.find_by_group_id_and_ratable_id_and_user_id(params[:group_id], params[:ratable_id], params[:user_id])
  		@ratable  = User.find_by_id(params[:ratable_id])
  		if @rating
  			message = "Already rated this person.."
@@ -316,28 +321,30 @@ class ApisController < ApplicationController
  			@group_rating = Rating.new_group_rating(params, @user)
  			message = "Rating create successfully.."
  		end
-			  render :json => {
-	                       :responseCode => 200,
-	                       :user => @ratable.as_json(only: [:id, :username, :picture]),
-	                       :responseMessage => message
-	  	                  }
-  end
+	  render :json => {
+                     :responseCode => 200,
+                     :user => @ratable.as_json(only: [:id, :username, :picture]),
+                     :responseMessage => message
+	                  }
+ 	end
+
 
 	def get_ratings
-	  @group_rating = Rating.find_by_group_id_and_ratable_id(params[:group_id], params[:ratable_id])
+	  @group_rating = Rating.find_by_group_id_and_ratable_id_and_user_id(params[:group_id], params[:ratable_id], params[:user_id])
+		@ratable = User.find_by_id(params[:ratable_id])
 		if @group_rating.present?
-			@ratable = User.find_by_id(params[:ratable_id])
 			render :json => {
                        :responseCode => 200,
                        :responseMessage => 'Ratings fetched successfully',
                        :get_ratings => @group_rating.as_json(except: [:created_at,:updated_at]),
-                       :user => @ratable.as_json(only: [:id, :username, :picture]),
+                       :user => @ratable.as_json(only: [:id, :username, :picture])
   	                  }
 	  	else
-	  		render :json => {
-	                       :responseCode => 500,
-	                       :responseMessage => 'No record found'
-	  	                  }
+  		render :json => {
+                       :responseCode => 500,
+                       :responseMessage => 'No record found',
+                       :user => @ratable.as_json(only: [:id, :username, :picture])
+  	                  }
 	  end
 	end
 

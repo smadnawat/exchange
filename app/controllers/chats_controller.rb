@@ -26,133 +26,112 @@ class ChatsController < ApplicationController
 		end
 	end
 
-	# def accept_decline 
-	# @invitation = Invitation.find_by_id(params[:invitation_id])
-	# 	if @invitation.update_column(:status,params[:action_type])
-	# 		Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_to_give],@invitation)
-	# 		book = Book.find_by_id(params[:book_to_give])
-	# 		if params[:action_type] == "Accept"
-	# 		@is_group = Group.find_by_name_and_admin_id("#{book.title}", @invitation.user_id)
-	# 		 if @is_group #&& !(@is_group.users.include?(User.find_by_id(params[:sender_id])))
-	# 		 	if @is_group.users.include?(@user)
-	# 		 		@message = "Already in that group"
-	# 		 	else
-	# 			 	@is_group.users << @user
-	# 			 	@group = @is_group
-	# 			 	@message = "Request is successfully #{params[:action_type]}"
-	# 			end
-	# 		 else
-	# 		@group = Group.create(:name => book.title, :admin_id => @invitation.user_id,
-	# 		:get_book_id => params[:book_to_get], :give_book_id => params[:book_to_get])
-	# 			if !@group.users.include?(params[:user_id])
- #          @sender = User.find(@invitation.user_id)
-	# 				@group.users << @user
-	# 				@group.users << @sender
-	# 				@message = "Request is successfully #{params[:action_type]}"
-	# 			end
-	# 		 end
-	# 		end
-	# 	render :json =>{
-	#                	 :responseCode => 200,
-	#                	 :responseMessage => @message,
- #                   :group_id => @group.as_json(only: [:id]) 
-	# 	               }
-	# 	else
-	# 	render :json => {
-	# 									:responseCode => 500,
-	# 									:responseMessage => 'Something went wrong'
-	# 									} 
-	# end
-	# end
-
-	# def accept_decline 
-	# @invitation = Invitation.find_by_id(params[:invitation_id])
-	# 	if @invitation.update_column(:status,params[:action_type])
-	# 		book = Book.find_by_id(params[:book_to_give])
-	# 		if params[:action_type] == "Accept"
-	# 		@is_group = Group.find_by_name_and_admin_id("#{book.title}", @invitation.user_id)
-	# 		 if @is_group
-	# 		 	@group = @is_group
-	# 			 	if @is_group.users.include?(@user)
-	# 			 		@message = "Already in that group"
-	# 			 	else
-	# 				 	@is_group.users << @user
-	# 				 	@message = "Request is successfully #{params[:action_type]}"
-	# 				end
-	# 		 else
-	# 		@group = Group.create(:name => book.title, :admin_id => @invitation.user_id,
-	# 		:get_book_id => params[:book_to_get], :give_book_id => params[:book_to_get])
-	# 			if !@group.users.include?(params[:user_id])
- #          @sender = User.find(@invitation.user_id)
-	# 				@group.users << @user
-	# 				@group.users << @sender
-	# 				@message = "Request is successfully #{params[:action_type]}"
-	# 			end
-	# 		 end
-	# 		end
-	# 	Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_to_give],@invitation,@group.id)	
-	# 	render :json => 
-	# 	               {
-	#                	 :responseCode => 200,
-	#                	 :responseMessage => "Request is successfully #{params[:action_type]}",
- #                   :group_id => @group.as_json(only: [:id]) 
-	# 	               }
-	# 	else
-	# 		render :json => {
-	# 										:responseCode => 500,
-	# 										:responseMessage => 'Something went wrong'
-	# 										} 
-	# 	end
-	# end
-
-
-	def accept_decline 
-	  @invitation = Invitation.find_by_id(params[:invitation_id])
-		if @invitation.update_column(:status,params[:action_type])
-			book = Book.find_by_id(params[:book_to_give])
-			if params[:action_type] == "Accept"
-			  @is_group = Group.find_by_name_and_admin_id("#{book.title}", @invitation.user_id)
-			  if @is_group
-			 	 @group = @is_group
-				  if @is_group.users.include?(@user)
-			   		@message = "Already in that group"
-			   	else
-			 	  	@is_group.users << @user
-				 	 @message = "Request is successfully #{params[:action_type]}"
-			  	end
-			  else
-			    @group = Group.create(:name => book.title, :admin_id => @invitation.user_id,
-			    :get_book_id => params[:book_to_get], :give_book_id => params[:book_to_get])
-				  if !@group.users.include?(params[:user_id])
-            @sender = User.find(@invitation.user_id)
-					  @group.users << @user
-				  	@group.users << @sender
-				  	@message = "Request is successfully #{params[:action_type]}"
+  def accept_decline 
+		book = Book.find_by_id(params[:book_to_give])
+		if (book.title.present? or book.author.present? or book.genre.present?)
+		  @invitation = Invitation.find_by_id(params[:invitation_id])
+			if @invitation.update_column(:status,params[:action_type])
+				if params[:action_type] == "Accept"
+				  @is_group = Group.find_by_get_book_id_and_admin_id_and_give_book_id(params[:book_to_get], @invitation.user_id, params[:book_to_give])
+				  if !@is_group.nil?
+				 	 @group = @is_group
+					  if @is_group.users.include?(@user)
+				   		@message = "Already in that group"
+				   	else
+				 	  	@is_group.users << @user
+					 	 @message = "Request is successfully #{params[:action_type]}"
+				  	end
+				  else
+				  	if book.title.present?
+					    @group = Group.create(:name => book.title, :admin_id => @invitation.user_id,
+					    :get_book_id => params[:book_to_get], :give_book_id => params[:book_to_give])
+				  	elsif book.author.present?
+				  		@group = Group.create(:name => book.author, :admin_id => @invitation.user_id,
+				    :get_book_id => params[:book_to_get], :give_book_id => params[:book_to_give])
+				  	else
+				  		@group = Group.create(:name => book.genre, :admin_id => @invitation.user_id,
+				    :get_book_id => params[:book_to_get], :give_book_id => params[:book_to_give])
+				  	end
+					  if !@group.users.include?(params[:user_id])
+	            @sender = User.find(@invitation.user_id)
+						  @group.users << @user
+					  	@group.users << @sender
+					  	@message = "Request is successfully #{params[:action_type]}"
+					  end
 				  end
-			  end
-			  Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_to_give],@invitation,@group.id)	
+				  Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_to_give],@invitation,@group.id)	
+				else
+					@message = "Invitation declined successfully."
+	        Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_to_give],@invitation,"unavailable")	
+				end
+			
+		   render :json => 
+		   {
+		 	 :responseCode => 200,
+		 	 :responseMessage => @message,
+		   :group_id => @group.as_json(only: [:id]) 
+		   }
 			else
-				@message = "Invitation declined successfully."
-        Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_to_give],@invitation,"")	
+			  render :json => 
+				{
+				:responseCode => 500,
+				:responseMessage => 'Something went wrong'
+				} 
 			end
-		
-	   render :json => 
-	   {
-	 	 :responseCode => 200,
-	 	 :responseMessage => @message,
-	   :group_id => @group.as_json(only: [:id]) 
-	   }
 		else
-		  render :json => 
+			render :json => 
 			{
 			:responseCode => 500,
-			:responseMessage => 'Something went wrong'
+			:responseMessage => 'No matches found'
 			} 
-		 end
+		end
 	end
 
 
-
+	# def accept_decline 
+	#   @invitation = Invitation.find_by_id(params[:invitation_id])
+	# 	if @invitation.update_column(:status,params[:action_type])
+	# 		book = Book.find_by_id(params[:book_to_give])
+	# 		if params[:action_type] == "Accept"
+	# 		  @is_group = Group.find_by_name_and_admin_id("#{book.title}", @invitation.user_id)
+	# 		  if @is_group
+	# 		 	 @group = @is_group
+	# 			  if @is_group.users.include?(@user)
+	# 		   		@message = "Already in that group"
+	# 		   	else
+	# 		 	  	@is_group.users << @user
+	# 			 	 @message = "Request is successfully #{params[:action_type]}"
+	# 		  	end
+	# 		  else
+	# 		    @group = Group.create(:name => book.title, :admin_id => @invitation.user_id,
+	# 		    :get_book_id => params[:book_to_get], :give_book_id => params[:book_to_get])
+	# 			  if !@group.users.include?(params[:user_id])
+ #            @sender = User.find(@invitation.user_id)
+	# 				  @group.users << @user
+	# 			  	@group.users << @sender
+	# 			  	@message = "Request is successfully #{params[:action_type]}"
+	# 			  end
+	# 		  end
+	# 		  Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_to_give],@invitation,@group.id)	
+	# 		else
+	# 			@message = "Invitation declined successfully."
+ #        Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_to_give],@invitation,"")	
+	# 		end
+		
+	#    render :json => 
+	#    {
+	#  	 :responseCode => 200,
+	#  	 :responseMessage => @message,
+	#    :group_id => @group.as_json(only: [:id]) 
+	#    }
+	# 	else
+	# 	  render :json => 
+	# 		{
+	# 		:responseCode => 500,
+	# 		:responseMessage => 'Something went wrong'
+	# 		} 
+	# 	 end
+	# end
 
 	def get_notification_list
 		@notifications = @user.recieve_notifications.includes(:user)
@@ -172,9 +151,14 @@ class ChatsController < ApplicationController
 		else
 			params[:media] = User.image_data(params[:media])
 			@group = Group.find(params[:group_id])
-			@message = @group.messages.build(:message => params[:message],:media => params[:media], :sender_id=> @user.id )
+			@group_users = @group.users
+			@block_user = Block.find_by_user_id_and_group_id(params[:user_id], params[:group_id])
+			@message = @group.messages.build(:message => params[:message],:media => params[:media], :sender_id=> @user.id)
 				if @message.save
-				  render :json => {:responseCode => 200,:responseMessage => "Message sent successfully"}
+            @group_users.reject{|u| (u.id == @user.id || (@block_user.present? and u.id == @block_user.user_id))}.each do |user|
+             user.devices.each {|device| (device.device_type == "Android") ? AndroidPushWorker.perform_async(nil, @message.message, nil, device.device_id, "message", nil, @group.id) : ApplePushWorker.perform_async(nil, @message.message, nil, device.device_id, "message", nil, @group.id) } 
+            end				   
+ 				   render :json => {:responseCode => 200,:responseMessage => "Message sent successfully"}
 			  else
 				   render :json => {:responseCode => 500,:responseMessage => 'Something went wrong'} 
 			  end
@@ -221,28 +205,28 @@ class ChatsController < ApplicationController
 	end
 
 	def block_users
-	@group = Group.find_by_id_and_admin_id(params[:group_id], @user.id)
-		if @group.present?
-			@blocked_mamber = Block.find_by_user_id_and_group_id(params[:member_id], @group)
-				if @blocked_mamber
-					message = "This user is already blocked.."
-					block = nil
-				else
-					@block = @group.blocks.create(:user_id => params[:member_id])
-					message = "Member blocked successfully.."
-					block = @block
-				end
+	 @group = Group.find_by_id_and_admin_id(params[:group_id], @user.id)
+			if @group.present?
+				@blocked_mamber = Block.find_by_user_id_and_group_id(params[:member_id], @group)
+					if @blocked_mamber
+						message = "This user is already blocked.."
+						block = nil
+					else
+						@block = @group.blocks.create(:user_id => params[:member_id])
+						message = "Member blocked successfully.."
+						block = @block
+					end
+					render :json => {
+													:responseCode => 200,
+													:responseMessage => message,
+													:block => block.as_json(except: [:created_at,:updated_at]) 
+													}
+			else
 				render :json => {
-												:responseCode => 200,
-												:responseMessage => message,
-												:block => block.as_json(except: [:created_at,:updated_at]) 
-												}
-		else
-			render :json => {
-											:responseCode => 500,
-											:responseMessage => 'Sorry you are not admin!'
-											} 
-		end
+												:responseCode => 500,
+												:responseMessage => 'Sorry you are not admin!'
+												} 
+			end
 	end
 
   def unblock_user
