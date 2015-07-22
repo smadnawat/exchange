@@ -33,32 +33,32 @@ class ChatsController < ApplicationController
 			if @invitation.update_column(:status,params[:action_type])
 				if params[:action_type] == "Accept"
 				  @is_group = Group.find_by_get_book_id_and_admin_id_and_give_book_id(params[:book_to_get], @invitation.user_id, params[:book_to_give])
-				  if !@is_group.nil?
-				 	 @group = @is_group
-					  if @is_group.users.include?(@user)
-				   		@message = "Already in that group"
-				   	else
-				 	  	@is_group.users << @user
-					 	 @message = "Request is successfully #{params[:action_type]}"
-				  	end
-				  else
-				  	if book.title.present?
-					    @group = Group.create(:name => book.title, :admin_id => @invitation.user_id,
-					    :get_book_id => params[:book_to_get], :give_book_id => params[:book_to_give])
-				  	elsif book.author.present?
-				  		@group = Group.create(:name => book.author, :admin_id => @invitation.user_id,
-				    :get_book_id => params[:book_to_get], :give_book_id => params[:book_to_give])
-				  	else
-				  		@group = Group.create(:name => book.genre, :admin_id => @invitation.user_id,
-				    :get_book_id => params[:book_to_get], :give_book_id => params[:book_to_give])
-				  	end
-					  if !@group.users.include?(params[:user_id])
-	            @sender = User.find(@invitation.user_id)
-						  @group.users << @user
-					  	@group.users << @sender
-					  	@message = "Request is successfully #{params[:action_type]}"
-					  end
-				  end
+								  if !@is_group.nil?
+								 	 @group = @is_group
+											  if @is_group.users.include?(@user)
+										   		@message = "Already in that group"
+										   	else
+										 	  	@is_group.users << @user
+											 	 @message = "Request is successfully #{params[:action_type]}"
+										  	end
+								  else
+									  	if book.title.present?
+										    @group = Group.create(:name => book.title, :admin_id => @invitation.user_id,
+										    :get_book_id => params[:book_to_get], :give_book_id => params[:book_to_give])
+									  	elsif book.author.present?
+									  		@group = Group.create(:name => book.author, :admin_id => @invitation.user_id,
+									    :get_book_id => params[:book_to_get], :give_book_id => params[:book_to_give])
+									  	else
+									  		@group = Group.create(:name => book.genre, :admin_id => @invitation.user_id,
+									    :get_book_id => params[:book_to_get], :give_book_id => params[:book_to_give])
+									  	end
+									  #if !@group.users.include?(params[:user_id])
+					            @sender = User.find(@invitation.user_id)
+										  @group.users << @user
+									  	@group.users << @sender
+									  	@message = "Request is successfully #{params[:action_type]}"
+									  #end
+								  end
 				  Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_to_give],@invitation,@group.id)	
 				else
 					@message = "Invitation declined successfully."
@@ -281,9 +281,14 @@ class ChatsController < ApplicationController
 		@group = Group.find_by_id_and_admin_id(params[:group_id], @user)
 			if @group
 				if params[:members].present?
-				
 					params[:members].as_json(only: [:id]).each do |t|
-						@group.users << User.find(t.values)
+						@user = User.find(t.values)
+						unless @group.users.include?(@user) 
+							@group.users << User.find(t.values)
+						end
+             #@group.users << @user
+             @user.first.devices.each {|device| (device.device_type == "Android") ? AndroidPushWorker.perform_async(nil, "Admin added you to #{@group.name} group" , nil, device.device_id, "message", nil, @group.id) : ApplePushWorker.perform_async(nil, "Admin added you to #{@group.name} group", nil, device.device_id, "message", nil, @group.id) } 
+
 					end
 					message = "User added successfully"
 				else

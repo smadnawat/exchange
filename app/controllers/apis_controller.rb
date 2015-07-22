@@ -122,7 +122,7 @@ class ApisController < ApplicationController
 				    render :json => {    
 				    	                :responseCode => 200,
 				    	                :responseMessage => 'Your uploaded reading preferences!',
-				    	                :Preferences => paging(@reading_pref, params[:page_no],params[:page_size]).as_json(only: [:title, :author, :genre, :id, :book_deactivated, :image_path]),
+				    	                :Preferences => paging(@reading_pref, params[:page_no],params[:page_size]).uniq.as_json(only: [:title, :author, :genre, :id, :book_deactivated, :image_path]),
 				    	                :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }
 				                     }
 			   else
@@ -221,7 +221,7 @@ class ApisController < ApplicationController
   	 render :json => {
                        :responseCode => 200,
                        :responseMessage => 'Potential Matches',
-                       :potential_matches => nearby_books, 
+                       :potential_matches => {matches: nearby_books[:matches].sort{|x|x[:other_user_detail][:distance]}}, 
                        :total_no_records => count
   	                  }
 
