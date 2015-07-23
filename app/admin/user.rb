@@ -77,15 +77,15 @@ index :title => 'User Profiles and Data' do
   end
 
   column "No. of Matches for Books"  do |f|
-    
+    f.mat_books_count 
   end
 
   column "No. of Matches for Author"  do |f|
-    
+    f.mat_author_count
   end
 
   column "No. of Matches for Genere"  do |f|
-    
+    f.mat_genre_count
   end
 
   column "No. of Matches (Less than 5 kms)"  do |f|

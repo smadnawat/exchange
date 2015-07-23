@@ -153,8 +153,9 @@ class User < ActiveRecord::Base
                end
            end
      end
-      logger.info"==========#{priority_first.count}====================#{priority_second.count}=======================#{priority_third.count}"
       hash[:matches] = priority_first + priority_second + priority_third + priority_forth + priority_fifth + priority_sixth + priority_seventh + priority_eighth + priority_nineth
+      logger.info"==========#{priority_first.count}====================#{priority_second.count}=======================#{priority_third.count}-----------------------------#{hash[:matches].count}"
+      self.update_data_for_admin(priority_first.count, priority_second.count, priority_third.count, @user, hash[:matches])
       return hash,hash[:matches].count
   end
 
@@ -186,6 +187,11 @@ class User < ActiveRecord::Base
     match_hash[:user_rating] = @rating
     match_hash[:book_to_give] = book.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path])
     match_hash
+  end
+
+  def self.update_data_for_admin(priority_first, priority_second, priority_third, user, matches_count)
+     @user = user
+     @user.update_attributes(:mat_books_count => priority_first, :mat_author_count => priority_second, :mat_genre_count => priority_third)
   end
 
   def update_via_social_media params

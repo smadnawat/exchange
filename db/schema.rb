@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150717100347) do
+ActiveRecord::Schema.define(version: 20150723085814) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -324,6 +324,11 @@ ActiveRecord::Schema.define(version: 20150717100347) do
     t.date     "weekly_date"
     t.boolean  "notification_status",    limit: 1,     default: true
     t.string   "sign_in_token",          limit: 255
+    t.integer  "mat_books_count",        limit: 4,     default: 0
+    t.integer  "mat_author_count",       limit: 4,     default: 0
+    t.integer  "mat_genre_count",        limit: 4,     default: 0
+    t.integer  "within_five_km",         limit: 4,     default: 0
+    t.date     "date_within_five_km"
   end
 
   create_table "users_groups", id: false, force: :cascade do |t|
