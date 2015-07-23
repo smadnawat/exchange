@@ -145,7 +145,7 @@ class ApisController < ApplicationController
 			 render :json => {    
 		    	                :responseCode => 200,
 		    	                :responseMessage => 'Your uploaded authors in reading preferences!',
-		    	                :Authors => paging(@authors, params[:page_no],params[:page_size]).as_json(only: [:id, :author, :author_deactivated]),
+		    	                :Authors => paging(@authors, params[:page_no],params[:page_size]).uniq { |p| p.author }.as_json(only: [:id, :author, :author_deactivated]),
 		    	                :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }
 		                     }
 	   else
@@ -169,7 +169,7 @@ class ApisController < ApplicationController
 			 render :json => {    
 		    	                :responseCode => 200,
 		    	                :responseMessage => 'Your uploaded genres in reading preferences!',
-		    	                :Generes => paging(@genres, params[:page_no],params[:page_size]).as_json(only: [:id, :genre, :genre_deactivated]),
+		    	                :Generes => paging(@genres, params[:page_no],params[:page_size]).uniq {|p| p.genre}.as_json(only: [:id, :genre, :genre_deactivated]),
 		    	                :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }
 		                     }
 	   else

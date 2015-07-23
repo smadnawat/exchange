@@ -89,7 +89,7 @@ index :title => 'User Profiles and Data' do
   end
 
   column "No. of Matches (Less than 5 kms)"  do |f|
-    
+    f.within_five_km
   end
 
   column "Action" do |f|

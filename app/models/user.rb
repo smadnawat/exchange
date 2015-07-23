@@ -189,9 +189,10 @@ class User < ActiveRecord::Base
     match_hash
   end
 
-  def self.update_data_for_admin(priority_first, priority_second, priority_third, user, matches_count)
+  def self.update_data_for_admin(priority_first, priority_second, priority_third, user, nearby_books)
      @user = user
-     @user.update_attributes(:mat_books_count => priority_first, :mat_author_count => priority_second, :mat_genre_count => priority_third)
+     count = nearby_books.select{|x|x[:other_user_detail][:distance]<=5}.count
+     @user.update_attributes(:mat_books_count => priority_first, :mat_author_count => priority_second, :mat_genre_count => priority_third, :within_five_km => count)
   end
 
   def update_via_social_media params
