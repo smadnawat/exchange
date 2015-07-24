@@ -4,7 +4,7 @@ class ApisController < ApplicationController
 
  include CalculateDistance
 
-  before_filter :find_user, :only => [:upload_by_scanning_counts, :view_my_review, :notification_status, :my_library, :potential_mat_profile, :upload_multiple_reading_pref,:create_ratings, :get_ratings, :my_chat_list, :invitation_details,:upload_books, :get_uploaded_books, :delete_uploaded_books, :delete_reading_preferences, :upload_reading_preferences, :my_reading_preferences, :my_reading_preferences_for_author, :my_reading_preferences_for_genre, :user_profile, :update_profile, :search_potential_matches]
+  before_filter :find_user, :only => [:upload_by_scanning_counts, :view_my_review, :notification_status, :delete_author_name, :delete_genre_name, :my_library, :potential_mat_profile, :upload_multiple_reading_pref,:create_ratings, :get_ratings, :my_chat_list, :invitation_details,:upload_books, :get_uploaded_books, :delete_uploaded_books, :delete_reading_preferences, :upload_reading_preferences, :my_reading_preferences, :my_reading_preferences_for_author, :my_reading_preferences_for_genre, :user_profile, :update_profile, :search_potential_matches]
 
 	def register	
 		params[:picture] = User.image_data(params[:picture])
@@ -71,9 +71,9 @@ class ApisController < ApplicationController
 		    if @books.save
 		           if params[:upload_type].eql? "scanning" and params[:reading_pref_upload].eql? true and params[:isbn13].present?
 		           	  @isbn_last = params[:isbn13] 
-		              @reading_pref = @user.reading_preferences.build(:title => " ", :author => params[:author], :genre => params[:genre], :isbn13 => params[:isbn13])
+		              @reading_pref = @user.reading_preferences.build(:title => " ", :author => params[:author], :genre => params[:genre], :isbn13 => params[:isbn13], :by_scanning => true)
 		              @reading_pref.image_path = "http://ec2-52-24-139-4.us-west-2.compute.amazonaws.com/covers/#{@isbn_last.to_s[9..10]}/#{@isbn_last.to_s[11..12]}/#{@isbn_last}.jpg" 
-			                @reading_pref.save
+			              @reading_pref.save
 		           end
 		      render_message 200, 'Book has been uploaded successfully!'     
 	      else			
@@ -137,7 +137,7 @@ class ApisController < ApplicationController
 
 	def my_reading_preferences_for_author
 		  @user = User.includes(:reading_preferences).where(:id => params[:user_id]).first
-		  @user_preferences = @user.reading_preferences
+		  @user_preferences = @user.reading_preferences.where(:delete_author => false)
 			@authors = @user_preferences.where("title = ? and genre = ? and author != ? ", " ", " ", " ") + @user_preferences.where("title = ? and genre != ? and author != ? ", " ", " ", " ") 
 		#@authors = ReadingPreference.where("user_id = ? and title = ? and genre = ? and author != ? ", params[:user_id], " ", " ", " ").select(:id, :author, :author_deactivated)
     #@authors = @user.reading_preferences.where('author != ?', " ").select(:id, :author, :author_deactivated)
@@ -161,7 +161,7 @@ class ApisController < ApplicationController
   
 	def my_reading_preferences_for_genre
 		  @user = User.includes(:reading_preferences).where(:id => params[:user_id]).first
-		  @user_preferences = @user.reading_preferences
+		  @user_preferences = @user.reading_preferences.where(:delete_genre => false)
 			@genres = @user_preferences.where("title = ? and genre != ? and author = ? ", " ", " ", " ") + @user_preferences.where("title = ? and genre != ? and author != ? ", " ", " ", " ") 
 		#@genres = ReadingPreference.where("user_id = ? and title = ? and genre != ? and author = ? ", params[:user_id], " ", " ", " ").select(:id, :genre, :genre_deactivated)
 		#@genres = @user.reading_preferences.where('genre != ?', " ").select(:id, :genre, :genre_deactivated)
@@ -292,25 +292,45 @@ class ApisController < ApplicationController
 	    end  	
   end
 
+  # def delete_author_name
+  # 	  @reading_preferences = ReadingPreference.find_by_id_and_author(params[:reading_pref_id], params[:author_name]) 
+  #     if @reading_preferences
+  # 	       @reading_preferences.update_attributes(:author => " ")
+  #          render :json => {:responseCode => 200,:responseMessage => "Author has been deleted successfully."}
+  #     else
+  #     	   render :json => {:responseCode => 500,:responseMessage => "Author name doesn't exists!."}
+  #     end     
+  # end
+
   def delete_author_name
-  	  @reading_preferences = ReadingPreference.find_by_id_and_author(params[:reading_pref_id], params[:author_name]) 
-      if @reading_preferences
-  	       @reading_preferences.update_attributes(:author => " ")
-           render :json => {:responseCode => 200,:responseMessage => "Author has been deleted successfully."}
+  	  @author = @user.reading_preferences.where(:author => params[:author_name])
+  	  if @author 
+  	  	  @author.update_all(:delete_author => true)
+  	      render :json => {:responseCode => 200,:responseMessage => "Author has been deleted successfully."}
       else
-      	   render :json => {:responseCode => 500,:responseMessage => "Author name doesn't exists!."}
-      end     
+     	    render :json => {:responseCode => 500,:responseMessage => "Author name doesn't exists!."}
+      end    
   end
 
+  # def delete_genre_name
+  # 	  @reading_preferences = ReadingPreference.find_by_id_and_genre(params[:reading_pref_id], params[:genre_name]) 
+  #     if @reading_preferences
+  # 	       @reading_preferences.update_attributes(:genre => " ")
+  #          render :json => {:responseCode => 200,:responseMessage => "Genre has been deleted successfully."}
+  #     else
+  #     	   render :json => {:responseCode => 500,:responseMessage => "Genre doesn't exists!."}
+  #     end     
+  # end 
+
   def delete_genre_name
-  	  @reading_preferences = ReadingPreference.find_by_id_and_genre(params[:reading_pref_id], params[:genre_name]) 
-      if @reading_preferences
-  	       @reading_preferences.update_attributes(:genre => " ")
-           render :json => {:responseCode => 200,:responseMessage => "Genre has been deleted successfully."}
+  	  @genre = @user.reading_preferences.where(:genre => params[:genre_name])
+  	  if @genre 
+  	  	  @genre.update_all(:delete_genre => true)
+  	      render :json => {:responseCode => 200,:responseMessage => "Category has been deleted successfully."}
       else
-      	   render :json => {:responseCode => 500,:responseMessage => "Genre doesn't exists!."}
-      end     
-  end 
+     	    render :json => {:responseCode => 500,:responseMessage => "Category doesn't exists!."}
+      end    
+  end
 
   def create_ratings 
  		@rating = Rating.find_by_group_id_and_ratable_id_and_user_id(params[:group_id], params[:ratable_id], params[:user_id])
@@ -318,8 +338,12 @@ class ApisController < ApplicationController
  		if @rating
  			message = "Already rated this person.."
  		else
- 			@group_rating = Rating.new_group_rating(params, @user)
- 			message = "Rating create successfully.."
+ 			if Group.find_by_id(params[:group_id]).present? and User.find_by_id(params[:ratable_id]).present?
+	 			@group_rating = Rating.new_group_rating(params, @user)
+	 			message = "Rating create successfully.."
+	 		else
+	 			message = "Rating not created"
+	 		end
  		end
 	  render :json => {
                      :responseCode => 200,
@@ -327,7 +351,6 @@ class ApisController < ApplicationController
                      :responseMessage => message
 	                  }
  	end
-
 
 	def get_ratings
 	  @group_rating = Rating.find_by_group_id_and_ratable_id_and_user_id(params[:group_id], params[:ratable_id], params[:user_id])

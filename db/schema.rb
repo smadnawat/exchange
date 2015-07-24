@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150723085814) do
+ActiveRecord::Schema.define(version: 20150724065855) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -263,6 +263,9 @@ ActiveRecord::Schema.define(version: 20150723085814) do
     t.boolean  "genre_deactivated",  limit: 1,     default: false
     t.string   "isbn13",             limit: 255
     t.string   "image_path",         limit: 255
+    t.boolean  "delete_author",      limit: 1,     default: false
+    t.boolean  "delete_genre",       limit: 1,     default: false
+    t.boolean  "by_scanning",        limit: 1,     default: false
   end
 
   add_index "reading_preferences", ["user_id"], name: "index_reading_preferences_on_user_id", using: :btree

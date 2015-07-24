@@ -6,7 +6,7 @@ class MypasswordsController < ApplicationController
 				User.send_token(@user)
 				render :json => {:responseCode => 200,:responseMessage => "Email instructions has been sent successfully."}
 			else
-				render :json => {:responseCode => 500,:responseMessage => "Please check email, it doesn't exist."}
+				render :json => {:responseCode => 500,:responseMessage => "Please enter proper email id."}
 			end	 
 	end
 

@@ -156,7 +156,7 @@ class ChatsController < ApplicationController
 			@message = @group.messages.build(:message => params[:message],:media => params[:media], :sender_id=> @user.id)
 				if @message.save
             @group_users.reject{|u| (u.id == @user.id || (@block_user.present? and u.id == @block_user.user_id))}.each do |user|
-             user.devices.each {|device| (device.device_type == "Android") ? AndroidPushWorker.perform_async(nil, @message.message, nil, device.device_id, "message", nil, @group.id) : ApplePushWorker.perform_async(nil, @message.message, nil, device.device_id, "message", nil, @group.id) } 
+             user.devices.each {|device| (device.device_type == "Android") ? AndroidPushWorker.perform_async(nil, (@message.message.present? || @message.user.username + "has shared an image."), nil, device.device_id, "message", nil, @group.id) : ApplePushWorker.perform_async(nil, (@message.message.present? || @message.user.username + "has shared an image."), nil, device.device_id, "message", nil, @group.id) } 
             end				   
  				   render :json => {:responseCode => 200,:responseMessage => "Message sent successfully"}
 			  else
