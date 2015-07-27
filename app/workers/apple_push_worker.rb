@@ -5,7 +5,8 @@ class ApplePushWorker
   def perform(reciever,alert,badges,device,type,invitation,group_id)
     
     p"---------------INSIDE ApplePushWorker---------------------------"
-
+  logger.info"===================#{reciever.inspect}===#{alert.inspect}==========#{badges.inspect}==============#{device.inspect}==========#{type.inspect}============#{invitation.inspect}"
+    
     pusher = Grocer.pusher(
       certificate: Rails.root.join('MobiloitteDevApp.pem'),      # required
       passphrase:  "Mobiloitte",                       # optional

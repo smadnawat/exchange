@@ -12,7 +12,7 @@ class Rating < ActiveRecord::Base
 	end
 
 	def self.calculate_ratings user 
-    @user_rate = user.ratings
+    @user_rate = user.rev_ratings
     unless @user_rate.blank?
 
       rate_arr = []
