@@ -374,24 +374,33 @@ class ApisController < ApplicationController
 	def invitation_details
 		@invitation = Invitation.find_by_id(params[:notification_id])
 		if @invitation.present?
-			@book_to_get = Book.find_by_id(@invitation.book_to_get.to_i)
-			@book_to_give = Book.find_by_id(@invitation.book_id)
-			@user = User.find_by_id(@invitation.user_id)
-			@rating = Rating.calculate_ratings(@user)
-			render :json => {
-                     :responseCode => 200,
-                     :responseMessage => 'Invitation details fetched successfully',
-                     :book_to_get => @book_to_get,
-                     :book_to_give => @book_to_give,
-                     :ratings => @rating,
-                     :sender => @user.as_json(only: [:id, :username, :picture])
-  	                  }
-  	else
-    	render :json => {
-                     :responseCode => 500,
-                     :responseMessage => 'No record found'
-  	                	}
-  	end
+			if  @invitation.invitation_status == 'B'
+				@book_to_get = Book.find_by_id(@invitation.book_to_get.to_i)
+				@book_to_give = Book.find_by_id(@invitation.book_to_give)
+
+			elsif @invitation.invitation_status == 'RP' 
+			      @book_to_get = ReadingPreference.find_by_id(@invitation.book_to_get.to_i)
+				  @book_to_give = ReadingPreference.find_by_id(@invitation.book_to_give)
+
+            else
+                  @book_to_give = Book.find_by_id(@invitation.book_to_give.to_i)
+            end	
+				@user = User.find_by_id(@invitation.user_id)
+				@rating = Rating.calculate_ratings(@user)
+				render :json => {
+	                     :responseCode => 200,
+	                     :responseMessage => 'Invitation details fetched successfully',
+	                     :book_to_get => @book_to_get,
+	                     :book_to_give => @book_to_give,
+	                     :ratings => @rating,
+	                     :sender => @user.as_json(only: [:id, :username, :picture])
+	  	                  }
+  	    else
+	    	render :json => {
+	                     :responseCode => 500,
+	                     :responseMessage => 'No record found'
+	  	                	}
+  	    end
 	end
 
 	def my_chat_list
@@ -583,6 +592,15 @@ class ApisController < ApplicationController
 			  @user.update_attributes(:notification_status => params[:notification_status])
 			  render :json => {:responseCode => 200, :responseMessage => "Notification has been turned on successfully!."}  
 			end
+	end
+
+	def terms_and_conditions
+		  @terms_and_conditions = TermsAndCondition.last.as_json(only: [:description])
+		  		render :json => {
+											      :responseCode => 200,
+                            :responseMessage => 'Terms & Conditions fetched successfully',
+                            :description => @terms_and_conditions
+                    	}
 	end
   
   def update_sign_in_token

@@ -63,6 +63,7 @@ Rails.application.routes.draw do
   get '/my_chat_list' => 'apis#my_chat_list'
   post '/create_ratings' => 'apis#create_ratings'
   get '/get_ratings' => 'apis#get_ratings'
+  get '/terms_and_conditions' => 'apis#terms_and_conditions', as: :terms_and_conditions
   #####################################################
 
   ############### web services my passwords controller###########################

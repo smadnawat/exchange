@@ -2,7 +2,7 @@ class Rating < ActiveRecord::Base
   belongs_to :user
   belongs_to :user, :class_name => "User", :foreign_key => :ratable_id
   belongs_to :group, :class_name => "Group", :foreign_key => :group_id
-  validates :user_id, uniqueness: {scope: :ratable_id}
+  # validates :user_id, uniqueness: {scope: :ratable_id}
 
 	def self.new_group_rating(params, user)
 		create!(:insights => params[:insights], :contributor => params[:contributor],

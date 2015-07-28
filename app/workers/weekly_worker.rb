@@ -89,9 +89,9 @@ class WeeklyWorker
                               if device.device_type == "Android"
                                 puts "======#{device.device_id}========"
                                 alert = "Your potential matches for this week is "
-                                AndroidPushWorker.perform_async(user.id, alert, priority_first, device.device_id, nil, nil, nil)
+                                AndroidPushWorker.perform_async(user.id, alert, priority_first, device.device_id, nil, nil, nil, nil)
                               else
-                                ApplePushWorker.perform_async(user.id, alert, priority_first, device.device_id, nil, nil, nil)
+                                ApplePushWorker.perform_async(user.id, alert, priority_first, device.device_id, nil, nil, nil, nil)
                               end
                             end
                           end

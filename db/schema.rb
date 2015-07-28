@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150724065855) do
+ActiveRecord::Schema.define(version: 20150728115208) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -175,26 +175,28 @@ ActiveRecord::Schema.define(version: 20150724065855) do
   end
 
   create_table "groups", force: :cascade do |t|
-    t.string   "name",         limit: 255
-    t.integer  "get_book_id",  limit: 4
-    t.integer  "give_book_id", limit: 4
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
-    t.integer  "admin_id",     limit: 4
+    t.string   "name",            limit: 255
+    t.integer  "get_book_id",     limit: 4
+    t.integer  "give_book_id",    limit: 4
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.integer  "admin_id",        limit: 4
+    t.integer  "get_preference",  limit: 4
+    t.integer  "give_preference", limit: 4
   end
 
   create_table "invitations", force: :cascade do |t|
-    t.integer  "user_id",         limit: 4
-    t.integer  "book_id",         limit: 4
-    t.string   "invitation_type", limit: 255
-    t.integer  "attendee",        limit: 4
-    t.string   "status",          limit: 255
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
-    t.integer  "book_to_get",     limit: 4
+    t.integer  "user_id",           limit: 4
+    t.string   "invitation_type",   limit: 255
+    t.integer  "attendee",          limit: 4
+    t.string   "status",            limit: 255
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.integer  "book_to_get",       limit: 4
+    t.integer  "book_to_give",      limit: 4
+    t.string   "invitation_status", limit: 255
   end
 
-  add_index "invitations", ["book_id"], name: "index_invitations_on_book_id", using: :btree
   add_index "invitations", ["user_id"], name: "index_invitations_on_user_id", using: :btree
 
   create_table "messages", force: :cascade do |t|
@@ -210,16 +212,15 @@ ActiveRecord::Schema.define(version: 20150724065855) do
 
   create_table "notices", force: :cascade do |t|
     t.integer  "user_id",       limit: 4
-    t.integer  "book_id",       limit: 4
     t.string   "action_type",   limit: 255
     t.integer  "reciever_id",   limit: 4
     t.boolean  "pending",       limit: 1
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
     t.integer  "invitation_id", limit: 4
+    t.integer  "book_to_give",  limit: 4
   end
 
-  add_index "notices", ["book_id"], name: "index_notices_on_book_id", using: :btree
   add_index "notices", ["user_id"], name: "index_notices_on_user_id", using: :btree
 
   create_table "notifications", force: :cascade do |t|
@@ -302,6 +303,12 @@ ActiveRecord::Schema.define(version: 20150724065855) do
 
   add_index "subject", ["slug"], name: "slug", unique: true, using: :btree
 
+  create_table "terms_and_conditions", force: :cascade do |t|
+    t.text     "description", limit: 65535
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string   "username",               limit: 255
     t.string   "gender",                 limit: 255
@@ -341,10 +348,8 @@ ActiveRecord::Schema.define(version: 20150724065855) do
 
   add_foreign_key "blocks", "groups"
   add_foreign_key "devices", "users"
-  add_foreign_key "invitations", "books"
   add_foreign_key "invitations", "users"
   add_foreign_key "messages", "groups"
-  add_foreign_key "notices", "books"
   add_foreign_key "notices", "users"
   add_foreign_key "ratings", "users"
   add_foreign_key "reading_preferences", "users"
