@@ -82,19 +82,19 @@ class User < ActiveRecord::Base
       priority_eighth = [] 
       priority_nineth = []
 
-      @user = User.includes(:books,:reading_preferences).where(:id => params[:user_id]).first
+      @user = User.find_by(:id => params[:user_id])
       @books_max_range = @user.books.near([params[:lat],params[:long]], params[:range_end], :units => :km)
       @books_min_range = @user.books.near([params[:lat],params[:long]], params[:range_start], :units => :km)
       @books = @books_max_range - @books_min_range
       @user_preferences = @user.reading_preferences
       @user_author_pref = @user.author_prefernce
       @user_genre_pref = @user.genre_preference
+      p "=========#{@books_max_range.inspect}========#{@books_min_range.inspect}===========#{@books.inspect}"
       other_users = (User.includes(:books,:reading_preferences,:ratings).near([params[:lat],params[:long]], params[:range_end], :units => :km).reject{|u| u.id == @user.id})
 
       if @books.present? 
       @books.each do |book|
         other_users.each  do |other_user|
-          if other_user.books.present?
             other_user.books.each do |other_users_book|
 
                 if (other_user.reading_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:title).include?(book.title) && @user_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:title).include?(other_users_book.title))
@@ -109,22 +109,21 @@ class User < ActiveRecord::Base
                           
                           priority_third<<  self.matches_detail(other_user, book, other_users_book)
 
-                elsif ((['Education - School','Education - Undergrad - Art & Design','Education - Undergrad - Aeronautics','Education - Undergrad - Business Studies / Eco','Education - Undergrad - Drama', 'Education - Undergrad - Engineering', 'Education - Undergrad - Geography', 'Education - Undergrad - History', 'Education - Undergrad - Law', 'Education - Undergrad - Literature / English', 'Education - Undergrad - Maths', 'Education - Undergrad - Medicine', 'Education - Undergrad - Music', 'Education - Undergrad - Science', 'Education - Undergrad - Social Science', 'Education - Undergrad - Technology', 'Education - Undergrad - Others', 'Education - Postgrad - Business / Finance', 'Education - Postgrad - History', 'Education - Postgrad - Marketing', 'Education - Postgrad - Maths', 'Education - Postgrad - Medicine', 'Education - Postgrad - Technology', 'Education - Postgrad - Others'] & other_user.reading_preferences.map(&:genre)).include?(book.genre)) #&& (other_user.reading_preferences.map(&:isbn13).include?(book.isbn13)) 
-                          
-                          priority_forth<< self.matches_detail_for_genre_cases(other_user, book)
 
                 #elsif (other_user.books.map(&:author).include?(book.author) && @books.map(&:author).include?(other_users_book.author)) 
-                elsif (other_user.reading_preferences.map{|x| x if x.by_scanning == true && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false}.compact.map(&:author).include?(book.author) && @user_preferences.map{|x| x if x.by_scanning == true && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false}.map(&:author).include?(other_users_book.author)) 
+                elsif (other_user.reading_preferences.map{|x| x if x.by_scanning == true && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false}.compact.map(&:author).include?(book.author) && @user_preferences.map{|x| x if x.by_scanning == true && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false}.compact.map(&:author).include?(other_users_book.author)) 
                          
                           priority_fifth<<   self.matches_detail(other_user, book, other_users_book)
                
                 #elsif (other_user.books.map(&:genre).include?(book.genre) && @books.map(&:genre).include?(other_users_book.genre))  
-                 elsif (other_user.reading_preferences.map{|x| x if x.by_scanning == true && x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false}.compact.map(&:genre).include?(book.genre) && @user_preferences.map{|x| x if x.by_scanning == true && x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false}.map(&:genre).include?(other_users_book.genre))          
+                 elsif (other_user.reading_preferences.map{|x| x if x.by_scanning == true && x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false}.compact.map(&:genre).include?(book.genre) && @user_preferences.map{|x| x if x.by_scanning == true && x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false}.compact.map(&:genre).include?(other_users_book.genre))          
                          
                           priority_sixth<<   self.matches_detail(other_user, book, other_users_book)
-
-                end
             end
+          end
+          if ((other_user.reading_preferences.map(&:genre)).include?(book.genre) and ['Education - School','Education - Undergrad - Art & Design','Education - Undergrad - Aeronautics','Education - Undergrad - Business Studies / Eco','Education - Undergrad - Drama', 'Education - Undergrad - Engineering', 'Education - Undergrad - Geography', 'Education - Undergrad - History', 'Education - Undergrad - Law', 'Education - Undergrad - Literature / English', 'Education - Undergrad - Maths', 'Education - Undergrad - Medicine', 'Education - Undergrad - Music', 'Education - Undergrad - Science', 'Education - Undergrad - Social Science', 'Education - Undergrad - Technology', 'Education - Undergrad - Others', 'Education - Postgrad - Business / Finance', 'Education - Postgrad - History', 'Education - Postgrad - Marketing', 'Education - Postgrad - Maths', 'Education - Postgrad - Medicine', 'Education - Postgrad - Technology', 'Education - Postgrad - Others'].include?(book.genre) ) #&& (other_user.reading_preferences.map(&:isbn13).include?(book.isbn13)) 
+                          
+                          priority_forth<< self.matches_detail_for_genre_cases(other_user, book)
           end
         end
       end 
