@@ -103,6 +103,7 @@ Rails.application.routes.draw do
   get '/about_us' => 'home#about_us'
   post '/contact_us' => 'home#contact_us', as: "contact_us"
   get '/thank_you' => 'home#thank_you'
+  get  '/my_team' => 'home#my_team'
   # post '/download_csv' => 'home#download_csv'
   get "/download_csv",:to => "home#download_csv",:as => "download_csv"
   get "/update_sign_in_token", :to => "apis#update_sign_in_token", :as => "update_sign_in_token" 

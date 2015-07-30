@@ -12,6 +12,9 @@ class HomeController < ApplicationController
 	def about_us		
 	end
 
+	def my_team		
+	end
+
 	def contact_us
 	  contact_us = ContactU.new(params_permit)
 		if contact_us.save

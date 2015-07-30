@@ -15,7 +15,8 @@ class ApisController < ApplicationController
 				@user = User.new(permitted_params)
 					if @user.save	
 						User.generate_sign_in_token(@user)
-						Device.total_devices(params[:device_id],params[:device_type],@user.id) unless params[:device_id].nil?
+						  manage_devices(user)
+						#Device.total_devices(params[:device_id],params[:device_type],@user.id) unless params[:device_id].nil?
 						render :json => {:responseCode => 200,:responseMessage => 'Your registration process is successfull.', :user_id => @user.id	} 
 					else
 						render :json => {:responseCode => 500, :responseMessage => @user.errors.full_messages.first}			
@@ -37,7 +38,8 @@ class ApisController < ApplicationController
 			   	   render :json => {:responseCode => 500,:responseMessage => "Email ID #{params[:email]} is already registered with ExchangeApp through a #{@user} account. Please login via same."} 
 			   	else
 			   	   @user = User.create(permitted_params)
-				     Device.total_devices(params[:device_id],params[:device_type],@user.id) unless params[:device_id].nil?
+				     manage_devices(user)
+				     #Device.total_devices(params[:device_id],params[:device_type],@user.id) unless params[:device_id].nil?
 				     render :json => {:responseCode => 200,:responseMessage => 'Signed-up successfully.', :user_id => @user.id	}	
 				  end		
 			  
@@ -48,13 +50,15 @@ class ApisController < ApplicationController
 			   	   render :json => {:responseCode => 500,:responseMessage => "Email ID #{params[:email]} is already registered with ExchangeApp through a #{@user} account. Please login via same."} 
 			   	else
 			   	   @user = User.create(permitted_params)
-				     Device.total_devices(params[:device_id],params[:device_type],@user.id) unless params[:device_id].nil?
+				     manage_devices(user)
+				     #Device.total_devices(params[:device_id],params[:device_type],@user.id) unless params[:device_id].nil?
 				     render :json => {:responseCode => 200,:responseMessage => 'Signed-up successfully.', :user_id => @user.id	}	
 				  end
 			  else     
 				   #@user = User.create_via_social_media(params) # create_via_social_media is a class method in User Model
 				    @user = User.create(permitted_params)
-				      Device.total_devices(params[:device_id],params[:device_type],@user.id) unless params[:device_id].nil?
+				      manage_devices(user)
+				      #Device.total_devices(params[:device_id],params[:device_type],@user.id) unless params[:device_id].nil?
 				      render :json => {:responseCode => 200,:responseMessage => 'Signed-up successfully.', :user_id => @user.id	}	
 				end		
 		else
@@ -375,21 +379,23 @@ class ApisController < ApplicationController
 		@invitation = Invitation.find_by_id(params[:notification_id])
 		if @invitation.present?
 			if  @invitation.invitation_status == 'B'
-				@book_to_get = Book.find_by_id(@invitation.book_to_get.to_i)
-				@book_to_give = Book.find_by_id(@invitation.book_to_give)
+				  @book_to_get = Book.find_by_id(@invitation.book_to_get.to_i)#.attributes.merge(invitation_status: 'B')
+				  @book_to_give = Book.find_by_id(@invitation.book_to_give)#.attributes.merge(invitation_status: 'B')
 
 			elsif @invitation.invitation_status == 'RP' 
-			      @book_to_get = ReadingPreference.find_by_id(@invitation.book_to_get.to_i)
-				  @book_to_give = ReadingPreference.find_by_id(@invitation.book_to_give)
+			      @book_to_get = ReadingPreference.find_by_id(@invitation.book_to_get.to_i)#.attributes.merge(invitation_status: 'RP')
+				    @book_to_give = ReadingPreference.find_by_id(@invitation.book_to_give)#.attributes.merge(invitation_status: 'RP')
 
-            else
-                  @book_to_give = Book.find_by_id(@invitation.book_to_give.to_i)
-            end	
+      else
+            @book_to_give = Book.find_by_id(@invitation.book_to_give.to_i)
+      end	
 				@user = User.find_by_id(@invitation.user_id)
 				@rating = Rating.calculate_ratings(@user)
 				render :json => {
 	                     :responseCode => 200,
 	                     :responseMessage => 'Invitation details fetched successfully',
+	                     
+	                     :data => @invitation.invitation_status,
 	                     :book_to_get => @book_to_get,
 	                     :book_to_give => @book_to_give,
 	                     :ratings => @rating,
@@ -621,5 +627,14 @@ class ApisController < ApplicationController
 	def reading_pref_params
 	   params.permit(:title,:author,:genre, :isbn13, :image_path)
 	end
+
+  def manage_devices(user)
+		unless params[:device_id].nil?  
+			@devices = Device.where(:device_id => params[:device_id])
+			@devices.destroy_all unless @devices.blank?
+			@devices = user.devices.create(:device_type => params[:device_type],:device_id => params[:device_id])
+		end
+	end
+
 
 end

@@ -1,5 +1,6 @@
 class UserMailer < ApplicationMailer
-  
+  default from: '"Exchange-App" <talktome@makasharcreative.com>'
+
   def reset_password_mail(user)
     @user = user    
     mail(:to => @user.email, :subject => 'Password Reset Instructions')

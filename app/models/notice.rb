@@ -19,13 +19,13 @@ class Notice < ActiveRecord::Base
 		        @devices.each do |device|
 			        if device.device_type == "Android"
 			        	puts "======#{device.device_id}========"
-			          AndroidPushWorker.perform_async(reciever, alert,@badges,device.device_id,type,invitation_id,group_id,data)
+			          AndroidPushWorker.perform_async(reciever, alert,@badges,device.device_id,type,invitation_id,group_id,data) 
 			        else
-			          ApplePushWorker.perform_async(reciever, alert,@badges,device.device_id,type,invitation_id,group_id,data)
-			        end
+			          ApplePushWorker.perform_async(reciever, alert,@badges,device.device_id,type,invitation_id,group_id,data) 
 			    end
 	        end
         end
+      end
   end
 
   def self.alert(sender,type)
