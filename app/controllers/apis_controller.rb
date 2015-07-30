@@ -73,7 +73,7 @@ class ApisController < ApplicationController
         @books.image_path = "http://ec2-52-24-139-4.us-west-2.compute.amazonaws.com/covers/#{@isbn_last.to_s[9..10]}/#{@isbn_last.to_s[11..12]}/#{@isbn_last}.jpg" 
       end 
 		    if @books.save
-		           if params[:upload_type].eql? "scanning" and params[:reading_pref_upload].eql? true and params[:isbn13].present?
+		           if params[:upload_type].eql? "scanning" and params[:reading_pref_upload].eql? "true" and params[:isbn13].present?
 		           	  @isbn_last = params[:isbn13] 
 		              @reading_pref = @user.reading_preferences.build(:title => " ", :author => params[:author], :genre => params[:genre], :isbn13 => params[:isbn13], :by_scanning => true)
 		              @reading_pref.image_path = "http://ec2-52-24-139-4.us-west-2.compute.amazonaws.com/covers/#{@isbn_last.to_s[9..10]}/#{@isbn_last.to_s[11..12]}/#{@isbn_last}.jpg" 

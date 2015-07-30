@@ -19,7 +19,7 @@ class HomeController < ApplicationController
 	  contact_us = ContactU.new(params_permit)
 		if contact_us.save
 			contact_data = ContactU.find(contact_us.id)
-        UserMailer.sending_contact_details(contact_data).deliver
+      UserMailer.sending_contact_details(contact_data).deliver
 			flash[:notice] = "Your Contact Us form has been submitted successfully"
 			redirect_to thank_you_path
 		end	
