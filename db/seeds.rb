@@ -151,7 +151,7 @@ For the purposes of this Agreement, "Intellectual Property Rights" means all pat
 							<p>
 								In no event shall Novelinked.com and (as applicable) its sole proprietor, employees or its suppliers be liable for any damages whatsoever, whether direct, indirect, general, special, compensatory, consequential, and/or incidental, arising out of or relating to the conduct of you or anyone else in connection with the use of the site, Novelinked.com’s services, or this agreement, including without limitation, lost profit, bodily injury, emotional distress, or any special, incidental or consequential damages. Novelinked.com’s liability and (as applicable) the liability of its sole proprietor, employees and suppliers, to you or to any third parties in any circumstances is limited to SGD 1. Some states do not allow the exclusion of limitation or incidental or consequential damages, so the above limitation or exclusion may not apply to you. </p>
 							
-							<h2>113. Indemnity</h2>
+							<h2>13. Indemnity</h2>
 							<p>
 								You agree to indemnify and hold Novelinked.com and (as applicable) Novelinked.com’s sole proprietor, employees and agents harmless from any claim or demand, including reasonable attorney’s fees made by any third party due to or arising out of your breach of this agreement or the documents it incorporates by reference, or your violation of any law or the rights of a third party.  </p>
 							
