@@ -15,7 +15,7 @@ class ApisController < ApplicationController
 				@user = User.new(permitted_params)
 					if @user.save	
 						User.generate_sign_in_token(@user)
-						  manage_devices(user)
+						  manage_devices(@user)
 						#Device.total_devices(params[:device_id],params[:device_type],@user.id) unless params[:device_id].nil?
 						render :json => {:responseCode => 200,:responseMessage => 'Your registration process is successfull.', :user_id => @user.id	} 
 					else
@@ -38,7 +38,7 @@ class ApisController < ApplicationController
 			   	   render :json => {:responseCode => 500,:responseMessage => "Email ID #{params[:email]} is already registered with ExchangeApp through a #{@user} account. Please login via same."} 
 			   	else
 			   	   @user = User.create(permitted_params)
-				     manage_devices(user)
+				     manage_devices(@user)
 				     #Device.total_devices(params[:device_id],params[:device_type],@user.id) unless params[:device_id].nil?
 				     render :json => {:responseCode => 200,:responseMessage => 'Signed-up successfully.', :user_id => @user.id	}	
 				  end		
@@ -50,14 +50,14 @@ class ApisController < ApplicationController
 			   	   render :json => {:responseCode => 500,:responseMessage => "Email ID #{params[:email]} is already registered with ExchangeApp through a #{@user} account. Please login via same."} 
 			   	else
 			   	   @user = User.create(permitted_params)
-				     manage_devices(user)
+				     manage_devices(@user)
 				     #Device.total_devices(params[:device_id],params[:device_type],@user.id) unless params[:device_id].nil?
 				     render :json => {:responseCode => 200,:responseMessage => 'Signed-up successfully.', :user_id => @user.id	}	
 				  end
 			  else     
 				   #@user = User.create_via_social_media(params) # create_via_social_media is a class method in User Model
 				    @user = User.create(permitted_params)
-				      manage_devices(user)
+				      manage_devices(@user)
 				      #Device.total_devices(params[:device_id],params[:device_type],@user.id) unless params[:device_id].nil?
 				      render :json => {:responseCode => 200,:responseMessage => 'Signed-up successfully.', :user_id => @user.id	}	
 				end		
