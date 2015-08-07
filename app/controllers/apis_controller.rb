@@ -149,7 +149,7 @@ class ApisController < ApplicationController
 			 render :json => {    
 		    	                :responseCode => 200,
 		    	                :responseMessage => 'Your uploaded authors in reading preferences!',
-		    	                :Authors => paging(@authors, params[:page_no],params[:page_size]).uniq { |p| p.author }.as_json(only: [:id, :author, :author_deactivated]),
+		    	                :Authors => paging(@authors, params[:page_no],params[:page_size]).uniq {|p| p.author}.as_json(only: [:id, :author, :author_deactivated]),
 		    	                :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }
 		                     }
 	   else
@@ -379,12 +379,12 @@ class ApisController < ApplicationController
 		@invitation = Invitation.find_by_id(params[:notification_id])
 		if @invitation.present?
 			if  @invitation.invitation_status == 'B'
-				  @book_to_get = Book.find_by_id(@invitation.book_to_get.to_i)#.attributes.merge(invitation_status: 'B')
-				  @book_to_give = Book.find_by_id(@invitation.book_to_give)#.attributes.merge(invitation_status: 'B')
+				  @book_to_get = Book.find_by_id(@invitation.book_to_get.to_i)
+				  @book_to_give = Book.find_by_id(@invitation.book_to_give)
 
 			elsif @invitation.invitation_status == 'RP' 
-			      @book_to_get = ReadingPreference.find_by_id(@invitation.book_to_get.to_i)#.attributes.merge(invitation_status: 'RP')
-				    @book_to_give = ReadingPreference.find_by_id(@invitation.book_to_give)#.attributes.merge(invitation_status: 'RP')
+			      @book_to_get = ReadingPreference.find_by_id(@invitation.book_to_get.to_i)
+				    @book_to_give = ReadingPreference.find_by_id(@invitation.book_to_give)
 
       else
             @book_to_give = Book.find_by_id(@invitation.book_to_give.to_i)
@@ -512,12 +512,12 @@ class ApisController < ApplicationController
 	end
 
 	def reading_prf_searching     # Search by Book Name, Author name, isbn_no or genre
-		  @book = Document.search(params[:name], star: true).map{|x| x.attributes.merge!(image_url:  "http://ec2-52-24-139-4.us-west-2.compute.amazonaws.com/covers/#{x.isbn13.to_s[9..10]}/#{x.isbn13.to_s[11..12]}/#{x.isbn13}.jpg")}
+		  @book = Document.search(params[:name], star: true).sort_by { |i| [i ? 0 : 1, i] }#.map{|x| x.attributes.merge!(image_url:  "http://ec2-52-24-139-4.us-west-2.compute.amazonaws.com/covers/#{x.isbn13.to_s[9..10]}/#{x.isbn13.to_s[11..12]}/#{x.isbn13}.jpg")}
 		  if @book.present?
 		  	 render :json => {
                             :responseCode => 200,
                             :responseMessage => "Books has been searched successfully!",
-                            :book => paging(@book, params[:page_no],params[:page_size]).as_json(only: ["author", "title","subjects", "isbn13", :image_url]),
+                            :book => paging(@book, params[:page_no],params[:page_size]).as_json(only: ["author", "title","subjects", "isbn13", "image_url"]),
                             :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }	                   
 		  	                   }
 		  else
@@ -606,7 +606,16 @@ class ApisController < ApplicationController
 											      :responseCode => 200,
                             :responseMessage => 'Terms & Conditions fetched successfully',
                             :description => @terms_and_conditions
-                    	}
+                    	    }
+	end
+
+	def privacy_policy
+		  @privacy_policy = PrivacyPolicy.last.as_json(only: [:description])
+		  		render :json => {
+											      :responseCode => 200,
+                            :responseMessage => 'Privacy Policy fetched successfully',
+                            :description => @privacy_policy
+                    	    }
 	end
   
   def update_sign_in_token

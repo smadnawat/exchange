@@ -11,7 +11,6 @@ Rails.application.routes.draw do
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
 
- ############### web services API controller###########################
 #chat controller
   post '/chat_exchange' => 'chats#chat_exchange'
   post '/accept_decline' => 'chats#accept_decline'
@@ -25,7 +24,9 @@ Rails.application.routes.draw do
   post '/add_user_to_group' => 'chats#add_user_to_group'
   post '/unblock_user' => 'chats#unblock_user'
 
-#===========================================
+#==============================================================================
+
+############### web services API controller###########################
 
   post '/register'          =>   'apis#register', as: :register
   post '/login'             =>   'sessions#create', as: :login
@@ -64,20 +65,13 @@ Rails.application.routes.draw do
   post '/create_ratings' => 'apis#create_ratings'
   get '/get_ratings' => 'apis#get_ratings'
   get '/terms_and_conditions' => 'apis#terms_and_conditions', as: :terms_and_conditions
-  #####################################################
+  get '/privacy_policy' => 'apis#privacy_policy', as: :privacy_policy
+#####################################################
 
   ############### web services my passwords controller###########################
   post '/forgot_password' => 'mypasswords#create'
-  #get '/change_password/:reset_password_token' => 'mypasswords#edit', as: :change_password
   post '/update' => 'mypasswords#update', as: :update_password
-   #####################################################
-  # post '/create_ratings' => 'apis#create_ratings'
-  # get '/get_ratings' => 'apis#get_ratings'
-  
-#My password controller =========================
-  #post '/forgot_password' => 'mypasswords#create'
-  #get '/change_password/:reset_password_token' => 'mypasswords#edit', as: :change_password
-  #post '/update' => 'mypasswords#update', as: :update_password
+
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
   # The priority is based upon order of creation: first created -> highest priority.
@@ -95,7 +89,6 @@ Rails.application.routes.draw do
   resources :banners
   resources :notifications
   post 'notifications/popup'=> 'notifications#popup'
-  #get '*notfound'         => 'notifications#notfound'
   post '/do_create'    =>   'notifications#do_create', as: 'do_create'
   root :to => 'home#dashboard'
   get '/privacy_policy' => 'home#privacy_policy'
@@ -104,7 +97,6 @@ Rails.application.routes.draw do
   post '/contact_us' => 'home#contact_us', as: "contact_us"
   get '/thank_you' => 'home#thank_you'
   get  '/my_team' => 'home#my_team'
-  # post '/download_csv' => 'home#download_csv'
   get "/download_csv",:to => "home#download_csv",:as => "download_csv"
   get "/update_sign_in_token", :to => "apis#update_sign_in_token", :as => "update_sign_in_token" 
 

@@ -1,5 +1,6 @@
 class Document < ActiveRecord::Base
     self.table_name = "book"
+   
 
   def self.search_genre(search)
 	    if search.blank?  # blank? covers both nil and empty string

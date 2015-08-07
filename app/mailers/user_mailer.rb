@@ -1,5 +1,5 @@
 class UserMailer < ApplicationMailer
-  default from: '"Exchange-App" <talktome@makasharcreative.com>'
+  default from: '"Novelinked" <talktome@makasharcreative.com>'
 
   def reset_password_mail(user)
     @user = user    

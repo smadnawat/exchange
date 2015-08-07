@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150728115208) do
+ActiveRecord::Schema.define(version: 20150804095711) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -104,6 +104,7 @@ ActiveRecord::Schema.define(version: 20150728115208) do
     t.text    "synopsis",          limit: 65535,    null: false
     t.text    "toc",               limit: 16777215, null: false
     t.text    "editorial_reviews", limit: 16777215, null: false
+    t.string  "image_url",         limit: 255
   end
 
   add_index "book", ["author"], name: "author", using: :btree
@@ -125,6 +126,42 @@ ActiveRecord::Schema.define(version: 20150728115208) do
   add_index "book2subjects", ["book", "sub_subject", "sub_sub_subject"], name: "book", unique: true, using: :btree
   add_index "book2subjects", ["sub_sub_subject"], name: "sub_sub_subject", using: :btree
   add_index "book2subjects", ["sub_subject", "sub_sub_subject"], name: "sub_subject", using: :btree
+
+  create_table "book_old", force: :cascade do |t|
+    t.text    "title",             limit: 65535,    null: false
+    t.string  "author",            limit: 255,      null: false
+    t.integer "author_id",         limit: 4,        null: false
+    t.text    "author_bio",        limit: 16777215, null: false
+    t.string  "authors",           limit: 255,      null: false
+    t.string  "title_slug",        limit: 255,      null: false
+    t.string  "author_slug",       limit: 255,      null: false
+    t.string  "isbn13",            limit: 255,      null: false
+    t.string  "isbn10",            limit: 255,      null: false
+    t.string  "price",             limit: 255,      null: false
+    t.string  "format",            limit: 255,      null: false
+    t.string  "publisher",         limit: 255,      null: false
+    t.string  "pubdate",           limit: 255,      null: false
+    t.string  "edition",           limit: 255,      null: false
+    t.string  "subjects",          limit: 255,      null: false
+    t.string  "lexile",            limit: 255,      null: false
+    t.string  "pages",             limit: 255,      null: false
+    t.string  "dimensions",        limit: 255,      null: false
+    t.text    "overview",          limit: 16777215, null: false
+    t.text    "excerpt",           limit: 16777215, null: false
+    t.text    "synopsis",          limit: 65535,    null: false
+    t.text    "toc",               limit: 16777215, null: false
+    t.text    "editorial_reviews", limit: 16777215, null: false
+  end
+
+  add_index "book_old", ["author"], name: "author", using: :btree
+  add_index "book_old", ["author_id"], name: "author_id", using: :btree
+  add_index "book_old", ["author_slug"], name: "author_slug", using: :btree
+  add_index "book_old", ["isbn10"], name: "isbn10", using: :btree
+  add_index "book_old", ["isbn13"], name: "isbn13", unique: true, using: :btree
+  add_index "book_old", ["subjects"], name: "index_book_old_on_subjects", using: :btree
+  add_index "book_old", ["subjects"], name: "subjects", using: :btree
+  add_index "book_old", ["title"], name: "title", length: {"title"=>10}, using: :btree
+  add_index "book_old", ["title_slug"], name: "title_slug", using: :btree
 
   create_table "books", force: :cascade do |t|
     t.text     "title",                 limit: 65535,               null: false
@@ -235,6 +272,12 @@ ActiveRecord::Schema.define(version: 20150728115208) do
     t.string   "sub_genres",    limit: 255,   default: "{}"
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
+  end
+
+  create_table "privacy_policies", force: :cascade do |t|
+    t.text     "description", limit: 65535
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   create_table "ratings", force: :cascade do |t|

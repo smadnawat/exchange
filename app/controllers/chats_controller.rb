@@ -56,7 +56,7 @@ class ChatsController < ApplicationController
 				   		@message = "Already in that group"
 				   	else
 				 	  	@is_group.users << @user
-					 	 	@message = "Request is successfully #{params[:action_type]}"
+					 	 	@message = "Invite have been successfully #{params[:action_type]}"   
 				  	end
 				  else
 				  	if book.title.present?
@@ -72,11 +72,11 @@ class ChatsController < ApplicationController
 	            @sender = User.find(@invitation.user_id)
 						  @group.users << @user
 					  	@group.users << @sender
-					  	@message = "Request is successfully #{params[:action_type]}"
+					  	@message = "Invite have been successfully #{params[:action_type]}"
 				  end
 				  Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_to_give],@invitation,@group.id,'')	
 				else
-					@message = "Invitation declined successfully."
+					@message = "Invite have been successfully declined."
 	        Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_to_give],@invitation,"unavailable",params[:data])	
 				end
 			
@@ -116,7 +116,7 @@ class ChatsController < ApplicationController
 				   		@message = "Already in that group"
 				   	else
 				 	  	@is_group.users << @user
-					 	 	@message = "Request is successfully #{params[:action_type]}"
+					 	 	@message = "Invite have been successfully #{params[:action_type]}"
 				  	end
 				  else
 				  	if book.title.present?
@@ -129,11 +129,11 @@ class ChatsController < ApplicationController
 	            @sender = User.find(@invitation.user_id)
 						  @group.users << @user
 					  	@group.users << @sender
-					  	@message = "Request is successfully #{params[:action_type]}"
+					  	@message = "Invite have been successfully #{params[:action_type]}"
 				  end
 				  Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_to_give],@invitation,@group.id,params[:data])	
 				else
-					@message = "Invitation declined successfully."
+					@message = "Invite have been successfully declined."
 	        Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_to_give],@invitation,"unavailable",params[:data])	
 				end
 			
@@ -174,7 +174,7 @@ class ChatsController < ApplicationController
 				   		@message = " "
 				   	else
 				 	  	@is_group.users << @user
-					 	 	@message = "Request is successfully #{params[:action_type]}"
+					 	 	@message = "Invite have been successfully #{params[:action_type]}"
 				  	end
 				  else
 				  	if @reading_preference.author.present?
@@ -187,11 +187,11 @@ class ChatsController < ApplicationController
 	            @sender = User.find(@invitation.user_id)
 						  @group.users << @user
 					  	@group.users << @sender
-					  	@message = "Request is successfully #{params[:action_type]}"
+					  	@message = "Invite have been successfully #{params[:action_type]}"
 				  end
 				  Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_to_give],@invitation,@group.id,params[:data])	
 				else
-					@message = "Invitation declined successfully."
+					@message = "Invite have been successfully declined."
 	        Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_to_give],@invitation,"unavailable",params[:data])	
 				end
 			
@@ -217,51 +217,6 @@ class ChatsController < ApplicationController
 		end
 	end
 
-
-	# def accept_decline 
-	#   @invitation = Invitation.find_by_id(params[:invitation_id])
-	# 	if @invitation.update_column(:status,params[:action_type])
-	# 		book = Book.find_by_id(params[:book_to_give])
-	# 		if params[:action_type] == "Accept"
-	# 		  @is_group = Group.find_by_name_and_admin_id("#{book.title}", @invitation.user_id)
-	# 		  if @is_group
-	# 		 	 @group = @is_group
-	# 			  if @is_group.users.include?(@user)
-	# 		   		@message = "Already in that group"
-	# 		   	else
-	# 		 	  	@is_group.users << @user
-	# 			 	 @message = "Request is successfully #{params[:action_type]}"
-	# 		  	end
-	# 		  else
-	# 		    @group = Group.create(:name => book.title, :admin_id => @invitation.user_id,
-	# 		    :get_book_id => params[:book_to_get], :give_book_id => params[:book_to_get])
-	# 			  if !@group.users.include?(params[:user_id])
- #            @sender = User.find(@invitation.user_id)
-	# 				  @group.users << @user
-	# 			  	@group.users << @sender
-	# 			  	@message = "Request is successfully #{params[:action_type]}"
-	# 			  end
-	# 		  end
-	# 		  Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_to_give],@invitation,@group.id)	
-	# 		else
-	# 			@message = "Invitation declined successfully."
- #        Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_to_give],@invitation,"")	
-	# 		end
-		
-	#    render :json => 
-	#    {
-	#  	 :responseCode => 200,
-	#  	 :responseMessage => @message,
-	#    :group_id => @group.as_json(only: [:id]) 
-	#    }
-	# 	else
-	# 	  render :json => 
-	# 		{
-	# 		:responseCode => 500,
-	# 		:responseMessage => 'Something went wrong'
-	# 		} 
-	# 	 end
-	# end
 
 	def get_notification_list
 		@notifications = @user.recieve_notifications.includes(:user)
@@ -384,28 +339,6 @@ class ChatsController < ApplicationController
 										:pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }
 										}
 	end
-
-# def add_user_to_group
-# 		@group = Group.find_by_id_and_admin_id(params[:group_id], @user)
-# 		if @group
-# 			@member = User.where(id: params[:member_id])
-# 			if @member == []
-# 				message = "No user added"
-# 			else
-# 				@group.users << @member
-# 				message = "User added successfully"
-# 			end
-# 			render :json => {
-# 											:responseCode => 200,
-# 											:responseMessage => message
-# 											}
-# 		else
-# 			render :json => {
-# 											:responseCode => 500,
-# 											:responseMessage => 'Something went wrong'
-# 											}
-# 		end	
-# 	end
 
 	def add_user_to_group
 		@group = Group.find_by_id_and_admin_id(params[:group_id], @user)
