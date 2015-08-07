@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
 
-#chat controller
+##############################chat controller##########################
   post '/chat_exchange' => 'chats#chat_exchange'
   post '/accept_decline' => 'chats#accept_decline'
   post '/get_notification_list' => "chats#get_notification_list"
@@ -23,15 +23,13 @@ Rails.application.routes.draw do
   post '/search_user' => 'chats#search_user'
   post '/add_user_to_group' => 'chats#add_user_to_group'
   post '/unblock_user' => 'chats#unblock_user'
-
 #==============================================================================
 
 ############### web services API controller###########################
-
-  post '/register'          =>   'apis#register', as: :register
-  post '/login'             =>   'sessions#create', as: :login
-  delete '/logout'            =>   'sessions#destroy', as: :logout
-  post '/upload_books'      => 'apis#upload_books', as: :upload_books
+  post '/register' =>   'apis#register', as: :register
+  post '/login' =>   'sessions#create', as: :login
+  delete '/logout' =>   'sessions#destroy', as: :logout
+  post '/upload_books'  => 'apis#upload_books', as: :upload_books
   get  '/get_uploaded_books' => 'apis#get_uploaded_books', as: :get_uploaded_books
   post  '/upload_reading_preferences' => 'apis#upload_reading_preferences', as: :upload_reading_preferences
   get  '/my_reading_preferences' => 'apis#my_reading_preferences', as: :my_reading_preferences

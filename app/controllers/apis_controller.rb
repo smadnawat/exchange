@@ -10,7 +10,7 @@ class ApisController < ApplicationController
 		params[:picture] = User.image_data(params[:picture])
 		if params[:provider].present? && params[:provider] == User::A
 			if @user = User.where('email = ?  AND provider !=?',params[:email],'normal').first					
-		        render :json => {:responseCode => 200,:responseMessage => "Email id #{@user.email} is already registered with ExchangeApp through a #{@user.provider} account. Please login via same."} 
+		        render :json => {:responseCode => 200,:responseMessage => "Email id #{@user.email} is already registered with Novelinked through a #{@user.provider} account. Please login via same."} 
 			else	
 				@user = User.new(permitted_params)
 					if @user.save	
@@ -29,13 +29,13 @@ class ApisController < ApplicationController
 				   render :json => {:responseCode => 200,:responseMessage => 'Logged in successfull.', :user_id => @user.id	}
 				
 				elsif @user = User.where('email = ? AND provider = ?',params[:email],'normal').first					
-	        	render :json => {:responseCode => 500,:responseMessage => "Email ID #{@user.email} is already registered with ExchangeApp. Please login via same."} 
+	        	render :json => {:responseCode => 500,:responseMessage => "Email ID #{@user.email} is already registered with Novelinked. Please login via same."} 
   
         elsif User.where('email = ? AND provider = ?',params[:email],'google').count == 0
 			  	@useer = User.find_by_email(params[:email])
 			  	if @useer.present?
 			  		 @user = @useer.provider
-			   	   render :json => {:responseCode => 500,:responseMessage => "Email ID #{params[:email]} is already registered with ExchangeApp through a #{@user} account. Please login via same."} 
+			   	   render :json => {:responseCode => 500,:responseMessage => "Email ID #{params[:email]} is already registered with Novelinked through a #{@user} account. Please login via same."} 
 			   	else
 			   	   @user = User.create(permitted_params)
 				     manage_devices(@user)
@@ -47,7 +47,7 @@ class ApisController < ApplicationController
 			  	@useer = User.find_by_email(params[:email])
 			  	if @useer.present?
 			  		 @user = @useer.provider
-			   	   render :json => {:responseCode => 500,:responseMessage => "Email ID #{params[:email]} is already registered with ExchangeApp through a #{@user} account. Please login via same."} 
+			   	   render :json => {:responseCode => 500,:responseMessage => "Email ID #{params[:email]} is already registered with Novelinked through a #{@user} account. Please login via same."} 
 			   	else
 			   	   @user = User.create(permitted_params)
 				     manage_devices(@user)
@@ -511,13 +511,13 @@ class ApisController < ApplicationController
 	  end                    
 	end
 
-	def reading_prf_searching     # Search by Book Name, Author name, isbn_no or genre
-		  @book = Document.search(params[:name], star: true).sort_by { |i| [i ? 0 : 1, i] }#.map{|x| x.attributes.merge!(image_url:  "http://ec2-52-24-139-4.us-west-2.compute.amazonaws.com/covers/#{x.isbn13.to_s[9..10]}/#{x.isbn13.to_s[11..12]}/#{x.isbn13}.jpg")}
+	def reading_prf_searching     # Search by Book Name, Author name, isbn_no or genre  #.sort_by { |i| [i ? 0 : 1, i] }
+		  @book = Document.search(params[:name], star: true).map{|x| x.attributes.merge!(image_url:  "http://ec2-52-24-139-4.us-west-2.compute.amazonaws.com/covers/#{x.isbn13.to_s[9..10]}/#{x.isbn13.to_s[11..12]}/#{x.isbn13}.jpg")}
 		  if @book.present?
 		  	 render :json => {
                             :responseCode => 200,
                             :responseMessage => "Books has been searched successfully!",
-                            :book => paging(@book, params[:page_no],params[:page_size]).as_json(only: ["author", "title","subjects", "isbn13", "image_url"]),
+                            :book => paging(@book, params[:page_no],params[:page_size]).as_json(only: ["author", "title","subjects", "isbn13", :image_url]),
                             :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }	                   
 		  	                   }
 		  else
