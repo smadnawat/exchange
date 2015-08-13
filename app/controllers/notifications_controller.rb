@@ -49,7 +49,7 @@ class NotificationsController < ApplicationController
        if rpuser.present?
          rpuser.each do |rp|
           if rp.notification_status.eql? true 
-              rp.devices.select {|rpm| AdminPushWorker.perform_async(rpm.device_id,rpm.device_type, "#{params[:notification][:subject]}", "#{params[:notification][:content]}"  ) } 
+              rp.devices.select {|rpm| AdminPushWorker.perform_async(rpm.device_id,rpm.device_type, "#{params[:user][:subject]}", "#{params[:user][:content]}"  ) } 
               flash[:notice]= 'Notification Send'
           end   
          end

@@ -31,9 +31,9 @@ class Notice < ActiveRecord::Base
   def self.alert(sender,type)
       case(type)
       	when "exchange"
-      		return "#{sender.username} send an invitation to you"
+      		return "#{sender.username} has sent an invite to you"
       	when "start chat"
-      		return "#{sender.username} send an invitation to you"
+      		return "#{sender.username} has sent an invite to you"
       	when "Accept"
       		return "Your chat request has been accepted.Tap here to initiate"
       	when "Decline"

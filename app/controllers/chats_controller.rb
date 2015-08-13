@@ -56,7 +56,7 @@ class ChatsController < ApplicationController
 				   		@message = "Already in that group"
 				   	else
 				 	  	@is_group.users << @user
-					 	 	@message = "Invite have been successfully #{params[:action_type]}"   
+					 	 	@message = "Invite have been successfully Accepted."   
 				  	end
 				  else
 				  	if book.title.present?
@@ -72,11 +72,11 @@ class ChatsController < ApplicationController
 	            @sender = User.find(@invitation.user_id)
 						  @group.users << @user
 					  	@group.users << @sender
-					  	@message = "Invite have been successfully #{params[:action_type]}"
+					  	@message = "Invite have been successfully Accepted."
 				  end
 				  Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_to_give],@invitation,@group.id,'')	
 				else
-					@message = "Invite have been successfully declined."
+					@message = "Invite have been successfully Declined."
 	        Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_to_give],@invitation,"unavailable",params[:data])	
 				end
 			
@@ -116,7 +116,7 @@ class ChatsController < ApplicationController
 				   		@message = "Already in that group"
 				   	else
 				 	  	@is_group.users << @user
-					 	 	@message = "Invite have been successfully #{params[:action_type]}"
+					 	 	@message = "Invite have been successfully Accepted."
 				  	end
 				  else
 				  	if book.title.present?
@@ -129,11 +129,11 @@ class ChatsController < ApplicationController
 	            @sender = User.find(@invitation.user_id)
 						  @group.users << @user
 					  	@group.users << @sender
-					  	@message = "Invite have been successfully #{params[:action_type]}"
+					  	@message = "Invite have been successfully Accepted."
 				  end
 				  Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_to_give],@invitation,@group.id,params[:data])	
 				else
-					@message = "Invite have been successfully declined."
+					@message = "Invite have been successfully Declined."
 	        Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_to_give],@invitation,"unavailable",params[:data])	
 				end
 			
@@ -174,7 +174,7 @@ class ChatsController < ApplicationController
 				   		@message = " "
 				   	else
 				 	  	@is_group.users << @user
-					 	 	@message = "Invite have been successfully #{params[:action_type]}"
+					 	 	@message = "Invite have been successfully Accepted."
 				  	end
 				  else
 				  	if @reading_preference.author.present?
@@ -187,11 +187,11 @@ class ChatsController < ApplicationController
 	            @sender = User.find(@invitation.user_id)
 						  @group.users << @user
 					  	@group.users << @sender
-					  	@message = "Invite have been successfully #{params[:action_type]}"
+					  	@message = "Invite have been successfully Accepted."
 				  end
 				  Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_to_give],@invitation,@group.id,params[:data])	
 				else
-					@message = "Invite have been successfully declined."
+					@message = "Invite have been successfully Declined."
 	        Notice.create_Notice(@user,@invitation.user_id,params[:action_type],params[:book_to_give],@invitation,"unavailable",params[:data])	
 				end
 			
@@ -224,10 +224,11 @@ class ChatsController < ApplicationController
 			notification.message = Notice.alert(notification.user,notification.action_type)
 		end
 		render :json => {
-                           :responseCode => 200,
-                           :responseMessage => "Your notifications list is fetched successfully!",
-                           :notifications => @notifications.as_json(:only => [:message,:id,:invitation_id,:created_at, :action_type])
-			            } 
+                      :responseCode => 200,
+                      :responseMessage => "Your notifications list is fetched successfully!",
+                      :notifications => @notifications.map{|notification| notification.attributes.except('updated_at','pending','user_id','book_to_give','reciever_id').merge( data: Invitation.find_by_id(notification.invitation_id).invitation_status)}#@notifications.as_json(:only => [:message,:id,:invitation_id,:created_at, :action_type]) 
+                                          
+			              } 
 	end
 
 	def group_chat

@@ -15,7 +15,7 @@ class UserMailer < ApplicationMailer
   def registration_confirmation(user, login_url)
   	@login_url = login_url
   	@user = user
-  	mail(:to => @user.email, :subject => "Welcome to ExchangeApp")
+  	mail(:to => @user.email, :subject => "Welcome to Novelinked, Where Old Books Meet New Friends.")
   end
 
 end
