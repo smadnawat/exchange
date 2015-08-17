@@ -190,8 +190,8 @@ class ApisController < ApplicationController
     @user = User.includes(:reading_preferences).where(:id => params[:user_id]).first
 		  @user_preferences = @user.reading_preferences
 			  @reading_pref = @user_preferences.where("title != ? and genre = ? and author = ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre = ? and author = ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre = ? and author != ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre != ? and author = ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre != ? and author != ? ", " ", " ", " ")
-				 	@authors = @user_preferences.where("title = ? and genre = ? and author != ? ", " ", " ", " ") + @user_preferences.where("title = ? and genre != ? and author != ? ", " ", " ", " ") 
-            	@genres = @user_preferences.where("title = ? and genre != ? and author = ? ", " ", " ", " ") + @user_preferences.where("title = ? and genre != ? and author != ? ", " ", " ", " ") 
+				 	@authors = @user_preferences.where(:delete_author => false).where("title = ? and genre = ? and author != ? ", " ", " ", " ") + @user_preferences.where(:delete_author => false).where("title = ? and genre != ? and author != ? ", " ", " ", " ") 
+            	@genres = @user_preferences.where(:delete_genre => false).where("title = ? and genre != ? and author = ? ", " ", " ", " ") + @user_preferences.where(:delete_genre => false).where("title = ? and genre != ? and author != ? ", " ", " ", " ") 
 		  		render :json => { 
 						               :responseCode => 200,
 						               :responseMessage => 'User profile.',

@@ -21,12 +21,9 @@ require "net/http"
 # end
 
 
-
-# 176667
-
 task :validate_images_url => :environment do
   hash = {}
-  Document.find_each(start: 212270,batch_size: 10000).with_index do |doc,index|
+  Document.find_each(start: 226574,batch_size: 10000).with_index do |doc,index|
     isbn_last = doc.isbn13
     u =  "http://www.novelinked.com/covers/#{isbn_last.to_s[9..10]}/#{isbn_last.to_s[11..12]}/#{isbn_last}.jpg"
     url = URI.parse(u)
