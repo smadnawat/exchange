@@ -277,7 +277,7 @@ class ChatsController < ApplicationController
 			 render :json => {
 											:responseCode => 200,
 											:responseMessage => "Group details fetched successfully",
-											:Group => @group.as_json(except: [:created_at,:updated_at, :get_book_id, :give_book_id]),
+											:Group => @group.as_json(except: [:created_at,:updated_at]),
 											:book_to_get => @get_book_id, 
 											:book_to_give => @give_book_id,
 											:group_users => @users#.as_json(only: [:id,:picture]),

@@ -8,6 +8,7 @@ class SessionsController < ApplicationController
 		 else	
 		  	if @user and @user.authenticate(params[:password])
 		  		manage_devices(@user)
+  		        # @user.update_attributes(latitude: params[:latitude], longitude: params[:longitude])	
 		  	  #Device.total_devices(params[:device_id],params[:device_type],@user.id) unless params[:device_id].nil?
 		  	  render :json => {:responseCode => 200,:responseMessage => "You've signed in successfully.",   :user_id => @user.id}
 		  	else

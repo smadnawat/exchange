@@ -21,7 +21,7 @@ ActiveAdmin.register_page "Aggregate Data" do
 	  	         end
 	  	        @collection = Kaminari.paginate_array(Book.details).page(params[:page]).per(5)
 	  	        @collection.each do |book|
-                books = Book.where(:upload_date_for_admin => book.upload_date_for_admin).group('address').count
+                books = Book.where(:upload_date_for_admin => book.upload_date_for_admin).group('country_name').count
 
 	                  tr do
 	                  	send = Invitation.pluck(:created_at).map{|x| x.to_date.eql? book.upload_date_for_admin}.reject{|x| x.eql? false}.count
@@ -29,10 +29,11 @@ ActiveAdmin.register_page "Aggregate Data" do
 	                     td {book.upload_date_for_admin} 
 	                     td {Message.where('created_at >= ? ', book.upload_date_for_admin - 7.days).map{|m|  m.group_id }.uniq.count} 
                         
-	                     td {book_count(books)} 
-	                     td { } 
+	                     # td {book_count(books)} 
+	                     td {books.flatten.join(' - ')}
+	                     td { User.where(date_within_five_km: book.upload_date_for_admin).sum(:within_five_km) } 
 	                     td { Invitation.pluck(:created_at).map{|x| x.to_date.eql? book.upload_date_for_admin}.reject{|x| x.eql? false}.count} 
-	                     td {Invitation.pluck(:created_at).map{|x| x.to_date.eql? book.upload_date_for_admin and Invitation.find_by_created_at(x).status == "Accept"}.reject{|x| x.eql? false}.count} 
+	                     td { Invitation.pluck(:created_at).map{|x| x.to_date.eql? book.upload_date_for_admin and Invitation.find_by_created_at(x).status == "Accept"}.reject{|x| x.eql? false}.count} 
 	                     # td {book.upload_date} 
 	                     td{ average_rating(send ,accept )}
 	                    
