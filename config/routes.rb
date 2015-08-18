@@ -63,7 +63,7 @@ Rails.application.routes.draw do
   post '/create_ratings' => 'apis#create_ratings'
   get '/get_ratings' => 'apis#get_ratings'
   get '/terms_and_conditions' => 'apis#terms_and_conditions', as: :terms_and_conditions
-  get '/privacy_policy' => 'apis#privacy_policy', as: :privacy_policy
+  get '/api_privacy_policy' => 'apis#privacy_policy'
 #####################################################
 
   ############### web services my passwords controller###########################
