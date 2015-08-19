@@ -64,6 +64,7 @@ Rails.application.routes.draw do
   get '/get_ratings' => 'apis#get_ratings'
   get '/terms_and_conditions' => 'apis#terms_and_conditions', as: :terms_and_conditions
   get '/api_privacy_policy' => 'apis#privacy_policy'
+  post '/update_lat_and_long' => 'apis#update_lat_and_long'
 #####################################################
 
   ############### web services my passwords controller###########################

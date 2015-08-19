@@ -4,7 +4,7 @@ class ApisController < ApplicationController
 
  include CalculateDistance
 
-  before_filter :find_user, :only => [:upload_by_scanning_counts, :view_my_review, :notification_status, :delete_author_name, :delete_genre_name, :my_library, :potential_mat_profile, :upload_multiple_reading_pref,:create_ratings, :get_ratings, :my_chat_list, :invitation_details,:upload_books, :get_uploaded_books, :delete_uploaded_books, :delete_reading_preferences, :upload_reading_preferences, :my_reading_preferences, :my_reading_preferences_for_author, :my_reading_preferences_for_genre, :user_profile, :update_profile, :search_potential_matches]
+  before_filter :find_user, :only => [:upload_by_scanning_counts, :view_my_review, :update_lat_and_long, :notification_status, :delete_author_name, :delete_genre_name, :my_library, :potential_mat_profile, :upload_multiple_reading_pref,:create_ratings, :get_ratings, :my_chat_list, :invitation_details,:upload_books, :get_uploaded_books, :delete_uploaded_books, :delete_reading_preferences, :upload_reading_preferences, :my_reading_preferences, :my_reading_preferences_for_author, :my_reading_preferences_for_genre, :user_profile, :update_profile, :search_potential_matches]
 
 	def register	
 		params[:picture] = User.image_data(params[:picture])
@@ -621,6 +621,14 @@ class ApisController < ApplicationController
   def update_sign_in_token
   	@user = User.find_by_sign_in_token(params[:format])
   	@user.update_attributes(:sign_in_token => nil)
+  end
+
+  def update_lat_and_long
+  	  @user.update_attributes(:latitude => params[:latitude], :longitude => params[:longitude])
+  	        render :json => {
+											      :responseCode => 200,
+                            :responseMessage => 'Latitude and longitude updated successfully.'
+                    	      }  
   end
 
   private
