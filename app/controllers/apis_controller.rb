@@ -512,7 +512,7 @@ class ApisController < ApplicationController
 	end
 
 	def reading_prf_searching     # Search by Book Name, Author name, isbn_no or genre  #.sort_by { |i| [i ? 0 : 1, i] }
-		  @book = Document.search(params[:name], star: true).map{|x| x.attributes.merge!(image_url:  "http://ec2-52-24-139-4.us-west-2.compute.amazonaws.com/covers/#{x.isbn13.to_s[9..10]}/#{x.isbn13.to_s[11..12]}/#{x.isbn13}.jpg")}
+		  @book = Document.search(params[:name], star: true, :per_page => 1000).map{|x| x.attributes.merge!(image_url:  "http://ec2-52-24-139-4.us-west-2.compute.amazonaws.com/covers/#{x.isbn13.to_s[9..10]}/#{x.isbn13.to_s[11..12]}/#{x.isbn13}.jpg")}
 		  if @book.present?
 		  	 render :json => {
                             :responseCode => 200,
