@@ -23,7 +23,7 @@ require "net/http"
 
 task :validate_images_url => :environment do
   hash = {}
-  Document.find_each(start: 285590,batch_size: 10000).with_index do |doc,index|
+  Document.find_each(start: 3222259,batch_size: 10000).with_index do |doc,index|
     isbn_last = doc.isbn13
     u =  "http://www.novelinked.com/covers/#{isbn_last.to_s[9..10]}/#{isbn_last.to_s[11..12]}/#{isbn_last}.jpg"
     url = URI.parse(u)
@@ -43,4 +43,4 @@ task :validate_images_url => :environment do
 end
 
 
-
+# 0 - 4l and than 32l
