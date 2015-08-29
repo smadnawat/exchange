@@ -13,7 +13,8 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :groups ,:join_table => "users_groups"
   has_many :messages, :class_name => 'Message',:foreign_key => 'sender_id',dependent: :destroy
   has_many :blocks, :class_name => "Block", :foreign_key => :user_id, dependent: :destroy
-
+  accepts_nested_attributes_for :reading_preferences 
+ 
   scope :users, -> { where(:is_block => false) }
   scope :blocked, -> { where(:is_block => true) }
 	A = 'normal'
@@ -87,9 +88,6 @@ class User < ActiveRecord::Base
       @books_min_range = @user.books.near([params[:lat],params[:long]], params[:range_start], :units => :km)
       @books = @books_max_range - @books_min_range
       @user_preferences = @user.reading_preferences
-      @user_author_pref = @user.author_prefernce
-      @user_genre_pref = @user.genre_preference
-      p "=========#{@books_max_range.inspect}========#{@books_min_range.inspect}===========#{@books.inspect}"
       other_users = (User.includes(:books,:reading_preferences,:ratings).near([params[:lat],params[:long]], params[:range_end], :units => :km).reject{|u| u.id == @user.id})
 
       if @books.present? 
@@ -99,7 +97,6 @@ class User < ActiveRecord::Base
                 other_user.reading_preferences.each do |other_user_preference|
                     @user_preferences.each do |user_preference|
 
-                        #other_user.reading_preferences.map{|x| x if x.book_deactivated == false}.compact.reject{|x|x.title==""}.map{|x|x.title.split[0..5].join('').upcase}
                         if (other_user.reading_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:title).include?(book.title) && @user_preferences.map{|x| x if x.book_deactivated == false}.compact.map(&:title).include?(other_users_book.title))
                                  
                                  if ((other_user_preference.title.eql? book.title) && (other_users_book.title.eql? user_preference.title))
@@ -118,14 +115,12 @@ class User < ActiveRecord::Base
                                   priority_third<<  self.matches_detail(other_user, book, other_users_book)
                                 end
 
-                        #elsif (other_user.books.map(&:author).include?(book.author) && @books.map(&:author).include?(other_users_book.author)) 
                         elsif (other_user.reading_preferences.map{|x| x if x.by_scanning == true && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false}.compact.map(&:author).include?(book.author) && @user_preferences.map{|x| x if x.by_scanning == true && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false}.compact.map(&:author).include?(other_users_book.author)) 
                                 
                                 if ((other_user_preference.author.eql? book.author) && (other_users_book.author.eql? user_preference.author)) 
                                   priority_fifth<<   self.matches_detail(other_user, book, other_users_book)
                                 end
                        
-                        #elsif (other_user.books.map(&:genre).include?(book.genre) && @books.map(&:genre).include?(other_users_book.genre))  
                         elsif (other_user.reading_preferences.map{|x| x if x.by_scanning == true && x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false}.compact.map(&:genre).include?(book.genre) && @user_preferences.map{|x| x if x.by_scanning == true && x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false}.compact.map(&:genre).include?(other_users_book.genre))          
                                  
                                 if ((other_user_preference.genre.eql? book.genre) && (other_users_book.genre.eql? user_preference.genre)) 
@@ -154,27 +149,18 @@ class User < ActiveRecord::Base
                       other_userss.reading_preferences.each do |other_user_preference|
                           if other_userss.books.blank?
 
-                                #if not(((other_userss.reading_preferences.map{|x| x if x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false}.compact.reject {|x| x.author == ""}.map(&:author) & @user_preferences.map{|x| x if x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false}.compact.reject {|x| x.author == ""}.map(&:author)).blank?) && ((other_userss.reading_preferences.map{|x| x if x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false}.compact.reject {|x| x.genre == ""}.map(&:genre) & @user_preferences.map{|x| x if x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false}.compact.reject {|x| x.genre == ""}.map(&:genre)).blank?)) 
-                                
-                                #if (other_userss.reading_preferences.map{|x| x if x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false}.compact.reject {|x| x.author == ""}.map(&:author).include?(user_preference.author) && (other_userss.reading_preferences.map{|x| x if x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false}.compact.reject {|x| x.genre == ""}.map(&:genre).include?(user_preference.genre))) 
-                                logger.info"======#{other_userss.reading_preferences.pluck(:author)}===================#{@user_preferences.pluck(:author)}=======================-------------------------------------------#{user_preference.author}----------------"
-
                                 if ((other_userss.reading_preferences.map{|x| x if x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false}.compact.reject {|x| x.author == ""}.map(&:author).include?(user_preference.author) && @user_preferences.map{|x| x if x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false}.compact.reject{|x| x.author == ""}.map(&:author).include?(other_user_preference.author)) && (other_userss.reading_preferences.map{|x| x if x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false}.compact.reject {|x| x.genre == ""}.map(&:genre).include?(user_preference.genre) && @user_preferences.map{|x| x if x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false}.compact.reject {|x| x.genre == ""}.map(&:genre).include?(other_user_preference.genre)))  
                                         
                                         if ((other_user_preference.author.eql? user_preference.author) && (other_user_preference.genre.eql? user_preference.genre))
                                              priority_seventh<<  self.match_hash_detail(other_userss, user_preference, other_user_preference)                                           
                                         end
-                                #elsif not((other_userss.reading_preferences.map{|x| x if x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false}.compact.reject {|x| x.author == ""}.map(&:author) & @user_preferences.map{|x| x if x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false}.compact.reject {|x| x.author == ""}.map(&:author)).blank?)
                                 
-                                #elsif (other_userss.reading_preferences.map{|x| x if x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false}.compact.reject {|x| x.author == ""}.map(&:author).include?(user_preference.author))
                                  elsif (other_userss.reading_preferences.map{|x| x if x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false}.compact.reject {|x| x.author == ""}.map(&:author).include?(user_preference.author) && @user_preferences.map{|x| x if x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false}.compact.reject{|x| x.author == ""}.map(&:author).include?(other_user_preference.author)) 
                                      
                                       if (other_user_preference.author.eql? user_preference.author)
                                           priority_eighth<<  self.match_hash_detail(other_userss, user_preference, other_user_preference)                                      
                                       end 
-                                #elsif not((other_userss.reading_preferences.map{|x| x if x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false}.compact.reject {|x| x.genre == ""}.map(&:genre) & @user_preferences.map{|x| x if x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false}.compact.reject {|x| x.genre == ""}.map(&:genre)).blank?)          
                                 
-                                #elsif (other_userss.reading_preferences.map{|x| x if x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false}.compact.reject {|x| x.genre == ""}.map(&:genre).include?(user_preference.genre))
                                  elsif (other_userss.reading_preferences.map{|x| x if x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false}.compact.reject {|x| x.genre == ""}.map(&:genre).include?(user_preference.genre) && @user_preferences.map{|x| x if x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false}.compact.reject {|x| x.genre == ""}.map(&:genre).include?(other_user_preference.genre))
                                       
                                       if (other_user_preference.genre.eql? user_preference.genre)       

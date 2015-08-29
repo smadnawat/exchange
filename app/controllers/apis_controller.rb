@@ -204,7 +204,8 @@ class ApisController < ApplicationController
 
   def update_profile
   		params[:picture] = User.image_data(params[:picture])
-	    if @user.update_attributes(permitted_params)
+	    # if @user.update_attributes(permitted_params)
+	    if @user.update_attributes(:username => params[:username], :gender => params[:gender], :picture => params[:picture], :about_me => params[:about_me])
 	      render :json => {
 	      	               :responseCode => 200,
 	      	               :responseMessage => "Profile has been successfully updated.",
@@ -296,16 +297,6 @@ class ApisController < ApplicationController
 	    end  	
   end
 
-  # def delete_author_name
-  # 	  @reading_preferences = ReadingPreference.find_by_id_and_author(params[:reading_pref_id], params[:author_name]) 
-  #     if @reading_preferences
-  # 	       @reading_preferences.update_attributes(:author => " ")
-  #          render :json => {:responseCode => 200,:responseMessage => "Author has been deleted successfully."}
-  #     else
-  #     	   render :json => {:responseCode => 500,:responseMessage => "Author name doesn't exists!."}
-  #     end     
-  # end
-
   def delete_author_name
   	  @author = @user.reading_preferences.where(:author => params[:author_name])
   	  if @author 
@@ -315,16 +306,6 @@ class ApisController < ApplicationController
      	    render :json => {:responseCode => 500,:responseMessage => "Author name doesn't exists!."}
       end    
   end
-
-  # def delete_genre_name
-  # 	  @reading_preferences = ReadingPreference.find_by_id_and_genre(params[:reading_pref_id], params[:genre_name]) 
-  #     if @reading_preferences
-  # 	       @reading_preferences.update_attributes(:genre => " ")
-  #          render :json => {:responseCode => 200,:responseMessage => "Genre has been deleted successfully."}
-  #     else
-  #     	   render :json => {:responseCode => 500,:responseMessage => "Genre doesn't exists!."}
-  #     end     
-  # end 
 
   def delete_genre_name
   	  @genre = @user.reading_preferences.where(:genre => params[:genre_name])
@@ -435,16 +416,6 @@ class ApisController < ApplicationController
                         :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }	                   
 	                   }  
 	end
-
-	# def genre_search
-	# 	@genre = Document.search_genre(params[:name])		
-	#   render :json => {
- #                        :responseCode => 200,
- #                        :responseMessage => "Genre name's are fetched successfully!",
- #                        :name => paging(@genre, params[:page_no],params[:page_size]).as_json(only: [:subjects, :isbn13]),
- #                        :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }	                   
-	#                    } 
-	# end
 
 	def genre_search
 		@genre = Genre.search(params[:name])		
@@ -634,7 +605,7 @@ class ApisController < ApplicationController
   private
 
 	def permitted_params
-	   params.permit(:email, :username, :password, :password_confirmation, :sign_in_token, :gender, :location, :picture, :about_me, :reset_password_token, :author_prefernce, :genre_preference, :date_signup,:device_used, :latitude, :longitude, :provider, :u_id)
+	   params.permit(:email, :username, :password, :password_confirmation, :sign_in_token, :gender, :location, :picture, :about_me, :reset_password_token, :author_prefernce, :genre_preference, :date_signup,:device_used, :latitude, :longitude, :provider, :u_id, reading_preferences_attributes: [:title, :author, :genre])
 	end
 
 	def books_params
@@ -655,3 +626,29 @@ class ApisController < ApplicationController
 
 
 end
+
+
+#===========================================================
+ # {
+ #        "provider": "normal",
+ #        "username": "abvffc",
+ #        "gender": "male",
+ #        "picture": "",
+ #        "date_signup": "2015-02-10",
+ #        "email": "testinktg@gmail.com",
+ #        "password": "12345678",
+ #        "location": "Noida",
+ #        "u_id": " ",
+ #        "latitude": 28.5315291,
+ #        "longitude": 77.2718406999,
+ #        "device_used": "Sony Xperia",
+ #        "device_id": "xxxxxxxxxxxx",
+ #        "device_type": "Android",
+ #        "reading_preferences_attributes": [ {
+ #            "title": "",
+ #            "author": "JohnGrisham",
+ #            "genre": "Kids"
+ #        } ]
+ #    }
+
+#===========================================================

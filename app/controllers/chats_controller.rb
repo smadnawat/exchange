@@ -370,6 +370,11 @@ class ChatsController < ApplicationController
 		end	
 	end
 
+	# def search_by_similar_reading_pref
+	# 	  logger.info"--------------------------#{params.inspect}"
+	# 	  ReadingPreference.search_similar_rp(params)
+	# end
+
 
 	private
 

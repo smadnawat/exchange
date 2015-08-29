@@ -14,8 +14,8 @@ class WeeklyWorker
 
     		        	other_users = User.includes(:books, :reading_preferences).all.reject{|u| u.id == user.id}
                     @user_preferences = user.reading_preferences
-                       @user_author_pref = user.author_prefernce
-                         @user_genre_pref = user.genre_preference
+                       #@user_author_pref = user.author_prefernce
+                         #@user_genre_pref = user.genre_preference
                             unless other_users.blank?
                                 other_users.each do |other_user|
                                     unless other_user.books.blank? 
