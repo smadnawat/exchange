@@ -183,7 +183,7 @@ class User < ActiveRecord::Base
     match_hash = {}
     dis = other_user.distance.round(2)
     match_hash[:other_user_detail] = other_user.as_json(:only => [:picture,:username,:id]).merge(distance: dis)
-    #@rating = Rating.calculate_ratings(other_user)
+    @rating = Rating.calculate_ratings(other_user)
     match_hash[:user_rating] = @rating
     data = "B"
     match_hash[:book_to_give] = book.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(data: data)
@@ -195,7 +195,7 @@ class User < ActiveRecord::Base
     match_hash = {}
     dis = other_user.distance.round(2)
     match_hash[:other_user_detail] = other_user.as_json(:only => [:picture,:username,:id]).merge(distance: dis)
-    #@rating = Rating.calculate_ratings(other_user)
+    @rating = Rating.calculate_ratings(other_user)
     match_hash[:user_rating] = @rating
     data = "RP"
     match_hash[:book_to_give] = user_preference.as_json(:only => [:id, :title,:author,:genre]).merge(data: data)
@@ -207,7 +207,7 @@ class User < ActiveRecord::Base
     match_hash = {}
     dis = other_user.distance.round(2)
     match_hash[:other_user_detail] = other_user.as_json(:only => [:picture,:username,:id]).merge(distance: dis)
-    #@rating = Rating.calculate_ratings(other_user)
+    @rating = Rating.calculate_ratings(other_user)
     match_hash[:user_rating] = @rating
     data = "ED"
     match_hash[:book_to_give] = book.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(data: data)
