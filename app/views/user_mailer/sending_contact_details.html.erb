@@ -1,0 +1,11 @@
+Hello Arvind Monie! <%= @user.name %> has submitted the contact form. <br>
+<br>
+The details of contact form is below: <br>
+Gender : <b> <%= @user.gender %> </b><br>
+Email : <b>  <%= @user.email %> </b> <br> 
+Country Name : <b> <%= @user.country %> </b> <br>
+Author Code : <b> <%= @user.author_code%> </b> <br>
+
+Please click on the following link to download the CSV : 
+
+<%= link_to "Download_CSV", download_csv_url(format: "csv"),:controller => "home",:action => "download_csv"%>

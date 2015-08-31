@@ -1,0 +1,234 @@
+<% provide(:title, 'Our Story') %>
+
+
+   <% meta_description "Get an insight of the minds behind Novelinked Idea and how it formed into an App for book lovers." %>
+     <nav class="navbar navbar-default navbar-fixed-top topnav navi " role="navigation">
+        <div class="container topnav">
+            <!-- Brand and toggle get grouped for better mobile display -->
+			<div class="row">
+				<div class="col-md-6 col-sm-4">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand topnav" href="/"><img  src="../assets/logo.png"></a>
+					</div>
+				</div>
+				
+            <!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="col-md-6 col-sm-8">
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+						<ul class="nav navbar-nav navbar-right ">
+							<li class="other-nav">
+								<a href="#about" data-toggle="modal" data-target="#contact_us" data-whatever="@mdo">Journey with Us</a>
+							</li>
+							<li class="other-nav">
+								<a href="http://novelinked.com#services">How It Works</a>
+							</li>
+							<li class="other-nav">
+								<a href="http://novelinked.com#benefits">Benefits</a>
+							</li>
+							 <li class="other-nav">
+								<a href="/about_us">My Story</a>
+							</li>
+							<!--  <li class="other-nav">
+								<a href="/my_team">My Team</a>
+							</li> -->
+						</ul>
+					</div>
+				</div>
+			</div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+	<div class="content-section-b padd-sec">
+		<div class="grn-bnd"></div>
+		<div class="container">
+			<div class="row">
+			
+					<div class="col-md-8 col-md-offset-2 about-head">
+						<h3 class="text-c">My Story</h3>
+						<div class="row">
+							<div class="col-md-4 col-md-offset-4">
+								<img src="../assets/profile-pic.png" class="prfl-img" alt="" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="text-area">
+								<p>One morning, I stumbled upon an almost mint condition Geronimo Stilton Hardcover book disposed-off and lying in the recycle bin of my condominium (the price of which was approx. SGD 20). Having a 7 and 10 year old daughter and son who are avid readers, who usually went through a book in this series in not more than a couple of hours, I am often compelled to spend similar amounts (most often, with a heavy heart) for the numerous books she had been through in this series.</p>
+								<p>What was an even tougher decision, was to dispose-off the book after having spent so much on it, and when it was in such a good condition. If only I knew someone who would have liked to have it? Or better still, if some I knew had a book I wanted, and wanted to give it away? And so, on that sunny morning, I realized the need to help connect these two sets of people. Why not create a channel of communication between parents to facilitate an exchange of books already read? After all, a book exchanged realizes much better value than when it is re-sold, or worse still, it just lies at home collecting dust and occupying space.</p>
+								<p>With today’s mobile technology, together with location based services, the exchange could be as convenient as a 10 minute walk to an exchange location. Possibly, a lot less that what you would take getting to a library or even a book store.  Add to this the fact that customers will get the book free, seemed to me like a compelling value proposition. The more I thought about it, the more convinced I was about the need for this app. Adding a social angle to it, made it even more relevant. </p>
+								<p>The prospect of meeting new people with similar reading interests seemed far more appealing than having to meet with people I may have nothing in common with.And so, I decided to take the plunge into the exciting world of developing mobile apps, thus moving me away from my previous job as an equity research analyst. Equipped with strong business analytical skills, being well-travelled in Asia, along with understanding of consumer sentiments and culture, I hope to provide users of Novelinked a valuable and convenient service. </p>
+								<p>I am a self-funded entrepreneur, working within a budget, but with a dream to deliver the best value and experience to you without a charge. To do this, I need to rely on advertising revenue, and as prospective beneficiaries I do hope you can understand this. Novelinked is soon to be launched on the App Store and Google Play when I will be at your service. If you have any questions or feedback, please email me at talktome@makasharcreative.com.</p>
+								<p>Thanking you,</br> 
+								Arvind Monie
+								</p>
+							</div>
+						</div>
+					</div>
+			</div>
+		</div>
+	</div>
+   
+
+   
+
+    <!-- Footer -->
+ <footer>
+        <div class="container">
+            <div class="row">
+				 <div class="col-md-6 col-sm-6">
+					 <p class="copyright text-muted small">© 2015 All rights reserved.</p>
+				 </div>
+                <div class="col-md-4 pull-right col-sm-6">
+                    <ul class="list-inline pull-right marg-10 footr">
+                        <li>
+                            <a href="/privacy_policy">Privacy Policy</a>
+                        </li>
+						<li class="footer-menu-divider">|</li>
+						<li>
+                            <a href="/terms_of_use">Terms of Use</a>
+                        </li>
+                        
+                    </ul>
+                   
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+      
+    <div class="modal fade" id="contact_us" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+
+        <div role="document" class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span></button>
+			<h4 id="exampleModalLabel" class="modal-title">Your Details</h4>
+		  </div>
+		  <div class="modal-body">
+			<%= form_for :contact_us,url: contact_us_path, :html=>{:class => "contact_us_form",id: "contact-form"} do |f| %>
+
+			  <div class="form-group">
+				<label for="exampleInputEmail1" class="label-txt">Name</label>
+				 <%= f.text_field :name, autofocus: true, :class => "form-control form-c" %>
+				 <span class="error-name error"></span>
+			  </div>
+			  <div class="form-group">
+				<label class="label-txt" for="exampleInputEmail1">Email</label>
+				<%= f.text_field :email, :class=> "form-control form-c"  %>
+				<span class="error-email error"></span>
+			  </div>
+			   <div class="form-group">
+				<label class="label-txt" for="exampleInputEmail1">Country</label>
+				<%= country_list%>  
+
+			  </div>
+			  <div class="form-group">
+				<label class="label-txt" for="exampleInputEmail1">Gender</label>
+			  <div class="radio">
+			  <label>
+				<%= f.radio_button :gender, 'Male', :checked=> true %>
+				Male
+			  </label>
+			</div>
+			<div class="radio">
+			  <label>
+				<%= f.radio_button :gender, 'Female' %>
+				Female
+			  </label>
+			</div>
+			</div>
+			<div class="form-group">
+				<label class="label-txt" for="exampleInputEmail1">Author Code (if any)</label>
+				<%= f.text_field :author_code, :class=> "form-control form-c"  %>
+			</div>
+			  
+			
+		  </div>
+		  <div class="modal-footer put-center">
+		  	<a href="#" class="btn btn-default btn-red" type="button" id = "contact_us_valid" onclick="$('.contact_us_form').submit();">Journey With Us</a>
+      </div>
+	 <% end %>
+			</div>
+		  </div>
+	  </div>
+
+
+
+	<!---------modal------------->
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="exampleModalLabel">Your Details</h4>
+		  </div>
+		  <div class="modal-body">
+			<form>
+			  <div class="form-group">
+				<label for="exampleInputEmail1" class="label-txt">Name</label>
+				<input type="email" class="form-control" id="exampleInputEmail1" placeholder="">
+			  </div>
+			  <div class="form-group">
+				<label for="exampleInputEmail1" class="label-txt">Email</label>
+				<input type="email" class="form-control" id="exampleInputEmail1" placeholder="">
+			  </div>
+			   <div class="form-group">
+				<label for="exampleInputEmail1" class="label-txt">Country</label>
+				<select class="form-control">
+				  <option>1</option>
+				  <option>2</option>
+				  <option>3</option>
+				  <option>4</option>
+				  <option>5</option>
+				</select>
+			  </div>
+			  <div class="form-group">
+				<label for="exampleInputEmail1"class="label-txt" >Gender</label>
+			  <div class="radio">
+			  <label>
+				<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+				Male
+			  </label>
+			</div>
+			<div class="radio">
+			  <label>
+				<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+				Female
+			  </label>
+			</div>
+			</div>
+			<div class="form-group">
+				<label for="exampleInputEmail1"class="label-txt">Author ( If any)</label>
+				<input type="email" class="form-control" id="exampleInputEmail1" placeholder="">
+			</div>
+			  
+			</form>
+		  </div>
+		  <div class="modal-footer put-center">
+			<button type="button" class="btn btn-default btn-red">Journey With Us</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+    <!-- jQuery -->
+ 	<script>
+//   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+//   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+//   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+//   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+//   ga('create', 'UA-64454858-1', 'auto');
+//   ga('send', 'pageview');
+
+// </script>
+
+    <!-- Bootstrap Core JavaScript -->
+
+</body>

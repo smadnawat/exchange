@@ -1,0 +1,7 @@
+Hello <%= @user.username %>, Welcome to Novelinked!  <br>
+
+<br>
+Please click on the following link to confirm your account: 
+
+ <b>  <%= link_to "Complete Registration", update_sign_in_token_url(@login_url),:controller => "apis",:action => "update_sign_in_token" %> </b> 
+

@@ -1,0 +1,22 @@
+  <table>
+  <tr>
+      <th>#</th>
+      <th >Name</th>
+      <th>Gender</th>
+      <th>Email</th>
+      <th>Country</th>
+      <th>Author Code</th>
+  </tr>
+  <% counter=0 %>
+<% @contact.each do |contact|%> 
+  <tr>
+      <td><%= counter+=1 %></td>
+      <td><%= contact.name %></td>
+      <td><%= contact.gender %></td>
+      <td><%= contact.email %></td>
+      <td><%= contact.country %></td>
+      <td><%= contact.author_code %></td>
+     
+  </tr>
+<% end %>
+  </table>

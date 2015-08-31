@@ -1,0 +1,32 @@
+<div id="form-content" class="modal hide fade in" style="display: none; ">
+          <div class="modal-header">
+                <a class="close" data-dismiss="modal">×</a>
+                <h3>Select Location</h3>
+          </div>
+          <form class="contact">
+             
+          
+            <div class="modal-body"> 
+           
+              <%= form_for(:rrrrrr,  url: notifications_path , html: { class: 'modal-form form-horizontal' } ) do |t| %>  
+              <%#= form_for :user, :url => {:controller => "notifications", :action => "create"} do |f| %>
+                 <% ReadingPreference.pluck(:genre).each do |role| %>
+                  <ul>
+                   <li>
+                     <%= check_box_tag 'genre[]', role -%>
+                     <%= h role -%>
+                   </li>
+                    <ul>
+                 <% end %>
+   
+                  <div class="modal-footer">
+                    <!-- <button class="btn btn-success" id="submit">Send</button> -->
+                     <%= t.submit "Log in", :class=>"btn btn-success" %>
+                    <a href="#" class="btn" data-dismiss="modal">Close</a>
+                  </div>
+             <%end%>
+            </div>
+           
+     </form>
+  </div>
+
