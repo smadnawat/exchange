@@ -23,7 +23,8 @@ Rails.application.routes.draw do
   post '/search_user' => 'chats#search_user'
   post '/add_user_to_group' => 'chats#add_user_to_group'
   post '/unblock_user' => 'chats#unblock_user'
-  # post '/search_by_similar_reading_pref' => 'chats#search_by_similar_reading_pref'
+  post '/search_by_similar_reading_pref' => 'chats#search_by_similar_reading_pref'
+  post '/search_by_similar_books' => 'chats#search_by_similar_books'
 #==============================================================================
 
 ############### web services API controller###########################

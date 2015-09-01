@@ -83,7 +83,7 @@ class User < ActiveRecord::Base
       priority_eighth = [] 
       priority_nineth = []
 
-      @user = User.includes(:books,:reading_preferences,:ratings).find_by(:id => params[:user_id])
+      @user = User.includes(:books,:reading_preferences,:ratings).find_by(:id => params[:user_id])        
       @books_max_range = @user.books.near([params[:lat],params[:long]], params[:range_end], :units => :km)
       @books_min_range = @user.books.near([params[:lat],params[:long]], params[:range_start], :units => :km)
       @books = @books_max_range - @books_min_range

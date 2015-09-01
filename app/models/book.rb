@@ -17,4 +17,30 @@ class Book < ActiveRecord::Base
 	  self.country_name = self.address.split(',').last	
 	end
 
+	def self.search_similar_books(params)
+  	  logger.info"==========================#{params.inspect}-----1111111111111111"
+      users = []
+  	  @user = User.includes(:books).find_by_id(params[:user_id])
+      @user_books = @user.books if @user.books.present?
+      other_users = User.includes(:books).near([@user.latitude, @user.longitude], 5, :units => :km).reject{|u| u.id == @user.id}
+
+          @user_books.reject{|x|x.author == ""}.each do |user_book|
+              other_users.each do |other_user|  
+
+                    if  (other_user.books.reject{|x| x.author == ""}.map(&:author).map{|x|x.split(' ').join('').upcase}.include?(user_book.author.split(' ').join('').upcase))
+                          users<< self.matches_detail_for_other_user(other_user)
+                    end  
+
+              end  
+          end 
+      return users.uniq 
+	end
+
+  def self.matches_detail_for_other_user(other_user)
+    match_hash = {}
+    dis = other_user.distance.round(2)
+    match_hash[:other_user_detail] = other_user.as_json(:only => [:picture,:username,:id]).merge(distance: dis)
+    match_hash
+  end
+
 end

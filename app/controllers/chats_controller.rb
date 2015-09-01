@@ -370,10 +370,44 @@ class ChatsController < ApplicationController
 		end	
 	end
 
-	# def search_by_similar_reading_pref
-	# 	  logger.info"--------------------------#{params.inspect}"
-	# 	  ReadingPreference.search_similar_rp(params)
-	# end
+	def search_by_similar_reading_pref
+		  logger.info"--------------------------#{params.inspect}"
+		  similar_pref = ReadingPreference.search_similar_rp(params)
+		  logger.info"=========-=-=---=-----------------------------===========================#{similar_pref.inspect}-----------"
+		  unless similar_pref.blank?
+			   render :json => {
+	                       :responseCode => 200,
+	                       :responseMessage => 'Similar Reading Preferences Users fetched successfully!',
+	                       :similar_reading_pref => {similar_pref: similar_pref.sort{|x|x[:other_user_detail][:distance]}}
+	  	                  }
+  	  else
+  	  	 render :json => {
+                       :responseCode => 500,
+                       :responseMessage => "Don't have similar Reading Preferences Users!",
+                       :similar_reading_pref => []
+  	                  }
+  	  end                
+	end
+
+	def search_by_similar_books
+		  logger.info"--------------------------#{params.inspect}"
+		  similar_books = Book.search_similar_books(params)
+		  logger.info"=========-=-=---=-----------------------------===========================#{similar_books.inspect}-----------"
+ 
+		  unless similar_books.blank?
+		  render :json => {
+                       :responseCode => 200,
+                       :responseMessage => 'Similar Books Catalogued Users fetched successfully!',
+                       :similar_books => {similar_book: similar_books.sort{|x|x[:other_user_detail][:distance]}}
+  	                  }
+  	  else
+  	  	 render :json => {
+		                       :responseCode => 500,
+		                       :responseMessage => "Don't have similar Books Catalogued Users!",
+		                       :similar_books => []
+  	                     }
+  	  end 
+	end
 
 
 	private
