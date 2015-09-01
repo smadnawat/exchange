@@ -370,11 +370,11 @@ ActiveRecord::Schema.define(version: 20150818130530) do
     t.string   "provider",               limit: 255,   default: "",    null: false
     t.string   "u_id",                   limit: 255,   default: "",    null: false
     t.string   "device_used",            limit: 255
+    t.boolean  "is_block",               limit: 1,     default: false
     t.string   "reset_password_token",   limit: 255
     t.datetime "reset_password_sent_at"
     t.string   "address",                limit: 255,   default: "",    null: false
     t.text     "about_me",               limit: 65535
-    t.boolean  "is_block",               limit: 1,     default: false
     t.date     "weekly_date"
     t.boolean  "notification_status",    limit: 1,     default: true
     t.string   "sign_in_token",          limit: 255
