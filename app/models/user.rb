@@ -36,6 +36,18 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :reading_preferences
 
 
+  def generate_token
+    random_token = ""
+    loop do
+      random_token = SecureRandom.hex(n=16)
+      break random_token unless User.exists?(mat_email_token: random_token)
+    end
+    self.update_attributes(mat_email_token: random_token)
+    self
+  end 
+
+
+
   def self.image_data(data)
     return nil unless data
     io = CarrierStringIO.new(Base64.decode64(data)) 

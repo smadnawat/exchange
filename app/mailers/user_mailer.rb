@@ -18,8 +18,9 @@ class UserMailer < ApplicationMailer
   	mail(:to => @user.email, :subject => "Welcome to Novelinked, Where Old Books Meet New Friends.")
   end
 
-  def news_letter
-    mail(:to => "ashish.mittal@mobiloitte.com", :subject => "Newsletter for the month of October 2015.")
+  def news_letter user
+    @user = user
+    mail(:to => @user.email, :subject => "Newsletter for the month of #{Date.current.strftime("%B  %Y")} .")
   end
 
 end

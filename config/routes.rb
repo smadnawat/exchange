@@ -98,5 +98,6 @@ Rails.application.routes.draw do
   get  '/my_team' => 'home#my_team'
   get "/download_csv",:to => "home#download_csv",:as => "download_csv"
   get "/update_sign_in_token", :to => "apis#update_sign_in_token", :as => "update_sign_in_token" 
+  get '/receive_news_letter/:token'=>'home#receive_news_letter',as:'receive_news_letter'
 
 end

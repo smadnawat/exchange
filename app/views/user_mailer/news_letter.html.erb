@@ -1,0 +1,11 @@
+Dear <%= @user.username%>
+
+We like getting to point so you can get on with your FREE reading experience. Please enter your registered email ID in the space provided below and click the MATCH ME button to send you an email of the list of 5 book swaps you can initiate on your NovelinkedApp.
+
+<%= link_to "Click here to Get your potential match", receive_news_letter_url(@user.mat_email_token),:controller => "home",:action => "receive_news_letter" %>
+
+Remember, if you want a wider choice of books at even more convenient exchange points, make sure you tell all your friends about it, especially the ones living close to you.  Build Micro Communities!!
+
+Happy Novelinking!
+Arvind Monie
+Owner of Novelinked.com

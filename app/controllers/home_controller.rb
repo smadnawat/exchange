@@ -33,6 +33,17 @@ class HomeController < ApplicationController
 		render text: @contact.to_csv(col_sep: "\t") 
 	end
 
+	def receive_news_letter
+		user = User.find_by(mat_email_token: params[:token])
+		if user 
+		  				
+			flash.now[:notice] = 'You will get your match on your registered email'
+		else
+			flash.now[:notice] = 'Invalid link or link has been already used'
+		end
+	end
+
+
 	private
 
 	def params_permit
