@@ -99,28 +99,27 @@ class User < ActiveRecord::Base
           book_genre = other_user.books.select{|x|@user_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.genre_deactivated == false && x.delete_genre == false && x.genre!="")}.map(&:genre).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["genre"].split(' ')[0,5].join('').upcase)}
           book_author_n = other_user.books.select{|x|@user_preferences.select{|x|(x.by_scanning == true && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false && x.author!="")}.map(&:author).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["author"].split(' ')[0,5].join('').upcase)}
           book_genre_n = other_user.books.select{|x|@user_preferences.select{|x|(x.by_scanning == true && x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false && x.genre!="")}.map(&:genre).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["genre"].split(' ')[0,5].join('').upcase)}
-
           @books.each do |book|
 
             book_title.each do |other_users_book_title|
               priority_first << matches_detail(other_user, book, other_users_book_title)
-            end if other_user.reading_preferences.select{|x|(x.book_deactivated == false && x.title!="")}.map(&:title).map{|x|x.split(' ')[0,5].join('').upcase}.include?(book.title) and book_title.present?
+            end if (other_user.reading_preferences.select{|x|(x.book_deactivated == false && x.title!="")}.map(&:title).map{|x|x.split(' ')[0,5].join('').upcase}.include?(book.title.split(' ')[0,5].join('').upcase) and book_title.present?)
 
             book_author.each do |other_users_book_author|
               priority_second << matches_detail(other_user, book, other_users_book_author)
-            end if other_user.reading_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false && x.author!="")}.map(&:author).map{|x|x.split(' ')[0,5].join('').upcase}.include?(book.author.split(' ')[0,5].join('').upcase) and book_author.present?
+            end if (other_user.reading_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false && x.author!="")}.map(&:author).map{|x|x.split(' ')[0,5].join('').upcase}.include?(book.author.split(' ')[0,5].join('').upcase) and book_author.present?)
 
             book_genre.each do |other_users_book_genre|
               priority_third << matches_detail(other_user, book, other_users_book_genre)
-            end if other_user.reading_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.genre_deactivated == false && x.delete_genre == false && x.genre!="")}.map(&:genre).map{|x|x.split(' ')[0,5].join('').upcase}.include?(book.genre.split(' ')[0,5].join('').upcase) and book_genre.present?
+            end if (other_user.reading_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.genre_deactivated == false && x.delete_genre == false && x.genre!="")}.map(&:genre).map{|x|x.split(' ')[0,5].join('').upcase}.include?(book.genre.split(' ')[0,5].join('').upcase) and book_genre.present?)
 
             book_author_n.each do |other_users_book_author_n|
               priority_fifth << matches_detail(other_user, book, other_users_book_author_n)
-            end if other_user.reading_preferences.select{|x|(x.by_scanning == true && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false && x.author!="")}.map(&:author).map{|x|x.split(' ')[0,5].join('').upcase}.include?(book.author.split(' ')[0,5].join('').upcase) and book_author_n.present?
+            end if (other_user.reading_preferences.select{|x|(x.by_scanning == true && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false && x.author!="")}.map(&:author).map{|x|x.split(' ')[0,5].join('').upcase}.include?(book.author.split(' ')[0,5].join('').upcase) and book_author_n.present?)
 
             book_genre_n.each do |other_users_book_genre_n|
               priority_sixth << matches_detail(other_user, book, other_users_book_genre_n)
-            end if other_user.reading_preferences.select{|x|(x.by_scanning == true && x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false && x.genre!="")}.map(&:genre).map{|x|x.split(' ')[0,5].join('').upcase}.include?(book.genre.split(' ')[0,5].join('').upcase) and book_genre_n.present?
+            end if (other_user.reading_preferences.select{|x|(x.by_scanning == true && x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false && x.genre!="")}.map(&:genre).map{|x|x.split(' ')[0,5].join('').upcase}.include?(book.genre.split(' ')[0,5].join('').upcase) and book_genre_n.present?)
 
             if ((other_user.reading_preferences.select{|x|(x.book_deactivated == false && x.genre!="" && x.delete_genre == false && x.genre_deactivated == false)}.map(&:genre)).include?(book.genre) and ['Education - School','Education - Undergrad - Art & Design','Education - Undergrad - Aeronautics','Education - Undergrad - Business Studies / Eco','Education - Undergrad - Drama', 'Education - Undergrad - Engineering', 'Education - Undergrad - Geography', 'Education - Undergrad - History', 'Education - Undergrad - Law', 'Education - Undergrad - Literature / English', 'Education - Undergrad - Maths', 'Education - Undergrad - Medicine', 'Education - Undergrad - Music', 'Education - Undergrad - Science', 'Education - Undergrad - Social Science', 'Education - Undergrad - Technology', 'Education - Undergrad - Others', 'Education - Postgrad - Business / Finance', 'Education - Postgrad - History', 'Education - Postgrad - Marketing', 'Education - Postgrad - Maths', 'Education - Postgrad - Medicine', 'Education - Postgrad - Technology', 'Education - Postgrad - Others'].include?(book.genre) ) #&& (other_user.reading_preferences.map(&:isbn13).include?(book.isbn13)) 
               priority_forth << self.matches_detail_for_genre_cases(other_user, book)
@@ -141,7 +140,7 @@ class User < ActiveRecord::Base
                 preferences.each do |other_user_preference|
                   @user_preferences.select{|x|(x.book_deactivated == false)}.each do |user_preferences|
 
-                    if other_user_preference.genre==user_preferences.genre && other_user_preference.author==user_preferences.author.split(' ')[0,5].join('').upcase &&  user_preferences.delete_author.split(' ')[0,5].join('').upcase == false && user_preferences.author_deactivated == false && user_preferences.delete_genre == false && user_preferences.genre_deactivated == false && other_user_preference.delete_author == false && other_user_preference.author_deactivated == false && other_user_preference.delete_genre == false && other_user_preference.genre_deactivated == false && user_preferences.author!="" && user_preferences.genre!=""
+                    if other_user_preference.genre==user_preferences.genre && other_user_preference.author.split(' ')[0,5].join('').upcase==user_preferences.author.split(' ')[0,5].join('').upcase &&  user_preferences.delete_author == false && user_preferences.author_deactivated == false && user_preferences.delete_genre == false && user_preferences.genre_deactivated == false && other_user_preference.delete_author == false && other_user_preference.author_deactivated == false && other_user_preference.delete_genre == false && other_user_preference.genre_deactivated == false && user_preferences.author!="" && user_preferences.genre!=""
 
                       priority_seventh<< self.match_hash_detail(other_userss, user_preferences, other_user_preference) 
 
