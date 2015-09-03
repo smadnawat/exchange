@@ -36,7 +36,7 @@ class HomeController < ApplicationController
 	def receive_news_letter
 		user = User.find_by(mat_email_token: params[:token])
 		if user 
-		  				
+		  PotentialMatchWorker.perform_async(user)			
 			flash.now[:notice] = 'You will get your match on your registered email'
 		else
 			flash.now[:notice] = 'Invalid link or link has been already used'
