@@ -180,7 +180,7 @@ class User < ActiveRecord::Base
   end
 
 
-  def self.user_potential_match_for_new_letter(user)  #fetch user potential match for monthly newsletter
+  def self.user_potential_match_for_new_letter(user_id)  #fetch user potential match for monthly newsletter
     hash = Hash.new
     priority_first =Set.new 
     priority_second = Set.new
@@ -188,7 +188,7 @@ class User < ActiveRecord::Base
     priority_forth = Set.new
     priority_fifth = Set.new
    
-    @user = user
+    @user = User.find_by(id: user_id)
     @lat_long = @user.books.last
     @books = @user.books#.near([@lat_long.latitude,@lat_long.longitude], 10, :units => :km)
 
@@ -264,6 +264,7 @@ class User < ActiveRecord::Base
 
     matches = priority_first.sort_by{|x|x[:distance]} + priority_second.sort_by{|x|x[:distance]} + priority_third.sort_by{|x|x[:distance]} + priority_forth.sort_by{|x|x[:distance]} + priority_fifth.sort_by{|x|x[:distance]} 
     matches.to_set.first(5)
+    UserMailer.send_potential_match(@user,matches).deliver
   end
 
 

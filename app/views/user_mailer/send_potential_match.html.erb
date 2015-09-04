@@ -1,4 +1,4 @@
-<legend>You’re Book Matches from Novelinked App</legend>
+<legend>You’re Book Matches from Novelinked App</legend></br>
 <table class="table table-striped table-hover ">
   <thead>
     <tr>
@@ -12,7 +12,7 @@
   <% @matches.each do |match|%>
     <tr class="info">
       <td><%= count %></td>
-      <td><%= match[:title]%></br><%= match[:author]%></br><%= match[:genre]%></td>
+      <td><%= match["title"]%></br><%= match["author"]%></br><%= match["genre"]%></td>
       <td><%= match[:distance]%> </td>
     </tr>
     <%count = count+1%>
@@ -22,4 +22,3 @@
 <p>
 We have used the catalog location of the first book in your catalogued books to arrive at the matches. Please use this setting in the Search Potential Matches Screen to come up with these matches. Initiate your chat, make friends and swap away!
 </p>
-
