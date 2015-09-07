@@ -411,9 +411,7 @@ class ApisController < ApplicationController
 		render :json => {
 	                       :responseCode => 200,
 	                       :responseMessage => 'My chat list fetched successfully',
-
 	                       :chat_list => paging(@chat_list, params[:page_no],params[:page_size]),#.as_json(only: [:id, :name]),
-
 	                       :pagination => { page_no: params[:page_no],max_page_no: @max, total_no_records: @total }
 	  	                  }
   	else
