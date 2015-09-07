@@ -26,6 +26,7 @@ end
     
 #     my_flag = 0
 
+
 #     ####### Priority First ##################
 #     other_users.each  do |other_user|
 #       book_title = other_user.books.select{|x|@user_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.title!="")}.map(&:title).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["title"].split(' ')[0,5].join('').upcase)}
