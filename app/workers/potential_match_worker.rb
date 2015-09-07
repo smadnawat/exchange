@@ -5,7 +5,7 @@ class PotentialMatchWorker
 
   def perform user_id
   	p "=======================================+#{user_id}"
- 	User.user_potential_match_for_new_letter(user_id)
+ 	User.user_potential_match_for_news_letter(user_id)
   end
 end
 

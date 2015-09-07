@@ -90,7 +90,7 @@ class User < ActiveRecord::Base
   end
  
 
-   def self.get_near_matches params 
+    def self.get_near_matches params 
       hash = Hash.new
       priority_first =Set.new 
       priority_second = Set.new
@@ -103,14 +103,21 @@ class User < ActiveRecord::Base
       priority_nineth = Set.new
 
       @user = User.find_by(:id => params[:user_id])
-      @books_max_range = @user.books.near([params[:lat],params[:long]], params[:range_end], :units => :km)
-      @books_min_range = @user.books.near([params[:lat],params[:long]], params[:range_start], :units => :km)
-      @books = @books_max_range - @books_min_range
       @user_preferences = @user.reading_preferences
-      other_users = (User.includes(:books,:reading_preferences,:ratings).near([params[:lat],params[:long]], params[:range_end], :units => :km).reject{|u| u.id == @user.id})
+
+      if params[:is_week_news].present?
+        @books = @user.books
+        @other_users = (User.includes(:books,:reading_preferences,:ratings).reject{|u| u.id == @user.id}) 
+      else
+        @books_max_range = @user.books.near([params[:lat],params[:long]], params[:range_end], :units => :km)
+        @books_min_range = @user.books.near([params[:lat],params[:long]], params[:range_start], :units => :km)
+        @books = @books_max_range - @books_min_range
+        @other_users = (User.includes(:books,:reading_preferences,:ratings).near([params[:lat],params[:long]], params[:range_end], :units => :km).reject{|u| u.id == @user.id})
+      end
+
 
       if @books.present? 
-        other_users.each  do |other_user|
+        @other_users.each  do |other_user|
 
           book_title = other_user.books.select{|x|@user_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.title!="")}.map(&:title).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["title"].split(' ')[0,5].join('').upcase)}
           book_author = other_user.books.select{|x|@user_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false && x.author!="")}.map(&:author).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["author"].split(' ')[0,5].join('').upcase)}
@@ -145,13 +152,9 @@ class User < ActiveRecord::Base
 
           end
         end
-     elsif @books.blank? 
-          @user_max_range = (User.near([params[:lat],params[:long]], params[:range_end], :units => :km).reject{|u| u.id == @user.id})
-          @user_min_range = (User.near([params[:lat],params[:long]], params[:range_start], :units => :km).reject{|u| u.id == @user.id})
-          @other_user = @user_max_range - @user_min_range unless @user_max_range.blank? && @user_min_range.blank?         
-          
-          if @other_user.present?
-            @other_user.each do |other_userss|
+     elsif @books.blank?          
+          if @other_users.present?
+            @other_users.each do |other_userss|
               if other_userss.books.blank?
 
                 preferences = other_userss.reading_preferences.select{|x|((x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false && x.author!="" && @user_preferences.map(&:author).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x.author.split(' ')[0,5].join('').upcase)) or (x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false && x.genre!="" && @user_preferences.map(&:genre).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x.genre.split(' ')[0,5].join('').upcase)))}
@@ -178,16 +181,20 @@ class User < ActiveRecord::Base
             end
           end
      end
-      matches = priority_first + priority_second + priority_third + priority_forth + priority_fifth + priority_sixth + priority_seventh + priority_eighth + priority_nineth
-      hash[:matches] = matches.to_set
-      logger.info"==========#{priority_first.count}====================#{priority_second.count}=======================#{priority_third.count}-----------------------------#{hash[:matches].count}"
+    matches = priority_first + priority_second + priority_third + priority_forth + priority_fifth + priority_sixth + priority_seventh + priority_eighth + priority_nineth
+    hash[:matches] = matches.to_set
+    logger.info"==========#{priority_first.count}====================#{priority_second.count}=======================#{priority_third.count}-----------------------------#{hash[:matches].count}"
+    if params[:is_week_news].present?
+      return hash[:matches].count
+    else
       self.update_data_for_admin(priority_first.count, priority_second.count, priority_third.count, @user, hash[:matches])
       return hash,hash[:matches].count
+    end
   end
 
 
 
-  def self.user_potential_match_for_new_letter(user_id)  #fetch user potential match for monthly newsletter
+  def self.user_potential_match_for_news_letter(user_id)  #fetch user potential match for monthly newsletter
     hash = Hash.new
     priority_first =Set.new 
     priority_second = Set.new
@@ -273,8 +280,6 @@ class User < ActiveRecord::Base
     matches.to_set.first(5)
     UserMailer.send_potential_match(@user,matches).deliver
   end
-
-
 
   def self.matches_detail(other_user, book, other_users_book)
     match_hash = {}
