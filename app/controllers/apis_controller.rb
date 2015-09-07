@@ -126,7 +126,9 @@ class ApisController < ApplicationController
 				    render :json => {    
 				    	                :responseCode => 200,
 				    	                :responseMessage => 'Your uploaded reading preferences!',
-				    	                :Preferences => paging(@reading_pref, params[:page_no],params[:page_size]).uniq.as_json(only: [:title, :author, :genre, :id, :book_deactivated, :image_path]),
+
+				    	                :Preferences => paging(@reading_pref, params[:page_no],params[:page_size]).uniq {|p| p.title}.as_json(only: [:title, :author, :genre, :id, :book_deactivated, :image_path]),
+
 				    	                :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }
 				                     }
 			   else
@@ -204,7 +206,9 @@ class ApisController < ApplicationController
 
   def update_profile
   		params[:picture] = User.image_data(params[:picture])
-	    if @user.update_attributes(permitted_params)
+
+	     if @user.update_attributes(permitted_params)
+	    #if @user.update_attributes(:username => params[:username], :gender => params[:gender], :picture => params[:picture], :about_me => params[:about_me])
 	      render :json => {
 	      	               :responseCode => 200,
 	      	               :responseMessage => "Profile has been successfully updated.",
@@ -296,15 +300,6 @@ class ApisController < ApplicationController
 	    end  	
   end
 
-  # def delete_author_name
-  # 	  @reading_preferences = ReadingPreference.find_by_id_and_author(params[:reading_pref_id], params[:author_name]) 
-  #     if @reading_preferences
-  # 	       @reading_preferences.update_attributes(:author => " ")
-  #          render :json => {:responseCode => 200,:responseMessage => "Author has been deleted successfully."}
-  #     else
-  #     	   render :json => {:responseCode => 500,:responseMessage => "Author name doesn't exists!."}
-  #     end     
-  # end
 
   def delete_author_name
   	  @author = @user.reading_preferences.where(:author => params[:author_name])
@@ -315,16 +310,6 @@ class ApisController < ApplicationController
      	    render :json => {:responseCode => 500,:responseMessage => "Author name doesn't exists!."}
       end    
   end
-
-  # def delete_genre_name
-  # 	  @reading_preferences = ReadingPreference.find_by_id_and_genre(params[:reading_pref_id], params[:genre_name]) 
-  #     if @reading_preferences
-  # 	       @reading_preferences.update_attributes(:genre => " ")
-  #          render :json => {:responseCode => 200,:responseMessage => "Genre has been deleted successfully."}
-  #     else
-  #     	   render :json => {:responseCode => 500,:responseMessage => "Genre doesn't exists!."}
-  #     end     
-  # end 
 
   def delete_genre_name
   	  @genre = @user.reading_preferences.where(:genre => params[:genre_name])
@@ -410,12 +395,25 @@ class ApisController < ApplicationController
 	end
 
 	def my_chat_list
-		@chat_list = @user.groups.uniq
+
+		@user_groups = UserGroup.where(user_id: @user.id, :is_deleted => nil).includes(:user,:group=>[:admin,:manager])
+    @chat_list = []
+		@user_groups.each do |uu|
+			hash = {}
+			chat_with = (uu.group.admin_id==uu.user_id) ? uu.group.manager : uu.group.admin
+			hash[:chat_with] = chat_with.as_json(only: [:id, :username])
+			hash[:created_at] = uu.created_at
+			hash[:group_detail]=uu.group.as_json(only: [:id, :name])
+			@chat_list << hash
+		end
+
 		if @chat_list.present?
 		render :json => {
 	                       :responseCode => 200,
 	                       :responseMessage => 'My chat list fetched successfully',
-	                       :chat_list => paging(@chat_list, params[:page_no],params[:page_size]).as_json(only: [:id, :name]),
+
+	                       :chat_list => paging(@chat_list, params[:page_no],params[:page_size]),#.as_json(only: [:id, :name]),
+
 	                       :pagination => { page_no: params[:page_no],max_page_no: @max, total_no_records: @total }
 	  	                  }
   	else
@@ -436,15 +434,6 @@ class ApisController < ApplicationController
 	                   }  
 	end
 
-	# def genre_search
-	# 	@genre = Document.search_genre(params[:name])		
-	#   render :json => {
- #                        :responseCode => 200,
- #                        :responseMessage => "Genre name's are fetched successfully!",
- #                        :name => paging(@genre, params[:page_no],params[:page_size]).as_json(only: [:subjects, :isbn13]),
- #                        :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }	                   
-	#                    } 
-	# end
 
 	def genre_search
 		@genre = Genre.search(params[:name])		
@@ -634,7 +623,8 @@ class ApisController < ApplicationController
   private
 
 	def permitted_params
-	   params.permit(:email, :username, :password, :password_confirmation, :sign_in_token, :gender, :location, :picture, :about_me, :reset_password_token, :author_prefernce, :genre_preference, :date_signup,:device_used, :latitude, :longitude, :provider, :u_id)
+
+	   params.permit(:email, :username, :password, :password_confirmation, :sign_in_token, :gender, :location, :picture, :about_me, :reset_password_token, :author_prefernce, :genre_preference, :date_signup,:device_used, :latitude, :longitude, :provider, :u_id, reading_preferences_attributes: [:title, :author, :genre])
 	end
 
 	def books_params
@@ -655,3 +645,6 @@ class ApisController < ApplicationController
 
 
 end
+
+
+
