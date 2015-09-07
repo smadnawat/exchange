@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150818130530) do
+ActiveRecord::Schema.define(version: 20150905064458) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -221,6 +221,7 @@ ActiveRecord::Schema.define(version: 20150818130530) do
     t.integer  "admin_id",        limit: 4
     t.integer  "get_preference",  limit: 4
     t.integer  "give_preference", limit: 4
+    t.integer  "manager_id",      limit: 4
   end
 
   create_table "invitations", force: :cascade do |t|
@@ -353,6 +354,17 @@ ActiveRecord::Schema.define(version: 20150818130530) do
     t.datetime "updated_at",                null: false
   end
 
+  create_table "user_groups", force: :cascade do |t|
+    t.integer  "user_id",    limit: 4
+    t.integer  "group_id",   limit: 4
+    t.boolean  "is_deleted", limit: 1
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  add_index "user_groups", ["group_id"], name: "index_user_groups_on_group_id", using: :btree
+  add_index "user_groups", ["user_id"], name: "index_user_groups_on_user_id", using: :btree
+
   create_table "users", force: :cascade do |t|
     t.string   "username",               limit: 255
     t.string   "gender",                 limit: 255
@@ -397,4 +409,6 @@ ActiveRecord::Schema.define(version: 20150818130530) do
   add_foreign_key "notices", "users"
   add_foreign_key "ratings", "users"
   add_foreign_key "reading_preferences", "users"
+  add_foreign_key "user_groups", "groups"
+  add_foreign_key "user_groups", "users"
 end

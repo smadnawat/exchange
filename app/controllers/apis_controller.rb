@@ -126,7 +126,7 @@ class ApisController < ApplicationController
 				    render :json => {    
 				    	                :responseCode => 200,
 				    	                :responseMessage => 'Your uploaded reading preferences!',
-				    	                :Preferences => paging(@reading_pref, params[:page_no],params[:page_size]).uniq.as_json(only: [:title, :author, :genre, :id, :book_deactivated, :image_path]),
+				    	                :Preferences => paging(@reading_pref, params[:page_no],params[:page_size]).uniq {|p| p.title}.as_json(only: [:title, :author, :genre, :id, :book_deactivated, :image_path]),
 				    	                :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }
 				                     }
 			   else
@@ -204,8 +204,8 @@ class ApisController < ApplicationController
 
   def update_profile
   		params[:picture] = User.image_data(params[:picture])
-	    # if @user.update_attributes(permitted_params)
-	    if @user.update_attributes(:username => params[:username], :gender => params[:gender], :picture => params[:picture], :about_me => params[:about_me])
+	     if @user.update_attributes(permitted_params)
+	    #if @user.update_attributes(:username => params[:username], :gender => params[:gender], :picture => params[:picture], :about_me => params[:about_me])
 	      render :json => {
 	      	               :responseCode => 200,
 	      	               :responseMessage => "Profile has been successfully updated.",
@@ -391,12 +391,21 @@ class ApisController < ApplicationController
 	end
 
 	def my_chat_list
-		@chat_list = @user.groups.uniq
+		@user_groups = UserGroup.where(user_id: @user.id, :is_deleted => nil).includes(:user,:group=>[:admin,:manager])
+    @chat_list = []
+		@user_groups.each do |uu|
+			hash = {}
+			chat_with = (uu.group.admin_id==uu.user_id) ? uu.group.manager : uu.group.admin
+			hash[:chat_with] = chat_with.as_json(only: [:id, :username])
+			hash[:created_at] = uu.created_at
+			hash[:group_detail]=uu.group.as_json(only: [:id, :name])
+			@chat_list << hash
+		end
 		if @chat_list.present?
 		render :json => {
 	                       :responseCode => 200,
 	                       :responseMessage => 'My chat list fetched successfully',
-	                       :chat_list => paging(@chat_list, params[:page_no],params[:page_size]).as_json(only: [:id, :name]),
+	                       :chat_list => paging(@chat_list, params[:page_no],params[:page_size]),#.as_json(only: [:id, :name]),
 	                       :pagination => { page_no: params[:page_no],max_page_no: @max, total_no_records: @total }
 	  	                  }
   	else
@@ -406,6 +415,7 @@ class ApisController < ApplicationController
 		  	                }
   	end
 	end
+
 
 	def author_search
 	 	@author = Author.search(params[:title])		
@@ -628,27 +638,10 @@ class ApisController < ApplicationController
 end
 
 
-#===========================================================
- # {
- #        "provider": "normal",
- #        "username": "abvffc",
- #        "gender": "male",
- #        "picture": "",
- #        "date_signup": "2015-02-10",
- #        "email": "testinktg@gmail.com",
- #        "password": "12345678",
- #        "location": "Noida",
- #        "u_id": " ",
- #        "latitude": 28.5315291,
- #        "longitude": 77.2718406999,
- #        "device_used": "Sony Xperia",
- #        "device_id": "xxxxxxxxxxxx",
- #        "device_type": "Android",
- #        "reading_preferences_attributes": [ {
- #            "title": "",
- #            "author": "JohnGrisham",
- #            "genre": "Kids"
- #        } ]
- #    }
-
-#===========================================================
+#  gp = UserGroup.all.each do |uu|
+#     if uu.user_id == uu.group.admin_id 
+# p uu.id     
+# else
+#       p uu.id
+#    end
+#  end

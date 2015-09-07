@@ -61,13 +61,13 @@ class ChatsController < ApplicationController
 				  else
 				  	if book.title.present?
 					    @group = Group.create(:name => book.title, :admin_id => @invitation.user_id,
-					    :get_book_id => params[:book_to_get], :give_book_id => params[:book_to_give])
+					    :get_book_id => params[:book_to_get], :give_book_id => params[:book_to_give], :manager_id => @user.id)
 				  	elsif book.author.present?
 				  		@group = Group.create(:name => book.author, :admin_id => @invitation.user_id,
-				    :get_book_id => params[:book_to_get], :give_book_id => params[:book_to_give])
+				    :get_book_id => params[:book_to_get], :give_book_id => params[:book_to_give], :manager_id => @user.id)
 				  	else
 				  		@group = Group.create(:name => book.genre, :admin_id => @invitation.user_id,
-				    :get_book_id => params[:book_to_get], :give_book_id => params[:book_to_give])
+				    :get_book_id => params[:book_to_get], :give_book_id => params[:book_to_give], :manager_id => @user.id)
 				  	end
 	            @sender = User.find(@invitation.user_id)
 						  @group.users << @user
@@ -120,11 +120,11 @@ class ChatsController < ApplicationController
 				  	end
 				  else
 				  	if book.title.present?
-					    @group = Group.create(:name => book.title, :admin_id => @invitation.user_id, :give_book_id => params[:book_to_give])
+					    @group = Group.create(:name => book.title, :admin_id => @invitation.user_id, :give_book_id => params[:book_to_give], :manager_id => @user.id)
 				  	elsif book.author.present?
-				  		@group = Group.create(:name => book.author, :admin_id => @invitation.user_id, :give_book_id => params[:book_to_give])
+				  		@group = Group.create(:name => book.author, :admin_id => @invitation.user_id, :give_book_id => params[:book_to_give], :manager_id => @user.id)
 				  	else
-				  		@group = Group.create(:name => book.genre, :admin_id => @invitation.user_id, :give_book_id => params[:book_to_give])
+				  		@group = Group.create(:name => book.genre, :admin_id => @invitation.user_id, :give_book_id => params[:book_to_give], :manager_id => @user.id)
 				  	end
 	            @sender = User.find(@invitation.user_id)
 						  @group.users << @user
@@ -179,10 +179,10 @@ class ChatsController < ApplicationController
 				  else
 				  	if @reading_preference.author.present?
 				  		@group = Group.create(:name => @reading_preference.author, :admin_id => @invitation.user_id,
-				    :get_preference => params[:book_to_get], :give_preference => params[:book_to_give])
+				    :get_preference => params[:book_to_get], :give_preference => params[:book_to_give], :manager_id => @user.id)
 				  	else
 				  		@group = Group.create(:name => @reading_preference.genre, :admin_id => @invitation.user_id,
-				    :get_preference => params[:book_to_get], :give_preference => params[:book_to_give])
+				    :get_preference => params[:book_to_get], :give_preference => params[:book_to_give], :manager_id => @user.id)
 				  	end
 	            @sender = User.find(@invitation.user_id)
 						  @group.users << @user
@@ -350,7 +350,6 @@ class ChatsController < ApplicationController
 						unless @group.users.include?(@user) 
 							@group.users << User.find(t.values)
 						end
-             #@group.users << @user
              @user.first.devices.each {|device| (device.device_type == "Android") ? AndroidPushWorker.perform_async(nil, "Admin added you to #{@group.name} group" , nil, device.device_id, "message", nil, @group.id, nil) : ApplePushWorker.perform_async(nil, "Admin added you to #{@group.name} group", nil, device.device_id, "message", nil, @group.id, nil) } 
 
 					end
@@ -371,9 +370,7 @@ class ChatsController < ApplicationController
 	end
 
 	def search_by_similar_reading_pref
-		  logger.info"--------------------------#{params.inspect}"
 		  similar_pref = ReadingPreference.search_similar_rp(params)
-		  logger.info"=========-=-=---=-----------------------------===========================#{similar_pref.inspect}-----------"
 		  unless similar_pref.blank?
 			   render :json => {
 	                       :responseCode => 200,
@@ -390,10 +387,7 @@ class ChatsController < ApplicationController
 	end
 
 	def search_by_similar_books
-		  logger.info"--------------------------#{params.inspect}"
-		  similar_books = Book.search_similar_books(params)
-		  logger.info"=========-=-=---=-----------------------------===========================#{similar_books.inspect}-----------"
- 
+		  similar_books = Book.search_similar_books(params) 
 		  unless similar_books.blank?
 		  render :json => {
                        :responseCode => 200,
@@ -407,6 +401,25 @@ class ChatsController < ApplicationController
 		                       :similar_books => []
   	                     }
   	  end 
+	end
+
+	def group_is_delete
+		@grp =  UserGroup.find_by(:user_id => @user.id, :group_id => params[:group_id])
+	  if @grp 
+	  	 @grp.update_attributes(:is_deleted => true)
+	  	 render :json => {
+                       :responseCode => 200,
+                       :responseMessage => 'Chat has been deleted successfully!',
+                       :is_deleted => @grp.is_deleted
+  	                   }
+	  else
+	  	render :json => {
+                       :responseCode => 500,
+                       :responseMessage => 'Unable to delete the chat. Some device issue!',
+                       :is_deleted => @grp.is_deleted
+  	                   }
+
+	  end	 
 	end
 
 

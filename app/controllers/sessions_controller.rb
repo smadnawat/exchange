@@ -15,7 +15,7 @@ class SessionsController < ApplicationController
 		  	  render :json => {:responseCode => 500,:responseMessage => "Please make sure your email and password is correct."}
 		  	end
 		end	  		
-    end
+  end
 
 
 	def destroy  

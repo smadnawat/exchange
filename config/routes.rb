@@ -25,6 +25,7 @@ Rails.application.routes.draw do
   post '/unblock_user' => 'chats#unblock_user'
   post '/search_by_similar_reading_pref' => 'chats#search_by_similar_reading_pref'
   post '/search_by_similar_books' => 'chats#search_by_similar_books'
+  post '/group_is_delete' => 'chats#group_is_delete'
 #==============================================================================
 
 ############### web services API controller###########################
