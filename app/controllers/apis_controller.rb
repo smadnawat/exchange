@@ -2,7 +2,7 @@ require 'distance'
 
 class ApisController < ApplicationController
 
- include CalculateDistance
+  include CalculateDistance
 
   before_filter :find_user, :only => [:upload_by_scanning_counts, :view_my_review, :update_lat_and_long, :notification_status, :delete_author_name, :delete_genre_name, :my_library, :potential_mat_profile, :upload_multiple_reading_pref,:create_ratings, :get_ratings, :my_chat_list, :invitation_details,:upload_books, :get_uploaded_books, :delete_uploaded_books, :delete_reading_preferences, :upload_reading_preferences, :my_reading_preferences, :my_reading_preferences_for_author, :my_reading_preferences_for_genre, :user_profile, :update_profile, :search_potential_matches]
 
