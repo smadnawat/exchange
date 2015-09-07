@@ -8,6 +8,7 @@ class ApplePushWorker
   logger.info"===================#{reciever.inspect}===#{alert.inspect}==========#{badges.inspect}==============#{device.inspect}==========#{type.inspect}============#{invitation.inspect}=================#{group_id.inspect}============#{data.inspect}"
     
     pusher = Grocer.pusher(
+
       certificate: Rails.root.join('MobiloitteDevelopmentAbdTesting.pem'),      # required
       passphrase:  "Mobiloitte1",                       # optional
       gateway:     "gateway.sandbox.push.apple.com", # optional; See note below.

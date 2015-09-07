@@ -126,7 +126,9 @@ class ApisController < ApplicationController
 				    render :json => {    
 				    	                :responseCode => 200,
 				    	                :responseMessage => 'Your uploaded reading preferences!',
+
 				    	                :Preferences => paging(@reading_pref, params[:page_no],params[:page_size]).uniq {|p| p.title}.as_json(only: [:title, :author, :genre, :id, :book_deactivated, :image_path]),
+
 				    	                :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }
 				                     }
 			   else
@@ -204,6 +206,7 @@ class ApisController < ApplicationController
 
   def update_profile
   		params[:picture] = User.image_data(params[:picture])
+
 	     if @user.update_attributes(permitted_params)
 	    #if @user.update_attributes(:username => params[:username], :gender => params[:gender], :picture => params[:picture], :about_me => params[:about_me])
 	      render :json => {
@@ -296,6 +299,7 @@ class ApisController < ApplicationController
 	       render :json => {:responseCode => 500,:responseMessage => "Reading Preferences doesn't exists!."}
 	    end  	
   end
+
 
   def delete_author_name
   	  @author = @user.reading_preferences.where(:author => params[:author_name])
@@ -391,6 +395,7 @@ class ApisController < ApplicationController
 	end
 
 	def my_chat_list
+
 		@user_groups = UserGroup.where(user_id: @user.id, :is_deleted => nil).includes(:user,:group=>[:admin,:manager])
     @chat_list = []
 		@user_groups.each do |uu|
@@ -401,11 +406,14 @@ class ApisController < ApplicationController
 			hash[:group_detail]=uu.group.as_json(only: [:id, :name])
 			@chat_list << hash
 		end
+
 		if @chat_list.present?
 		render :json => {
 	                       :responseCode => 200,
 	                       :responseMessage => 'My chat list fetched successfully',
+
 	                       :chat_list => paging(@chat_list, params[:page_no],params[:page_size]),#.as_json(only: [:id, :name]),
+
 	                       :pagination => { page_no: params[:page_no],max_page_no: @max, total_no_records: @total }
 	  	                  }
   	else
@@ -416,7 +424,6 @@ class ApisController < ApplicationController
   	end
 	end
 
-
 	def author_search
 	 	@author = Author.search(params[:title])		
 	  render :json => {
@@ -426,6 +433,7 @@ class ApisController < ApplicationController
                         :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }	                   
 	                   }  
 	end
+
 
 	def genre_search
 		@genre = Genre.search(params[:name])		
@@ -638,10 +646,4 @@ class ApisController < ApplicationController
 end
 
 
-#  gp = UserGroup.all.each do |uu|
-#     if uu.user_id == uu.group.admin_id 
-# p uu.id     
-# else
-#       p uu.id
-#    end
-#  end
+

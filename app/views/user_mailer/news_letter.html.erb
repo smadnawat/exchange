@@ -1,0 +1,426 @@
+<!-- start of header -->
+<table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#f6f4f5" st-sortable="header" id="backgroundTable">
+   <tbody>
+      <tr>
+         <td>
+            <table width="580" align="center" cellspacing="0" cellpadding="0" border="0" bgcolor="#f5f5f5" style="border-left: 2px solid #80BA06; border-right: 2px solid #80BA06; border-top: 2px solid #80BA06;">
+               <tbody>
+                  <tr>
+                     <td>
+                        <!-- logo -->
+                        <table width="163" align="left" cellspacing="0" cellpadding="0" border="0">
+                           <tbody>
+                              <tr>
+                                 <td width="270" valign="middle" class="logo" style="padding: 10px 0 10px 20px;">
+                                    <div class="imgpop">
+                                       <a href="#"><img border="0" class="logo" st-image="edit" style="display:block; border:none; outline:none; text-decoration:none;" alt="logo" src="http://res.cloudinary.com/abhicloud/image/upload/v1441345464/logo_mqya1a.png"></a>
+                                    </div>
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                        <!-- End of logo -->
+                        <!-- menu -->
+                        <table width="417" align="right" cellspacing="0" cellpadding="0" border="0">
+                           <tbody>
+                              <tr>
+                                 <td width="270" valign="middle" align="right" st-content="menu" class="menu" style="font-family: Helvetica,Arial,sans-serif; font-size: 23px; color: rgb(0, 0, 0); line-height: 66px; padding: 10px 0px; text-align: left;">
+                                    Where Old Books Meet New Friends!
+                                 </td>
+                                 <td width="20"></td>
+                              </tr>
+                           </tbody>
+                        </table>
+                        <!-- End of Menu -->
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+         </td>
+      </tr>
+   </tbody>
+</table>
+<!-- end of header -->
+<!-- image + text -->
+<table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#f6f4f5" st-sortable="bigimage" id="backgroundTable">
+   <tbody>
+      <tr>
+         <td>
+            <table width="580" align="center" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-left:2px solid #80BA06; border-right:2px solid #80BA06;">
+               <tbody>
+                  <tr>
+                     <td>
+                        <table width="540" align="center" cellspacing="0" cellpadding="0" border="0" class="devicewidthinner">
+                           <tbody>
+                              <tr>
+                                 <!-- start of image -->
+                                 <td align="center">
+                                    <a href="#" target="_blank"><img width="574" height="132" border="0" class="bigimage" src="http://res.cloudinary.com/abhicloud/image/upload/v1441345464/banner_zitfrl.png" style="display:block; border:none; outline:none; text-decoration:none;" alt=""></a>
+                                 </td>
+                              </tr>
+                              <!-- end of image -->
+                              <!-- Spacing -->
+                              <!-- Spacing -->
+                              <!-- title -->
+                              <tr>
+                                 <td st-title="rightimage-title" style="font-family: Helvetica, arial, sans-serif; font-size: 18px; color: #464646; text-align:left;line-height: 20px; padding:7px;">
+                                    Dear <%= @user.username%>, 
+                                 </td>
+                              </tr>
+                              <!-- end of title -->
+                              <!-- Spacing -->
+                              <!-- Spacing -->
+                              <!-- content -->
+                              <tr>
+                                 <td st-content="rightimage-paragraph" style="font-family: Helvetica, arial, sans-serif; font-size: 13px; color: #464646; text-align:left;line-height: 24px; padding:7px;">
+                                    We like getting to point so you can get on with your FREE reading experience. Tap on   GET FREE BOOKS  and we will send you an email of a list of 5 book swaps you can initiate on your NovelinkedApp based on your reading preferences. 
+                                 </td>
+                              </tr>
+                              <!-- end of content -->
+                              <!-- Spacing -->
+                              <!-- button -->
+                              <tr>
+                                 <td style="padding: 7px;">
+                                    <table height="30" align="left" cellspacing="0" cellpadding="0" border="0" st-button="edit" class="tablet-button" valign="middle">
+                                       <tbody>
+                                          <tr>
+                                             <td width="auto" valign="middle" height="30" align="center" style=" background-color:#D2183B; border-top-left-radius:4px; border-bottom-left-radius:4px;border-top-right-radius:4px; border-bottom-right-radius:4px; background-clip: padding-box;font-size:13px; font-family:Helvetica, arial, sans-serif; text-align:center;  color:#ffffff; font-weight: 300; padding-left:18px; padding-right:18px;">
+                                      
+                                                <span style="color: #ffffff; font-weight: 300;">
+                                                <%= link_to "Get Free Books", receive_news_letter_url(@user.mat_email_token),:controller => "home",:action => "receive_news_letter",style: "color: #ffffff; text-align:center;text-decoration: none;"%>
+                                                </span>
+                                             </td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </td>
+                              </tr>
+                              <!-- /button -->
+                              <!-- Spacing -->
+                              <!-- Spacing -->
+                              <tr>
+                                 <td st-content="rightimage-paragraph" style="font-family: Helvetica, arial, sans-serif; font-size: 13px; color: #464646; text-align:left;line-height: 24px; padding:7px;">
+                                    Remember, if you want a wider choice of books at even more convenient exchange points, make sure you tell all your friends about it, especially the ones living close to you.  Build Your Micro Library Community Today!! 
+                                 </td>
+                              </tr>
+                              <tr>
+                                 <td style="padding: 7px;">
+                                    <table height="30" align="left" cellspacing="0" cellpadding="0" border="0" st-button="edit" class="tablet-button" valign="middle">
+                                       <tbody>
+                               <!--            <tr>
+                                             <td width="auto" valign="middle" height="30" align="center" style=" background-color:#D2183B; border-top-left-radius:4px; border-bottom-left-radius:4px;border-top-right-radius:4px; border-bottom-right-radius:4px; background-clip: padding-box;font-size:13px; font-family:Helvetica, arial, sans-serif; text-align:center;  color:#ffffff; font-weight: 300; padding-left:18px; padding-right:18px;">
+                                                		   <span style="color: #ffffff; font-weight: 300;">
+                                                   <a href="#" style="color: #ffffff; text-align:center;text-decoration: none;">Send</a>
+                                                   </span>
+                                             </td>
+                                          </tr> -->
+                                       </tbody>
+                                    </table>
+                                 </td>
+                              </tr>
+                              <tr>
+                                 <td st-content="rightimage-paragraph" style="font-family: Helvetica, arial, sans-serif; font-size: 13px; color: #464646; text-align:left;line-height: 24px; padding:7px;">
+                                    Happy Novelinking!
+                                 </td>
+                              </tr>
+                              <tr>
+                                 <td st-content="rightimage-paragraph" style="font-family: Helvetica, arial, sans-serif; font-size: 13px; color: #464646; text-align:left;line-height: 24px; padding:7px;">
+                                    Arvind Monie<br>
+                                    Owner of Novelinked.com 
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+         </td>
+      </tr>
+   </tbody>
+</table>
+<!-- start textbox-with-title -->
+<!-- 3-columns -->  
+<table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#f6f4f5" st-sortable="3columns" id="backgroundTable">
+   <tbody>
+      <tr>
+         <td>
+            <table width="580" align="center" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" modulebg="edit" "="" style="border-left:2px solid #80BA06; border-right:2px solid #80BA06;">
+               <tbody>
+                  <tr>
+                     <td width="100%" height="20"></td>
+                  </tr>
+                  <tr>
+                     <td>
+                        <table width="560" align="center" cellspacing="0" cellpadding="0" border="0">
+                           <tbody>
+                              <tr>
+                                 <td>
+                                    <!-- col 1 -->
+                                    <table width="170" align="left" cellspacing="0" cellpadding="0" border="0">
+                                       <tbody>
+                                          <!-- image 2 -->
+                                          <tr style="background-image:url(http://res.cloudinary.com/abhicloud/image/upload/v1441345464/BOOK_vllbux.png);height: 192px;background-repeat: no-repeat; background-size: 100% auto; background-position: 0px -3px; ">
+
+                                             <td width="170" height="128" align="center">
+                                                <p style="width: 142px; font-weight: bold; font-size: 13px; margin: 0px; padding: 0px 9px 0px 0px; font-family: Helvetica,arial,sans-serif; float: right;color: #464646">Tips for managing your matches</p>
+                                                <ul style="padding: 0px 15px 0px 0px; list-style: outside none none; font-size: 13px; width: 120px; margin: 0px; text-align: left; font-family: Helvetica,arial,sans-serif; float: right; color: #464646">
+                                                   <li>
+                                                      Lorem Ipsum is simply dummy text 
+                                                   </li>
+                                                   <li>
+                                                      Lorem Ipsum is simply dummy text 
+                                                   </li>
+                                                   <li>
+                                                      Lorem Ipsum is simply dummy text 
+                                                   </li>
+                                                   <li>
+                                                      Lorem Ipsum is simply dummy text 
+                                                   </li>
+                                                </ul>
+                                             </td>
+                                          </tr>
+                                          <!-- end of image2 -->
+                                       </tbody>
+                                    </table>
+                                    <!-- spacing -->
+                                    <table width="15" align="left" cellspacing="0" cellpadding="0" border="0" class="removeMobile">
+                                       <tbody>
+                                          <tr>
+                                             <td width="100%" height="15" style="font-size:1px; line-height:1px; mso-line-height-rule: exactly;">&nbsp;</td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                    <!-- end of spacing -->
+                                    <!-- col 2 -->
+                                    <table width="170" align="left" cellspacing="0" cellpadding="0" border="0">
+                                       <tbody>
+                                          <!-- image 2 -->
+                                          <tr style="background-image:url(http://res.cloudinary.com/abhicloud/image/upload/v1441345464/BOOK_vllbux.png);height: 192px;background-repeat: no-repeat; background-size: 100% auto; background-position: 0px -3px; ">
+
+                                             <td width="170" height="128" align="center">
+                                                <p style="width: 142px; font-weight: bold; font-size: 13px; margin: 0px; padding: 0px 9px 0px 0px; font-family: Helvetica,arial,sans-serif; float: right;color: #464646">Questions for us?</p>
+                                                <ul style="padding: 0px 15px 0px 0px; list-style: outside none none; font-size: 13px; width: 120px; margin: 0px; text-align: left; font-family: Helvetica,arial,sans-serif; float: right;color: #464646">
+                                                   <li>
+                                                      Lorem Ipsum is simply dummy text 
+                                                   </li>
+                                                   <li>
+                                                      Lorem Ipsum is simply dummy text 
+                                                   </li>
+                                                   <li>
+                                                      Lorem Ipsum is simply dummy text 
+                                                   </li>
+                                                   <li>
+                                                      Lorem Ipsum is simply dummy text 
+                                                   </li>
+                                                </ul>
+                                             </td>
+                                          </tr>
+                                          <!-- end of image2 -->
+                                       </tbody>
+                                    </table>
+                                    <!-- end of col 2 -->
+                                    <!-- spacing -->
+                                    <table width="1" align="left" cellspacing="0" cellpadding="0" border="0" class="removeMobile">
+                                       <tbody>
+                                          <tr>
+                                             <td width="100%" height="15" style="font-size:1px; line-height:1px; mso-line-height-rule: exactly;">&nbsp;</td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                    <!-- end of spacing -->
+                                    <!-- col 3 -->
+                                    <table width="170" align="right" cellspacing="0" cellpadding="0" border="0">
+                                       <tbody>
+                                          <!-- image3 -->
+                                          <tr style="background-image:url(http://res.cloudinary.com/abhicloud/image/upload/v1441345464/BOOK_vllbux.png);height: 192px;background-repeat: no-repeat; background-size: 100% auto; background-position: 0px -3px; ">
+
+                                             <td width="170" height="128" align="center">
+                                                <p style="width: 142px; font-weight: bold; font-size: 13px; margin: 0px; padding: 0px 9px 0px 0px; font-family: Helvetica,arial,sans-serif; float: right;color: #464646">Tell us about your experience</p>
+                                                <ul style="padding: 0px 15px 0px 0px; list-style: outside none none; font-size: 13px; width: 120px; margin: 0px; text-align: left; font-family: Helvetica,arial,sans-serif; float: right;color: #464646">
+                                                   <li>
+                                                      Lorem Ipsum is simply dummy text 
+                                                   </li>
+                                                   <li>
+                                                      Lorem Ipsum is simply dummy text 
+                                                   </li>
+                                                   <li>
+                                                      Lorem Ipsum is simply dummy text 
+                                                   </li>
+                                                   <li>
+                                                      Lorem Ipsum is simply dummy text 
+                                                   </li>
+                                                </ul>
+                                             </td>
+                                          </tr>
+                                          <!-- end of image3 -->
+                                          <!-- end of text content table -->
+                                       </tbody>
+                                    </table>
+                                 </td>
+                                 <!-- spacing -->
+                                 <!-- end of spacing -->
+                              </tr>
+                           </tbody>
+                        </table>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td width="100%" height="20"></td>
+                  </tr>
+               </tbody>
+            </table>
+         </td>
+      </tr>
+   </tbody>
+</table>
+<!-- end of 3-columns --> 
+<table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#f6f4f5" st-sortable="3columns" id="backgroundTable">
+   <tbody>
+      <tr>
+         <td>
+            <table width="580" align="center" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="border-left:2px solid #80BA06; font-family: Helvetica,arial,sans-serif; border-right:2px solid #80BA06;">
+               <tbody>
+                  <tr>
+                     <td width="100%" height="20"></td>
+                  </tr>
+                  <tr>
+                     <td>
+                        <table width="560" align="center" cellspacing="0" cellpadding="0" border="0">
+                           <tbody>
+                              <tr>
+                                 <td>
+                                    <!-- col 1 -->
+                                    <table width="174" align="left" cellspacing="0" cellpadding="0" border="0">
+                                       <tbody>
+                                          <!-- image 2 -->
+                                          <tr align="center" bgcolor="#80BA06" width="170" style="height: 20px;">
+                                             <td align="center" style="padding: 8px; font-size: 14px; color: rgb(255, 255, 255); font-weight: 600;">
+                                                We are on
+                                             </td>
+                                          </tr>
+                                          <tr align="center" width="170" style="height: 20px; border:1px solid #80BA06">
+                                             <td width="80" align="left" style="font-size: 14px; color: rgb(255, 255, 255); font-weight: 600; border: 1px solid rgb(237, 237, 237); padding: 8px 2px;">
+                                                <a align="left" href="#" style="width: 48%; display: inline-block;">
+                                                <img src="http://res.cloudinary.com/abhicloud/image/upload/v1441345463/g-play_eigrzb.png" style="padding:0; margin:0;">
+                                                </a>
+                                                <a align="left" href="#" style="width: 48%; display: inline-block;">
+                                                <img src="http://res.cloudinary.com/abhicloud/image/upload/v1441345463/iphone_g4yc0k.png" style="padding:0; margin:0;">
+                                                </a>
+                                             </td>
+                                          </tr>
+                                          <!-- end of image2 -->
+                                       </tbody>
+                                    </table>
+                                    <!-- spacing -->
+                                    <table width="15" align="left" cellspacing="0" cellpadding="0" border="0" class="removeMobile">
+                                       <tbody>
+                                          <tr>
+                                             <td width="100%" height="15" style="font-size:1px; line-height:1px; mso-line-height-rule: exactly;">&nbsp;</td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                    <!-- end of spacing -->
+                                    <!-- col 2 -->
+                                    <table width="174" align="left" cellspacing="0" cellpadding="0" border="0">
+                                       <tbody>
+                                          <!-- image 2 -->
+                                          <tr align="center" bgcolor="#80BA06" width="170" style="height: 20px;">
+                                             <td align="center" style="padding: 8px; font-size: 14px; color: rgb(255, 255, 255); font-weight: 600;">
+                                                Share Us On
+                                             </td>
+                                          </tr>
+                                          <tr align="center" width="170" style="height: 20px; border:1px solid #80BA06">
+                                             <td width="80" align="left" style="font-size: 14px; color: rgb(255, 255, 255); font-weight: 600; border: 1px solid rgb(237, 237, 237); padding: 8px 2px;">
+
+                                                <a align="left" href="https://www.facebook.com/Novelinked" style="width: 48%; display: inline-block;">
+                                                <img src="http://res.cloudinary.com/abhicloud/image/upload/v1441345463/fb_qxpfcc.png" style="padding:0; margin:0;">
+                                                </a>
+                                                <a align="left" href="https://twitter.com/Novelinked" style="width: 48%; display: inline-block;">
+                                                <img src="http://res.cloudinary.com/abhicloud/image/upload/v1441345465/twitter_rwyqg6.png" style="padding:0; margin:0;">
+                                                </a>
+                                             </td>
+                                          </tr>
+                                          <!-- end of image2 -->
+                                       </tbody>
+                                    </table>
+                                    <!-- end of col 2 -->
+                                    <!-- spacing -->
+                                    <table width="15" align="left" cellspacing="0" cellpadding="0" border="0" class="removeMobile">
+                                       <tbody>
+                                          <tr>
+                                             <td width="100%" height="15" style="font-size:1px; line-height:1px; mso-line-height-rule: exactly;">&nbsp;</td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                    <!-- end of spacing -->
+                                    <!-- col 3 -->
+                                    <table width="174" align="left" cellspacing="0" cellpadding="0" border="0">
+                                       <tbody>
+                                          <!-- image 2 -->
+                                          <tr align="center" bgcolor="#80BA06" width="170" style="height: 20px;">
+                                             <td align="center" style="padding: 8px; font-size: 14px; color: rgb(255, 255, 255); font-weight: 600;">
+                                                Like Us On
+                                             </td>
+                                          </tr>
+                                          <tr align="center" width="170" style="height: 20px; border:1px solid #80BA06">
+                                             <td width="80" align="left" style="font-size: 14px; color: rgb(255, 255, 255); font-weight: 600; border: 1px solid rgb(237, 237, 237); padding: 8px 2px;">
+                                                <a align="center" href="https://www.facebook.com/Novelinked" style="width: 90%; display: inline-block; text-align: center;">
+                                                <img src="http://res.cloudinary.com/abhicloud/image/upload/v1441345464/like_koiduv.png" style="padding:0; margin:0;">
+                                                </a>
+                                             </td>
+                                          </tr>
+                                          <!-- end of image2 -->
+                                       </tbody>
+                                    </table>
+                                 </td>
+                                 <!-- spacing -->
+                                 <!-- end of spacing -->
+                              </tr>
+                           </tbody>
+                        </table>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td width="100%" height="20"></td>
+                  </tr>
+               </tbody>
+            </table>
+         </td>
+      </tr>
+   </tbody>
+</table>
+<!-- Full + text -->
+<!-- Start of preheader -->
+<table width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#f6f4f5" st-sortable="postfooter" id="backgroundTable">
+   <tbody>
+      <tr>
+         <td width="100%">
+            <table width="580" align="center" cellspacing="0" cellpadding="0" border="0" style="border-left: 2px solid #80BA06; border-right: 2px solid #80BA06; border-bottom: 2px solid #80BA06;">
+               <tbody>
+                  <!-- Spacing -->
+                  <tr>
+                     <td width="100%" height="5"></td>
+                  </tr>
+                  <!-- Spacing -->
+                  <tr>
+                     <td valign="middle" align="center" st-content="preheader" style="font-family: Helvetica, arial, sans-serif; font-size: 10px;color: #999999">
+                        This Email was sent to you as you have signed up to our App. We send it to you once a 
+                        month. If you wish to unsubscribe please .
+                        <a style="text-decoration: none; color: #80BA06" href="#" class="hlite">click here</a> 
+                     </td>
+                  </tr>
+                  <!-- Spacing -->
+                  <tr>
+                     <td width="100%" height="5"></td>
+                  </tr>
+                  <!-- Spacing -->
+               </tbody>
+            </table>
+         </td>
+      </tr>
+   </tbody>
+</table>
+<!-- End of preheader -->
+
+

@@ -42,5 +42,3 @@ task :validate_images_url => :environment do
   end
 end
 
-
-# 0 - 4l and than 32l

@@ -61,6 +61,7 @@ class ChatsController < ApplicationController
 				  else
 				  	if book.title.present?
 					    @group = Group.create(:name => book.title, :admin_id => @invitation.user_id,
+
 					    :get_book_id => params[:book_to_get], :give_book_id => params[:book_to_give], :manager_id => @user.id)
 				  	elsif book.author.present?
 				  		@group = Group.create(:name => book.author, :admin_id => @invitation.user_id,
@@ -68,6 +69,7 @@ class ChatsController < ApplicationController
 				  	else
 				  		@group = Group.create(:name => book.genre, :admin_id => @invitation.user_id,
 				    :get_book_id => params[:book_to_get], :give_book_id => params[:book_to_give], :manager_id => @user.id)
+
 				  	end
 	            @sender = User.find(@invitation.user_id)
 						  @group.users << @user
@@ -120,11 +122,13 @@ class ChatsController < ApplicationController
 				  	end
 				  else
 				  	if book.title.present?
+
 					    @group = Group.create(:name => book.title, :admin_id => @invitation.user_id, :give_book_id => params[:book_to_give], :manager_id => @user.id)
 				  	elsif book.author.present?
 				  		@group = Group.create(:name => book.author, :admin_id => @invitation.user_id, :give_book_id => params[:book_to_give], :manager_id => @user.id)
 				  	else
 				  		@group = Group.create(:name => book.genre, :admin_id => @invitation.user_id, :give_book_id => params[:book_to_give], :manager_id => @user.id)
+
 				  	end
 	            @sender = User.find(@invitation.user_id)
 						  @group.users << @user
@@ -179,10 +183,12 @@ class ChatsController < ApplicationController
 				  else
 				  	if @reading_preference.author.present?
 				  		@group = Group.create(:name => @reading_preference.author, :admin_id => @invitation.user_id,
+
 				    :get_preference => params[:book_to_get], :give_preference => params[:book_to_give], :manager_id => @user.id)
 				  	else
 				  		@group = Group.create(:name => @reading_preference.genre, :admin_id => @invitation.user_id,
 				    :get_preference => params[:book_to_get], :give_preference => params[:book_to_give], :manager_id => @user.id)
+
 				  	end
 	            @sender = User.find(@invitation.user_id)
 						  @group.users << @user
@@ -350,6 +356,7 @@ class ChatsController < ApplicationController
 						unless @group.users.include?(@user) 
 							@group.users << User.find(t.values)
 						end
+
              @user.first.devices.each {|device| (device.device_type == "Android") ? AndroidPushWorker.perform_async(nil, "Admin added you to #{@group.name} group" , nil, device.device_id, "message", nil, @group.id, nil) : ApplePushWorker.perform_async(nil, "Admin added you to #{@group.name} group", nil, device.device_id, "message", nil, @group.id, nil) } 
 
 					end
@@ -368,6 +375,7 @@ class ChatsController < ApplicationController
 											}
 		end	
 	end
+
 
 	def search_by_similar_reading_pref
 		  similar_pref = ReadingPreference.search_similar_rp(params)

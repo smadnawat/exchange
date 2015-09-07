@@ -18,6 +18,7 @@ class SessionsController < ApplicationController
   end
 
 
+
 	def destroy  
 	    if @user  
 	      auth = Device.where(:user_id => @user.id, :device_id => params[:device_id])      

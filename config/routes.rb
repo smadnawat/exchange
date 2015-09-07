@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   post '/search_user' => 'chats#search_user'
   post '/add_user_to_group' => 'chats#add_user_to_group'
   post '/unblock_user' => 'chats#unblock_user'
+
   post '/search_by_similar_reading_pref' => 'chats#search_by_similar_reading_pref'
   post '/search_by_similar_books' => 'chats#search_by_similar_books'
   post '/group_is_delete' => 'chats#group_is_delete'
@@ -101,5 +102,7 @@ Rails.application.routes.draw do
   get  '/my_team' => 'home#my_team'
   get "/download_csv",:to => "home#download_csv",:as => "download_csv"
   get "/update_sign_in_token", :to => "apis#update_sign_in_token", :as => "update_sign_in_token" 
+  get '/receive_news_letter/:token'=>'home#receive_news_letter',as:'receive_news_letter'
+
 
 end

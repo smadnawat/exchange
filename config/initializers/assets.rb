@@ -4,6 +4,7 @@
 Rails.application.config.assets.version = '1.0'
 
 ##########customize for modal form
+
 Rails.application.config.assets.precompile += %w( bootstrap.min.css bootstrap.min.js )
 
 # Add additional assets to the asset load path

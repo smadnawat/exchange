@@ -395,6 +395,7 @@ ActiveRecord::Schema.define(version: 20150905064458) do
     t.integer  "mat_genre_count",        limit: 4,     default: 0
     t.integer  "within_five_km",         limit: 4,     default: 0
     t.date     "date_within_five_km"
+    t.string   "mat_email_token",        limit: 255
   end
 
   create_table "users_groups", id: false, force: :cascade do |t|
