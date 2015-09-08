@@ -39,6 +39,7 @@ class User < ActiveRecord::Base
   validates_presence_of :password, :on => :create
   validates_uniqueness_of :username, :message => "already exists." , :on => :create
   accepts_nested_attributes_for :reading_preferences
+  before_create :generate_unsubscribe_token
 
 
   def generate_token
@@ -49,6 +50,15 @@ class User < ActiveRecord::Base
     end
     self.update_attributes(mat_email_token: random_token)
     self
+  end 
+
+  def generate_unsubscribe_token
+    random_token = ""
+    loop do
+      random_token = SecureRandom.hex(n=16)
+      break random_token unless User.exists?(unsubscription_token: random_token)
+    end
+    self.unsubscription_token = random_token
   end 
 
 

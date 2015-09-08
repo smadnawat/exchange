@@ -5,7 +5,7 @@ class SessionsController < ApplicationController
 	    @user = User.where("email = ? or username = ?",params[:email],params[:username]).first
 	    if @user and @user.sign_in_token.present? 
 	    	render :json => {:responseCode => 500, :responseMessage => "Please confirm your account first at your email address."}
-		 else	
+		  else	
 		  	if @user and @user.authenticate(params[:password])
 		  		manage_devices(@user)
   		        # @user.update_attributes(latitude: params[:latitude], longitude: params[:longitude])	

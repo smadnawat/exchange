@@ -44,6 +44,16 @@ class HomeController < ApplicationController
 		end
 	end
 
+	def unsubscribe
+		user = User.find_by(unsubscription_token: params[:token])
+		if user 
+			user.update_attributes(unsubscription_token: nil,is_subscribe: false)
+			flash.now[:notice] = 'You have been successfully unsubscribed'
+		else
+			flash.now[:notice] = 'Invalid link or or you already unsubscribed'
+		end
+	end
+
 
 	private
 
