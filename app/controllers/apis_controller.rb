@@ -118,17 +118,14 @@ class ApisController < ApplicationController
 	end
 
 	def my_reading_preferences
-			#@reading_pref = @user.reading_preferences
 		  @user = User.includes(:reading_preferences).where(:id => params[:user_id]).first
 		  @user_preferences = @user.reading_preferences
-			  @reading_pref = @user_preferences.where("title != ? and genre = ? and author = ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre = ? and author = ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre = ? and author != ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre != ? and author = ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre != ? and author != ? ", " ", " ", " ")
+			  @reading_pref = @user_preferences.where("title != ? and genre = ? and author = ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre = ? and author != ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre != ? and author = ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre != ? and author != ? ", " ", " ", " ")
 				 if @reading_pref.present?
 				    render :json => {    
 				    	                :responseCode => 200,
 				    	                :responseMessage => 'Your uploaded reading preferences!',
-
 				    	                :Preferences => paging(@reading_pref, params[:page_no],params[:page_size]).uniq {|p| p.title}.as_json(only: [:title, :author, :genre, :id, :book_deactivated, :image_path]),
-
 				    	                :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }
 				                     }
 			   else
@@ -145,8 +142,6 @@ class ApisController < ApplicationController
 		  @user = User.includes(:reading_preferences).where(:id => params[:user_id]).first
 		  @user_preferences = @user.reading_preferences.where(:delete_author => false)
 			@authors = @user_preferences.where("title = ? and genre = ? and author != ? ", " ", " ", " ") + @user_preferences.where("title = ? and genre != ? and author != ? ", " ", " ", " ") 
-		#@authors = ReadingPreference.where("user_id = ? and title = ? and genre = ? and author != ? ", params[:user_id], " ", " ", " ").select(:id, :author, :author_deactivated)
-    #@authors = @user.reading_preferences.where('author != ?', " ").select(:id, :author, :author_deactivated)
 		if @authors.present?
 			 render :json => {    
 		    	                :responseCode => 200,
@@ -169,8 +164,6 @@ class ApisController < ApplicationController
 		  @user = User.includes(:reading_preferences).where(:id => params[:user_id]).first
 		  @user_preferences = @user.reading_preferences.where(:delete_genre => false)
 			@genres = @user_preferences.where("title = ? and genre != ? and author = ? ", " ", " ", " ") + @user_preferences.where("title = ? and genre != ? and author != ? ", " ", " ", " ") 
-		#@genres = ReadingPreference.where("user_id = ? and title = ? and genre != ? and author = ? ", params[:user_id], " ", " ", " ").select(:id, :genre, :genre_deactivated)
-		#@genres = @user.reading_preferences.where('genre != ?', " ").select(:id, :genre, :genre_deactivated)
 		if @genres.present?
 			 render :json => {    
 		    	                :responseCode => 200,
@@ -194,6 +187,7 @@ class ApisController < ApplicationController
 			  @reading_pref = @user_preferences.where("title != ? and genre = ? and author = ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre = ? and author = ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre = ? and author != ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre != ? and author = ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre != ? and author != ? ", " ", " ", " ")
 				 	@authors = @user_preferences.where(:delete_author => false).where("title = ? and genre = ? and author != ? ", " ", " ", " ") + @user_preferences.where(:delete_author => false).where("title = ? and genre != ? and author != ? ", " ", " ", " ") 
             	@genres = @user_preferences.where(:delete_genre => false).where("title = ? and genre != ? and author = ? ", " ", " ", " ") + @user_preferences.where(:delete_genre => false).where("title = ? and genre != ? and author != ? ", " ", " ", " ") 
+		  		    #@rating = Rating.calculate_ratings(@user)
 		  		render :json => { 
 						               :responseCode => 200,
 						               :responseMessage => 'User profile.',
@@ -206,9 +200,7 @@ class ApisController < ApplicationController
 
   def update_profile
   		params[:picture] = User.image_data(params[:picture])
-
 	     if @user.update_attributes(permitted_params)
-	    #if @user.update_attributes(:username => params[:username], :gender => params[:gender], :picture => params[:picture], :about_me => params[:about_me])
 	      render :json => {
 	      	               :responseCode => 200,
 	      	               :responseMessage => "Profile has been successfully updated.",

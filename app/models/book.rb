@@ -10,9 +10,38 @@ class Book < ActiveRecord::Base
 	before_save :update_date_admin, :if => :new_record?
 	before_save :update_country_name
     
-    validates :user_id, :uniqueness => {:scope => [:isbn13] , :message => "Book Already Catalogued"}, if: 'isbn13.present?'
+  validates :user_id, :uniqueness => {:scope => [:isbn13] , :message => "Book Already Catalogued"}, if: 'isbn13.present?'
 
-	def update_date_admin
+	
+  # scope :near1, lambda{ |*args|
+  #                   origin = *args.first[:origin]
+  #                   if (origin).is_a?(Array)
+  #                     origin_lat, origin_lng = origin
+  #                   else
+  #                     origin_lat, origin_lng = origin.lat, origin.lng
+  #                   end
+  #                   origin_lat, origin_lng = deg2rad(origin_lat), deg2rad(origin_lng)
+  #                   within = *args.first[:within]
+  #                   {
+  #                     :conditions => %(
+  #                       (ACOS(COS(#{origin_lat})*COS(#{origin_lng})*COS(RADIANS(books.latitude))*COS(RADIANS(books.longitude))+
+  #                       COS(#{origin_lat})*SIN(#{origin_lng})*COS(RADIANS(books.latitude))*SIN(RADIANS(books.longitude))+
+  #                       SIN(#{origin_lat})*SIN(RADIANS(books.latitude)))*3963) <= (#{(within.join(", "))})
+  #                     ),
+  #                     :select => %( users.*,
+  #                       (ACOS(COS(#{origin_lat})*COS(#{origin_lng})*COS(RADIANS(books.latitude))*COS(RADIANS(books.longitude))+
+  #                       COS(#{origin_lat})*SIN(#{origin_lng})*COS(RADIANS(books.latitude))*SIN(RADIANS(books.longitude))+
+  #                       SIN(#{origin_lat})*SIN(RADIANS(books.latitude)))*3963) AS distance
+  #                     )
+  #                   }
+  #                 }
+
+
+  # def self.deg2rad(degrees)
+  #   degrees.to_f / 180.0 * Math::PI
+  # end            
+
+  def update_date_admin
 	  self.upload_date_for_admin = Date.today		
 	end
 

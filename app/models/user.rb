@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
 	C = 'google'
 
   reverse_geocoded_by :latitude, :longitude
-  after_validation :reverse_geocode 
+  after_validation :reverse_geocode#, :if => :new_record? 
   before_save :about_me_update, :if => :new_record?
   before_save :weekly_date_update, :if => :new_record?
   validates :email, presence: true,  
@@ -39,7 +39,34 @@ class User < ActiveRecord::Base
   validates_presence_of :password, :on => :create
   validates_uniqueness_of :username, :message => "already exists." , :on => :create
   accepts_nested_attributes_for :reading_preferences
+  
+  # scope :near, lambda{ |*args|
+  #                     origin = *args.first[:origin]
+  #                     if (origin).is_a?(Array)
+  #                       origin_lat, origin_lng = origin
+  #                     else
+  #                       origin_lat, origin_lng = origin.lat, origin.lng
+  #                     end
+  #                     origin_lat, origin_lng = deg2rad(origin_lat), deg2rad(origin_lng)
+  #                     within = *args.first[:within]
+  #                     {
+  #                       :conditions => %(
+  #                         (ACOS(COS(#{origin_lat})*COS(#{origin_lng})*COS(RADIANS(users.latitude))*COS(RADIANS(users.longitude))+
+  #                         COS(#{origin_lat})*SIN(#{origin_lng})*COS(RADIANS(users.latitude))*SIN(RADIANS(users.longitude))+
+  #                         SIN(#{origin_lat})*SIN(RADIANS(users.latitude)))*3963) <= (#{(within.join(", "))})
+  #                       ),
+  #                       :select => %( users.*,
+  #                         (ACOS(COS(#{origin_lat})*COS(#{origin_lng})*COS(RADIANS(users.latitude))*COS(RADIANS(users.longitude))+
+  #                         COS(#{origin_lat})*SIN(#{origin_lng})*COS(RADIANS(users.latitude))*SIN(RADIANS(users.longitude))+
+  #                         SIN(#{origin_lat})*SIN(RADIANS(users.latitude)))*3963) AS distance
+  #                       )
+  #                     }
+  #                   }
+    
 
+  # def self.deg2rad(degrees)
+  #   degrees.to_f / 180.0 * Math::PI
+  # end  
 
   def generate_token
     random_token = ""
@@ -50,8 +77,6 @@ class User < ActiveRecord::Base
     self.update_attributes(mat_email_token: random_token)
     self
   end 
-
-
 
   def self.image_data(data)
     return nil unless data
@@ -110,10 +135,18 @@ class User < ActiveRecord::Base
         @books = @user.books
         @other_users = (User.includes(:books,:reading_preferences,:ratings).reject{|u| u.id == @user.id}) 
       else
+      #   @books_max_range = @user.books.near1(origin: [params[:lat],params[:long]], within: params[:range_end])
+      #   logger.info"==================#{@books_max_range.inspect}=========================#{@books_max_range.count}"
         @books_max_range = @user.books.near([params[:lat],params[:long]], params[:range_end], :units => :km)
+        # @books_min_range = @user.books.near1(origin: [params[:lat],params[:long]], within: params[:range_start])
+        # logger.info"==================#{@books_min_range.inspect}=========================#{@books_min_range.count}"
+
         @books_min_range = @user.books.near([params[:lat],params[:long]], params[:range_start], :units => :km)
         @books = @books_max_range - @books_min_range
+        logger.info"===========================#{@books.count}---------------33333333333333"
         @other_users = (User.includes(:books,:reading_preferences,:ratings).near([params[:lat],params[:long]], params[:range_end], :units => :km).reject{|u| u.id == @user.id})
+        # @other_users = (User.includes(:books,:reading_preferences,:ratings).near(origin: [params[:lat],params[:long]], within: params[:range_end]).reject{|u| u.id == @user.id})
+        logger.info"=======================#{@other_users.map(&:id)}=================other_user"
       end
 
 
@@ -128,27 +161,27 @@ class User < ActiveRecord::Base
           @books.each do |book|
             unless education_case.include?(book.genre)
               book_title.each do |other_users_book_title|
-                priority_first << matches_detail(other_user, book, other_users_book_title)
+                priority_first << matches_detail(other_user, book, other_users_book_title, @user)
               end if (other_user.reading_preferences.select{|x|(x.book_deactivated == false && x.title!="")}.map(&:title).map{|x|x.split(' ')[0,5].join('').upcase}.include?(book.title.split(' ')[0,5].join('').upcase) and book_title.present?)
 
               book_author.each do |other_users_book_author|
-                priority_second << matches_detail(other_user, book, other_users_book_author)
+                priority_second << matches_detail(other_user, book, other_users_book_author, @user)
               end if (other_user.reading_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false && x.author!="")}.map(&:author).map{|x|x.split(' ')[0,5].join('').upcase}.include?(book.author.split(' ')[0,5].join('').upcase) and book_author.present?)
 
               book_genre.each do |other_users_book_genre|
-                priority_third << matches_detail(other_user, book, other_users_book_genre)
+                priority_third << matches_detail(other_user, book, other_users_book_genre, @user)
               end if (other_user.reading_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.genre_deactivated == false && x.delete_genre == false && x.genre!="")}.map(&:genre).map{|x|x.split(' ')[0,5].join('').upcase}.include?(book.genre.split(' ')[0,5].join('').upcase) and book_genre.present?)
 
               book_author_n.each do |other_users_book_author_n|
-                priority_fifth << matches_detail(other_user, book, other_users_book_author_n)
+                priority_fifth << matches_detail(other_user, book, other_users_book_author_n, @user)
               end if (other_user.reading_preferences.select{|x|(x.by_scanning == true && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false && x.author!="")}.map(&:author).map{|x|x.split(' ')[0,5].join('').upcase}.include?(book.author.split(' ')[0,5].join('').upcase) and book_author_n.present?)
 
               book_genre_n.each do |other_users_book_genre_n|
-                priority_sixth << matches_detail(other_user, book, other_users_book_genre_n)
+                priority_sixth << matches_detail(other_user, book, other_users_book_genre_n, @user)
               end if (other_user.reading_preferences.select{|x|(x.by_scanning == true && x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false && x.genre!="")}.map(&:genre).map{|x|x.split(' ')[0,5].join('').upcase}.include?(book.genre.split(' ')[0,5].join('').upcase) and book_genre_n.present?)
             else
               if ((other_user.reading_preferences.select{|x|(x.book_deactivated == false && x.genre!="" && x.delete_genre == false && x.genre_deactivated == false)}.map(&:genre)).include?(book.genre) ||  (other_user.reading_preferences.select{|x|(x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false && x.author!="")}.map(&:author)).include?(book.author) || (other_user.reading_preferences.select{|x|(x.book_deactivated == false && x.title!="")}.map(&:title)).include?(book.title)) #&& (other_user.reading_preferences.map(&:isbn13).include?(book.isbn13)) 
-                priority_forth << self.matches_detail_for_genre_cases(other_user, book)
+                priority_forth << self.matches_detail_for_genre_cases(other_user, book, @user)
               end
             end
           end
@@ -164,15 +197,15 @@ class User < ActiveRecord::Base
 
                     if other_user_preference.genre==user_preferences.genre && other_user_preference.author.split(' ')[0,5].join('').upcase==user_preferences.author.split(' ')[0,5].join('').upcase &&  user_preferences.delete_author == false && user_preferences.author_deactivated == false && user_preferences.delete_genre == false && user_preferences.genre_deactivated == false && other_user_preference.delete_author == false && other_user_preference.author_deactivated == false && other_user_preference.delete_genre == false && other_user_preference.genre_deactivated == false && user_preferences.author!="" && user_preferences.genre!=""
 
-                      priority_seventh<< self.match_hash_detail(other_userss, user_preferences, other_user_preference) 
+                      priority_seventh<< self.match_hash_detail(other_userss, user_preferences, other_user_preference, @user) 
 
                     elsif other_user_preference.author.split(' ')[0,5].join('').upcase==user_preferences.author.split(' ')[0,5].join('').upcase && user_preferences.book_deactivated == false && user_preferences.delete_author == false && user_preferences.author_deactivated == false && user_preferences.author!=""
 
-                      priority_eighth<<  self.match_hash_detail(other_userss, user_preferences, other_user_preference) 
+                      priority_eighth<<  self.match_hash_detail(other_userss, user_preferences, other_user_preference, @user) 
 
                     elsif other_user_preference.genre==user_preferences.genre && user_preferences.book_deactivated == false && user_preferences.delete_genre == false && user_preferences.genre_deactivated == false && user_preferences.genre!=""
 
-                      priority_nineth<<  self.match_hash_detail(other_userss, user_preferences, other_user_preference)
+                      priority_nineth<<  self.match_hash_detail(other_userss, user_preferences, other_user_preference, @user)
                     end
 
                   end 
@@ -282,7 +315,7 @@ class User < ActiveRecord::Base
     UserMailer.send_potential_match(@user,matches).deliver
   end
 
-  def self.matches_detail(other_user, book, other_users_book)
+  def self.matches_detail(other_user, book, other_users_book, user)
     match_hash = {}
     dis = other_user.distance.round(2)
     match_hash[:other_user_detail] = other_user.as_json(:only => [:picture,:username,:id]).merge(distance: dis)
@@ -291,10 +324,14 @@ class User < ActiveRecord::Base
     data = "B"
     match_hash[:book_to_give] = book.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(data: data)
     match_hash[:book_to_get] = other_users_book.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(data: data)
+    @invite_status = Invitation.where(:invitation_status => "B", :user_id => user.id, :attendee => other_user.id, :invitation_type => "invite", :book_to_get => other_users_book.id, :book_to_give => book.id).present?
+    @exchange_status = Invitation.where(:invitation_status => "B", :user_id => user.id, :attendee => other_user.id, :invitation_type => "exchange", :book_to_get => other_users_book.id, :book_to_give => book.id).present?
+    match_hash[:invite_status] = @invite_status
+    match_hash[:exchange_status] = @exchange_status
     match_hash
   end
 
-  def self.match_hash_detail(other_user, user_preference, other_user_preference)
+  def self.match_hash_detail(other_user, user_preference, other_user_preference, user)
     match_hash = {}
     dis = other_user.distance.round(2)
     match_hash[:other_user_detail] = other_user.as_json(:only => [:picture,:username,:id]).merge(distance: dis)
@@ -303,10 +340,14 @@ class User < ActiveRecord::Base
     data = "RP"
     match_hash[:book_to_give] = user_preference.as_json(:only => [:id, :title,:author,:genre]).merge(data: data)
     match_hash[:book_to_get] = other_user_preference.as_json(:only => [:id, :title,:author,:genre]).merge(data: data)
+    @invite_status = Invitation.where(:invitation_status => "RP", :user_id => user.id, :attendee => other_user.id, :invitation_type => "invite", :book_to_get => other_user_preference.id, :book_to_give => user_preference.id).present?
+    @exchange_status = Invitation.where(:invitation_status => "RP", :user_id => user.id, :attendee => other_user.id, :invitation_type => "exchange", :book_to_get => other_user_preference.id, :book_to_give => user_preference.id).present?
+    match_hash[:invite_status] = @invite_status
+    match_hash[:exchange_status] = @exchange_status
     match_hash
   end
 
-  def self.matches_detail_for_genre_cases(other_user, book)
+  def self.matches_detail_for_genre_cases(other_user, book, user)
     match_hash = {}
     dis = other_user.distance.round(2)
     match_hash[:other_user_detail] = other_user.as_json(:only => [:picture,:username,:id]).merge(distance: dis)
@@ -314,6 +355,10 @@ class User < ActiveRecord::Base
     match_hash[:user_rating] = @rating
     data = "ED"
     match_hash[:book_to_give] = book.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(data: data)
+    @invite_status = Invitation.where(:invitation_status => "ED", :user_id => user.id, :attendee => other_user.id, :invitation_type => "invite", :book_to_give => book.id).present?
+    @exchange_status = Invitation.where(:invitation_status => "ED", :user_id => user.id, :attendee => other_user.id, :invitation_type => "exchange", :book_to_give => book.id).present?
+    match_hash[:invite_status] = @invite_status
+    match_hash[:exchange_status] = @exchange_status
     match_hash
   end
 
