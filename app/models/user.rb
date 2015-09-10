@@ -132,20 +132,14 @@ class User < ActiveRecord::Base
       @user_preferences = @user.reading_preferences
 
       if params[:is_week_news].present?
-        @books = @user.books
-        @other_users = (User.includes(:books,:reading_preferences,:ratings).reject{|u| u.id == @user.id}) 
+        @books = @user.books     
+        @other_users = (User.includes(:books,:reading_preferences,:ratings).near([@user.latitude,@user.longitude], 100, :units => :km).reject{|u| u.id == @user.id})
       else
-      #   @books_max_range = @user.books.near1(origin: [params[:lat],params[:long]], within: params[:range_end])
-      #   logger.info"==================#{@books_max_range.inspect}=========================#{@books_max_range.count}"
         @books_max_range = @user.books.near([params[:lat],params[:long]], params[:range_end], :units => :km)
-        # @books_min_range = @user.books.near1(origin: [params[:lat],params[:long]], within: params[:range_start])
-        # logger.info"==================#{@books_min_range.inspect}=========================#{@books_min_range.count}"
-
         @books_min_range = @user.books.near([params[:lat],params[:long]], params[:range_start], :units => :km)
         @books = @books_max_range - @books_min_range
         logger.info"===========================#{@books.count}---------------33333333333333"
         @other_users = (User.includes(:books,:reading_preferences,:ratings).near([params[:lat],params[:long]], params[:range_end], :units => :km).reject{|u| u.id == @user.id})
-        # @other_users = (User.includes(:books,:reading_preferences,:ratings).near(origin: [params[:lat],params[:long]], within: params[:range_end]).reject{|u| u.id == @user.id})
         logger.info"=======================#{@other_users.map(&:id)}=================other_user"
       end
 
@@ -325,9 +319,7 @@ class User < ActiveRecord::Base
     match_hash[:book_to_give] = book.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(data: data)
     match_hash[:book_to_get] = other_users_book.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(data: data)
     @invite_status = Invitation.where(:invitation_status => "B", :user_id => user.id, :attendee => other_user.id, :invitation_type => "invite", :book_to_get => other_users_book.id, :book_to_give => book.id).present?
-    @exchange_status = Invitation.where(:invitation_status => "B", :user_id => user.id, :attendee => other_user.id, :invitation_type => "exchange", :book_to_get => other_users_book.id, :book_to_give => book.id).present?
     match_hash[:invite_status] = @invite_status
-    match_hash[:exchange_status] = @exchange_status
     match_hash
   end
 
@@ -341,9 +333,7 @@ class User < ActiveRecord::Base
     match_hash[:book_to_give] = user_preference.as_json(:only => [:id, :title,:author,:genre]).merge(data: data)
     match_hash[:book_to_get] = other_user_preference.as_json(:only => [:id, :title,:author,:genre]).merge(data: data)
     @invite_status = Invitation.where(:invitation_status => "RP", :user_id => user.id, :attendee => other_user.id, :invitation_type => "invite", :book_to_get => other_user_preference.id, :book_to_give => user_preference.id).present?
-    @exchange_status = Invitation.where(:invitation_status => "RP", :user_id => user.id, :attendee => other_user.id, :invitation_type => "exchange", :book_to_get => other_user_preference.id, :book_to_give => user_preference.id).present?
     match_hash[:invite_status] = @invite_status
-    match_hash[:exchange_status] = @exchange_status
     match_hash
   end
 
@@ -356,9 +346,7 @@ class User < ActiveRecord::Base
     data = "ED"
     match_hash[:book_to_give] = book.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(data: data)
     @invite_status = Invitation.where(:invitation_status => "ED", :user_id => user.id, :attendee => other_user.id, :invitation_type => "invite", :book_to_give => book.id).present?
-    @exchange_status = Invitation.where(:invitation_status => "ED", :user_id => user.id, :attendee => other_user.id, :invitation_type => "exchange", :book_to_give => book.id).present?
     match_hash[:invite_status] = @invite_status
-    match_hash[:exchange_status] = @exchange_status
     match_hash
   end
 

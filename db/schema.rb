@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150905064458) do
+ActiveRecord::Schema.define(version: 20150908143318) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -396,11 +396,6 @@ ActiveRecord::Schema.define(version: 20150905064458) do
     t.integer  "within_five_km",         limit: 4,     default: 0
     t.date     "date_within_five_km"
     t.string   "mat_email_token",        limit: 255
-  end
-
-  create_table "users_groups", id: false, force: :cascade do |t|
-    t.integer "user_id",  limit: 4
-    t.integer "group_id", limit: 4
   end
 
   add_foreign_key "blocks", "groups"

@@ -6,16 +6,6 @@ class ChatsController < ApplicationController
 
 	before_filter :find_user
 
-	# def chat_exchange
-	# 	@invitation = @user.invitations.build(:attendee => params[:reciever_id],:invitation_type =>	params[:invitation_type],:status => "pending",:book_id => params[:book_id])
-	# 	if @invitation.save!
-	# 		Notice.create_Notice(@user,params[:reciever_id],params[:invitation_type],params[:book_id],@invitation)
-	# 		render :json => {:responseCode => 200,:responseMessage => 'Invitation is successfully sent'} 
-	# 	else
-	# 		render :json => {:responseCode => 500,:responseMessage => 'Something went wrong'} 			 
-	# 	end
-	# end
-
 	def chat_exchange
 		if params[:data] == "B"
 		 @invitation = @user.invitations.build(:attendee => params[:reciever_id],:invitation_type =>	params[:invitation_type],:status => "pending",:book_to_give => params[:book_to_give], :book_to_get => params[:book_to_get], :invitation_status => params[:data])
@@ -122,7 +112,6 @@ class ChatsController < ApplicationController
 				  	end
 				  else
 				  	if book.title.present?
-
 					    @group = Group.create(:name => book.title, :admin_id => @invitation.user_id, :give_book_id => params[:book_to_give], :manager_id => @user.id)
 				  	elsif book.author.present?
 				  		@group = Group.create(:name => book.author, :admin_id => @invitation.user_id, :give_book_id => params[:book_to_give], :manager_id => @user.id)
@@ -243,7 +232,7 @@ class ChatsController < ApplicationController
 		else
 			params[:media] = User.image_data(params[:media])
 			@group = Group.find(params[:group_id])
-			@group_users = @group.users
+			@group_users = @group.users.where(id: @group.user_groups.where('is_deleted is null or is_deleted =?',false).pluck(:user_id))
 			@block_user = Block.find_by_user_id_and_group_id(params[:user_id], params[:group_id])
 			@message = @group.messages.build(:message => params[:message],:media => params[:media], :sender_id=> @user.id)
 				if @message.save
@@ -276,18 +265,28 @@ class ChatsController < ApplicationController
 	def group_detail
 		@group = Group.find_by_id(params[:group_id])
 		if @group
-			@get_book_id = Book.find_by_id(@group.get_book_id)
-			@give_book_id = Book.find_by_id(@group.give_book_id)
-			blocked_user_ids = @group.blocks.map(&:user_id)
-			@users = @group.users.map{|u| blocked_user_ids.include?(u.id) ? (u.attributes.except('created_at','updated_at','gender', 'email', 'password_digest','author_prefernce', 'genre_preference', 'location', 'date_signup', 'latitude', 'longitude', 'provider', 'u_id', 'device_used', 'is_block', 'reset_password_token', 'reset_password_sent_at').merge(blocked: 1, picture: u.picture) ): (u.attributes.except('created_at','updated_at','gender', 'email', 'password_digest','author_prefernce', 'genre_preference', 'location', 'date_signup', 'latitude', 'longitude', 'provider', 'u_id', 'device_used', 'is_block', 'reset_password_token', 'reset_password_sent_at').merge(blocked: 0, picture: u.picture)) }
-			 render :json => {
-											:responseCode => 200,
-											:responseMessage => "Group details fetched successfully",
-											:Group => @group.as_json(except: [:created_at,:updated_at]),
-											:book_to_get => @get_book_id, 
-											:book_to_give => @give_book_id,
-											:group_users => @users#.as_json(only: [:id,:picture]),
-											}
+			if @group.get_book_id.present? and @group.give_book_id.present?
+				 @get_book_id = Book.find_by_id(@group.get_book_id) 
+				 @give_book_id = Book.find_by_id(@group.give_book_id)
+			elsif @group.get_preference.present? and @group.give_preference.present?	
+				@get_book_id_rp = ReadingPreference.find_by_id(@group.get_preference)
+				@give_book_id_rp = ReadingPreference.find_by_id(@group.give_preference)
+			else
+			  @give_book_id_ed = Book.find_by_id(@group.give_book_id)	
+			end
+				blocked_user_ids = @group.blocks.map(&:user_id)
+				@users = @group.users.map{|u| blocked_user_ids.include?(u.id) ? (u.attributes.except('created_at','updated_at','gender', 'email', 'password_digest','author_prefernce', 'genre_preference', 'location', 'date_signup', 'latitude', 'longitude', 'provider', 'u_id', 'device_used', 'is_block', 'reset_password_token', 'reset_password_sent_at').merge(blocked: 1, picture: u.picture) ): (u.attributes.except('created_at','updated_at','gender', 'email', 'password_digest','author_prefernce', 'genre_preference', 'location', 'date_signup', 'latitude', 'longitude', 'provider', 'u_id', 'device_used', 'is_block', 'reset_password_token', 'reset_password_sent_at').merge(blocked: 0, picture: u.picture)) }
+				 render :json => {
+													:responseCode => 200,
+													:responseMessage => "Group details fetched successfully",
+													:Group => @group.as_json(except: [:created_at,:updated_at]),
+													:book_to_get => @get_book_id, 
+													:book_to_give => @give_book_id,
+													:book_to_get_rp => @get_book_id_rp,
+													:book_to_give_rp => @give_book_id_rp,
+													:book_to_give_ed => @give_book_id_ed,
+													:group_users => @users
+											  }
 		else
 			render :json => {
 											:responseCode => 500,
