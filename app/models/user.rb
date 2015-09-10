@@ -12,15 +12,11 @@ class User < ActiveRecord::Base
   has_many :ratings, :dependent => :destroy
   has_many :rev_ratings, :class_name => "Rating", :foreign_key => :ratable_id, dependent: :destroy
   has_many :recieve_notifications, :class_name => 'Notice',:foreign_key => 'reciever_id', :dependent => :destroy
-
   has_many :user_groups, :dependent => :destroy
   has_many :groups ,:through => :user_groups, :dependent => :destroy
-  
   has_many :messages, :class_name => 'Message',:foreign_key => 'sender_id',dependent: :destroy
   has_many :blocks, :class_name => "Block", :foreign_key => :user_id, dependent: :destroy
-
-  accepts_nested_attributes_for :reading_preferences 
- 
+  accepts_nested_attributes_for :reading_preferences  
   scope :users, -> { where(:is_block => false) }
   scope :blocked, -> { where(:is_block => true) }
 	A = 'normal'
@@ -28,7 +24,8 @@ class User < ActiveRecord::Base
 	C = 'google'
 
   reverse_geocoded_by :latitude, :longitude
-  after_validation :reverse_geocode#, :if => :new_record? 
+  after_validation :reverse_geocode
+  before_create :generate_unsubscribe_token
   before_save :about_me_update, :if => :new_record?
   before_save :weekly_date_update, :if => :new_record?
   validates :email, presence: true,  
@@ -39,34 +36,6 @@ class User < ActiveRecord::Base
   validates_presence_of :password, :on => :create
   validates_uniqueness_of :username, :message => "already exists." , :on => :create
   accepts_nested_attributes_for :reading_preferences
-  
-  # scope :near, lambda{ |*args|
-  #                     origin = *args.first[:origin]
-  #                     if (origin).is_a?(Array)
-  #                       origin_lat, origin_lng = origin
-  #                     else
-  #                       origin_lat, origin_lng = origin.lat, origin.lng
-  #                     end
-  #                     origin_lat, origin_lng = deg2rad(origin_lat), deg2rad(origin_lng)
-  #                     within = *args.first[:within]
-  #                     {
-  #                       :conditions => %(
-  #                         (ACOS(COS(#{origin_lat})*COS(#{origin_lng})*COS(RADIANS(users.latitude))*COS(RADIANS(users.longitude))+
-  #                         COS(#{origin_lat})*SIN(#{origin_lng})*COS(RADIANS(users.latitude))*SIN(RADIANS(users.longitude))+
-  #                         SIN(#{origin_lat})*SIN(RADIANS(users.latitude)))*3963) <= (#{(within.join(", "))})
-  #                       ),
-  #                       :select => %( users.*,
-  #                         (ACOS(COS(#{origin_lat})*COS(#{origin_lng})*COS(RADIANS(users.latitude))*COS(RADIANS(users.longitude))+
-  #                         COS(#{origin_lat})*SIN(#{origin_lng})*COS(RADIANS(users.latitude))*SIN(RADIANS(users.longitude))+
-  #                         SIN(#{origin_lat})*SIN(RADIANS(users.latitude)))*3963) AS distance
-  #                       )
-  #                     }
-  #                   }
-    
-
-  # def self.deg2rad(degrees)
-  #   degrees.to_f / 180.0 * Math::PI
-  # end  
 
   def generate_token
     random_token = ""
@@ -76,6 +45,15 @@ class User < ActiveRecord::Base
     end
     self.update_attributes(mat_email_token: random_token)
     self
+  end 
+
+  def generate_unsubscribe_token
+    random_token = ""
+    loop do
+      random_token = SecureRandom.hex(n=16)
+      break random_token unless User.exists?(unsubscription_token: random_token)
+    end
+    self.unsubscription_token = random_token
   end 
 
   def self.image_data(data)

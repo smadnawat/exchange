@@ -48,6 +48,7 @@ gem 'grocer'
 gem 'unicorn'
 gem 'clockwork'
 gem 'daemons-rails'
+gem 'sendgrid-ruby'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

@@ -1,4 +1,8 @@
 class NotificationsController < ApplicationController
+
+  # def testing
+  # end
+
    def index
       @notifications = Book.details
    end   

@@ -11,6 +11,8 @@ Rails.application.routes.draw do
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
 
+  # get '/testing' => 'notifications#testing'
+
 ##############################chat controller##########################
   post '/chat_exchange' => 'chats#chat_exchange'
   post '/accept_decline' => 'chats#accept_decline'
@@ -103,6 +105,6 @@ Rails.application.routes.draw do
   get "/download_csv",:to => "home#download_csv",:as => "download_csv"
   get "/update_sign_in_token", :to => "apis#update_sign_in_token", :as => "update_sign_in_token" 
   get '/receive_news_letter/:token'=>'home#receive_news_letter',as:'receive_news_letter'
-
+  get '/unsubscribe/:token' => 'home#unsubscribe' , as: 'unsubscribe'
 
 end

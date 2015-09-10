@@ -3,9 +3,9 @@ class MonthlyEmailWorker
   include Sidekiq::Worker
 
   def perform
-    User.all.each do |user|
+    User.where(is_subscribe: true).each do |user|
     	p "====================#{user.email}"
-      UserMailer.news_letter(user.generate_token).deliver if user.email=="ashish.mittal@mobiloitte.com"
+      UserMailer.news_letter(user.generate_token).deliver 
     end
   end
 end

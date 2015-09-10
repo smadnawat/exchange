@@ -396,6 +396,8 @@ ActiveRecord::Schema.define(version: 20150908143318) do
     t.integer  "within_five_km",         limit: 4,     default: 0
     t.date     "date_within_five_km"
     t.string   "mat_email_token",        limit: 255
+    t.boolean  "is_subscribe",           limit: 1,     default: true
+    t.string   "unsubscription_token",   limit: 255
   end
 
   add_foreign_key "blocks", "groups"
