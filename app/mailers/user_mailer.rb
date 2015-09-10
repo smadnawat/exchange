@@ -49,8 +49,7 @@ class UserMailer < ApplicationMailer
   def send_potential_match user,match
     @matches = match
     @user = user
-    # mail(:to => @user.email, :subject => "Potential Match.")
-    mail(:to => "ashish.mittal@mobiloitte.com", :subject => "Potential Match.")
+    mail(:to => @user.email, :subject => "Potential Match.")
   end
 
 

@@ -37,7 +37,7 @@ class HomeController < ApplicationController
 		user = User.find_by(mat_email_token: params[:token])
 		if user 
 			user.update_attributes(mat_email_token: nil)
-		  PotentialMatchWorker.perform_async(120)			
+		  PotentialMatchWorker.perform_async(user.id)			
 			flash.now[:notice] = 'You will get your match on your registered email'
 		else
 			flash.now[:notice] = 'Invalid link or link has been already used'
