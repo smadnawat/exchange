@@ -25,11 +25,10 @@ Rails.application.routes.draw do
   post '/search_user' => 'chats#search_user'
   post '/add_user_to_group' => 'chats#add_user_to_group'
   post '/unblock_user' => 'chats#unblock_user'
-
   post '/search_by_similar_reading_pref' => 'chats#search_by_similar_reading_pref'
   post '/search_by_similar_books' => 'chats#search_by_similar_books'
   post '/group_is_delete' => 'chats#group_is_delete'
-#==============================================================================
+######################################################################
 
 ############### web services API controller###########################
   post '/register' =>   'apis#register', as: :register
@@ -71,7 +70,7 @@ Rails.application.routes.draw do
   get '/terms_and_conditions' => 'apis#terms_and_conditions', as: :terms_and_conditions
   get '/api_privacy_policy' => 'apis#privacy_policy'
   post '/update_lat_and_long' => 'apis#update_lat_and_long'
-#####################################################
+#################################################################################
 
   ############### web services my passwords controller###########################
   post '/forgot_password' => 'mypasswords#create'

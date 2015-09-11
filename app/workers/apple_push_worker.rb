@@ -9,9 +9,9 @@ class ApplePushWorker
     
     pusher = Grocer.pusher(
 
-      certificate: Rails.root.join('MobiloitteDevelopmentAbdTesting.pem'),      # required
-      passphrase:  "Mobiloitte1",                       # optional
-      gateway:     "gateway.sandbox.push.apple.com", # optional; See note below.
+      certificate: Rails.root.join('NovelinkedDistribution.pem'),      # required
+      passphrase:  "Novelinked",                       # optional
+      gateway:     "gateway.push.apple.com", # optional; See note below.
       port:        2195,                     # optional
       retries:     3                         # optional
     )

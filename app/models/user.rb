@@ -296,7 +296,7 @@ class User < ActiveRecord::Base
     data = "B"
     match_hash[:book_to_give] = book.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(data: data)
     match_hash[:book_to_get] = other_users_book.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(data: data)
-    @invite_status = Invitation.where(:invitation_status => "B", :user_id => user.id, :attendee => other_user.id, :invitation_type => "invite", :book_to_get => other_users_book.id, :book_to_give => book.id).present?
+    @invite_status = Invitation.where(:invitation_status => "B", :user_id => user.id, :attendee => other_user.id, :invitation_type => "start chat", :book_to_get => other_users_book.id, :book_to_give => book.id).present?
     match_hash[:invite_status] = @invite_status
     match_hash
   end
@@ -310,7 +310,7 @@ class User < ActiveRecord::Base
     data = "RP"
     match_hash[:book_to_give] = user_preference.as_json(:only => [:id, :title,:author,:genre]).merge(data: data)
     match_hash[:book_to_get] = other_user_preference.as_json(:only => [:id, :title,:author,:genre]).merge(data: data)
-    @invite_status = Invitation.where(:invitation_status => "RP", :user_id => user.id, :attendee => other_user.id, :invitation_type => "invite", :book_to_get => other_user_preference.id, :book_to_give => user_preference.id).present?
+    @invite_status = Invitation.where(:invitation_status => "RP", :user_id => user.id, :attendee => other_user.id, :invitation_type => "start chat", :book_to_get => other_user_preference.id, :book_to_give => user_preference.id).present?
     match_hash[:invite_status] = @invite_status
     match_hash
   end
@@ -323,7 +323,7 @@ class User < ActiveRecord::Base
     match_hash[:user_rating] = @rating
     data = "ED"
     match_hash[:book_to_give] = book.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(data: data)
-    @invite_status = Invitation.where(:invitation_status => "ED", :user_id => user.id, :attendee => other_user.id, :invitation_type => "invite", :book_to_give => book.id).present?
+    @invite_status = Invitation.where(:invitation_status => "ED", :user_id => user.id, :attendee => other_user.id, :invitation_type => "start chat", :book_to_give => book.id).present?
     match_hash[:invite_status] = @invite_status
     match_hash
   end

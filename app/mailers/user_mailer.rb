@@ -26,7 +26,8 @@ class UserMailer < ApplicationMailer
     unsubscribe_url = "http://www.novelinked.com/unsubscribe/#{@user.unsubscription_token}"
     client = SendGrid::Client.new(api_user: 'MakasharCreative', api_key: 'Mypromovideo1234')
     mail = SendGrid::Mail.new
-    mail.from = "'Novelinked' <talktome@makasharcreative.com>"
+    mail.from = "<talktome@makasharcreative.com>"
+    mail.from_name = "Novelinked"
     mail.to = @user.email
     header = Smtpapi::Header.new
     header.add_substitution('User', ["#{user.username}"])        # sub = {keep: ['secret']}
