@@ -17,7 +17,7 @@ class ApplePushWorker
     )
     #Rails.logger.info "===============#{device.inspect}==================="
     notification = Grocer::Notification.new(
-      :device_token => 'a2ebd81b0f659a3883f2cdd916579c3e68ea502fd24d41fa3f26405b222b1ebd',#device.to_s,
+      :device_token => device.to_s,
       :alert =>  alert,
       custom: {:alert_type => type,:invitation_id => invitation,:group_id => group_id,:data => data},
       :badge => badges,

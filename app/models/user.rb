@@ -34,7 +34,7 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :email, :message => "already exists."  
   validates :username, presence: true, :on => :create
   validates_presence_of :password, :on => :create
-  validates_uniqueness_of :username, :message => "already exists." , :on => :create
+  # validates_uniqueness_of :username, :message => "already exists." , :on => :create
   accepts_nested_attributes_for :reading_preferences
 
   def generate_token
