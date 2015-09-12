@@ -556,7 +556,7 @@ class ApisController < ApplicationController
 
 	def view_my_review
 		@review = Rating.where('ratable_id = ?', @user)
-		# logger.info"====================#{@review.inspect}====================="
+		logger.info"====================#{@review.inspect}====================="
 		if @review
 			@rating = Rating.calculate_ratings(@user)
 			render :json => {
