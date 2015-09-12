@@ -221,7 +221,7 @@ class ApisController < ApplicationController
   	 render :json => {
                        :responseCode => 200,
                        :responseMessage => 'Potential Matches',
-                       :potential_matches => {matches: nearby_books[:matches].sort{|x|x[:other_user_detail][:distance]}}, 
+                       :potential_matches => {matches: nearby_books[:matches].sort_by{|x|x[:other_user_detail][:distance]}}, 
                        :total_no_records => count
   	                  }
 
@@ -556,7 +556,6 @@ class ApisController < ApplicationController
 
 	def view_my_review
 		@review = Rating.where('ratable_id = ?', @user)
-		logger.info"====================#{@review.inspect}====================="
 		if @review
 			@rating = Rating.calculate_ratings(@user)
 			render :json => {
