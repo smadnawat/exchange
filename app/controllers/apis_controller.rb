@@ -4,7 +4,7 @@ class ApisController < ApplicationController
 
   include CalculateDistance
 
-  before_filter :find_user, :only => [:upload_by_scanning_counts, :view_my_review, :update_lat_and_long, :notification_status, :delete_author_name, :delete_genre_name, :my_library, :potential_mat_profile, :upload_multiple_reading_pref,:create_ratings, :get_ratings, :my_chat_list, :invitation_details,:upload_books, :get_uploaded_books, :delete_uploaded_books, :delete_reading_preferences, :upload_reading_preferences, :my_reading_preferences, :my_reading_preferences_for_author, :my_reading_preferences_for_genre, :user_profile, :update_profile, :search_potential_matches]
+  before_filter :find_user, :only => [:upload_by_scanning_counts, :view_my_review, :update_lat_and_long, :my_invites, :notification_status, :delete_author_name, :delete_genre_name, :my_library, :potential_mat_profile, :upload_multiple_reading_pref,:create_ratings, :get_ratings, :my_chat_list, :invitation_details,:upload_books, :get_uploaded_books, :delete_uploaded_books, :delete_reading_preferences, :upload_reading_preferences, :my_reading_preferences, :my_reading_preferences_for_author, :my_reading_preferences_for_genre, :user_profile, :update_profile, :search_potential_matches]
 
 	def register	
 		params[:picture] = User.image_data(params[:picture])
@@ -95,12 +95,7 @@ class ApisController < ApplicationController
 		    	                :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }
 		                     }
 	   else
-	         render :json =>    {    
-			    	                :responseCode => 200,
-			    	                :responseMessage => 'Your uploaded books!',
-			    	                :Books => [],
-			    	                :total_uploaded_books => 0
-			                     }  
+	         render :json =>    { :responseCode => 200, :responseMessage => 'Your uploaded books!', :Books => [], :total_uploaded_books => 0 }  
 	   end
 	end
 
@@ -129,12 +124,7 @@ class ApisController < ApplicationController
 				    	                :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }
 				                     }
 			   else
-			         render :json =>    {    
-					    	                :responseCode => 200,
-					    	                :responseMessage => 'Your uploaded reading preferences!',
-					    	                :Preferences => [],
-					    	                :total_uploaded_books => 0
-					                     }  
+			         render :json =>    { :responseCode => 200, :responseMessage => 'Your uploaded reading preferences!', :Preferences => [], :total_uploaded_books => 0 }  
 			   end
 	end
 
@@ -151,12 +141,7 @@ class ApisController < ApplicationController
 		                     }
 	   else
 
-	     render :json => {    
-	    	                :responseCode => 200,
-	    	                :responseMessage => 'Your uploaded authors in reading preferences!',
-	    	                :Authors => [],
-	    	                :total_uploaded_books => 0
-	                     }  
+	     render :json => { :responseCode => 200, :responseMessage => 'Your uploaded authors in reading preferences!', :Authors => [], :total_uploaded_books => 0 }  
 	   end
 	end
   
@@ -172,12 +157,7 @@ class ApisController < ApplicationController
 		    	                :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }
 		                     }
 	   else
-	         render :json =>  {    
-				    	                :responseCode => 200,
-				    	                :responseMessage => 'Your uploaded genres in reading preferences!',
-				    	                :Generes => [],
-				    	                :total_uploaded_books => 0
-			                      }  
+	      render :json =>  { :responseCode => 200, :responseMessage => 'Your uploaded genres in reading preferences!', :Generes => [], :total_uploaded_books => 0 }  
 	   end
 	end
 
@@ -608,6 +588,28 @@ class ApisController < ApplicationController
 											      :responseCode => 200,
                             :responseMessage => 'Latitude and longitude updated successfully.'
                     	      }  
+  end
+
+  def my_invites
+  	@invitation_list = Invitation.where(:user_id => @user.id)
+    invitation_detail = []
+    @invitation_list.each do |invitation_list|
+          
+      invite_list = {}
+    	invite_list[:username] = User.find_by_id(invitation_list.attendee).username if User.find_by_id(invitation_list.attendee).present?
+      invite_list[:created_at] = invitation_list.created_at
+      invite_list[:book_to_give_book] = invitation_list.invitation_status == 'B' ? Book.find_by_id(invitation_list.book_to_give).as_json(only: [:title]) : nil
+      invite_list[:book_to_give_reading_pref] = invitation_list.invitation_status == 'RP' ? ReadingPreference.find_by_id(invitation_list.book_to_give).as_json(only: [:title, :author, :genre]) : nil
+      invite_list[:book_to_give_education] = invitation_list.invitation_status == 'ED' ? Book.find_by_id(invitation_list.book_to_give).as_json(only: [:title]) : nil
+      invitation_detail << invite_list
+      end 
+            render :json => {
+											      :responseCode => 200,
+                            :responseMessage => 'Your invites fetched successfully.',
+                            :invite_details => paging(invitation_detail, params[:page_no], params[:page_size]),
+                            :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }
+
+                    	      } 
   end
 
   private

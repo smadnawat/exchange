@@ -22,10 +22,10 @@ class Notice < ActiveRecord::Base
 			          AndroidPushWorker.perform_async(reciever, alert,@badges,device.device_id,type,invitation_id,group_id,data) 
 			        else
 			          ApplePushWorker.perform_async(reciever, alert,@badges,device.device_id,type,invitation_id,group_id,data) 
-			    end
-	        end
+			        end
+	          end
+          end
         end
-      end
   end
 
   def self.alert(sender,type)

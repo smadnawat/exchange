@@ -4,7 +4,7 @@ class ChatsController < ApplicationController
 
 	include CalculateDistance
 
-	before_filter :find_user
+	before_filter :find_user, :except => [:user_grp_detail]
 
 	def chat_exchange
 		if params[:data] == "B"
@@ -191,24 +191,12 @@ class ChatsController < ApplicationController
 				end
 			
 		   render :json => 
-		   {
-		 	 :responseCode => 200,
-		 	 :responseMessage => @message,
-		   :group_id => @group.as_json(only: [:id]) 
-		   }
+		   {:responseCode => 200,:responseMessage => @message, :group_id => @group.as_json(only: [:id]) }
 			else
-			  render :json => 
-				{
-				:responseCode => 500,
-				:responseMessage => 'Something went wrong'
-				} 
+			  render :json => {:responseCode => 500,:responseMessage => 'Something went wrong' } 
 			end
 		else
-			render :json => 
-			{
-			:responseCode => 500,
-			:responseMessage => 'No matches found'
-			} 
+			render :json => {:responseCode => 500,:responseMessage => 'No matches found' } 
 		end
 	end
 
@@ -221,7 +209,7 @@ class ChatsController < ApplicationController
 		render :json => {
                       :responseCode => 200,
                       :responseMessage => "Your notifications list is fetched successfully!",
-                      :notifications => @notifications.map{|notification| notification.attributes.except('updated_at','pending','user_id','book_to_give','reciever_id').merge( data: Invitation.find_by_id(notification.invitation_id).invitation_status)}#@notifications.as_json(:only => [:message,:id,:invitation_id,:created_at, :action_type]) 
+                      :notifications => @notifications.map{|notification| notification.attributes.except('updated_at','pending','user_id','book_to_give','reciever_id').merge( data: ( notification.invitation_id.present? ? (Invitation.find_by_id(notification.invitation_id).invitation_status) : 'adduser' ) ) }#@notifications.as_json(:only => [:message,:id,:invitation_id,:created_at, :action_type]) 
                                           
 			              } 
 	end
@@ -236,9 +224,9 @@ class ChatsController < ApplicationController
 			@block_user = Block.find_by_user_id_and_group_id(params[:user_id], params[:group_id])
 			@message = @group.messages.build(:message => params[:message],:media => params[:media], :sender_id=> @user.id)
 				if @message.save
-            @group_users.reject{|u| (u.id == @user.id || (@block_user.present? and u.id == @block_user.user_id))}.each do |user|
-             user.devices.each {|device| (device.device_type == "Android") ? AndroidPushWorker.perform_async(nil, ((@message.message.present?) ? @message.message : (@message.user.username + "has shared an image.")), nil, device.device_id, "message", nil, @group.id, nil) : ApplePushWorker.perform_async(nil, ((@message.message.present?) ? @message.message : (@message.user.username + "has shared an image.")), nil, device.device_id, "message", nil, @group.id, nil) } 
-            end				   
+            #@group_users.reject{|u| (u.id == @user.id || (@block_user.present? and u.id == @block_user.user_id))}.each do |user|
+             # user.devices.each {|device| (device.device_type == "Android") ? AndroidPushWorker.perform_async(nil, ((@message.message.present?) ? @message.message : (@message.user.username + "has shared an image.")), nil, device.device_id, "message", nil, @group.id, nil) : ApplePushWorker.perform_async(nil, ((@message.message.present?) ? @message.message : (@message.user.username + "has shared an image.")), nil, device.device_id, "message", nil, @group.id, nil) } 
+            #end				   
  				   render :json => {:responseCode => 200,:responseMessage => "Message sent successfully"}
 			  else
 				   render :json => {:responseCode => 500,:responseMessage => 'Something went wrong'} 
@@ -253,7 +241,7 @@ class ChatsController < ApplicationController
                 {
                  :responseCode => 200,	
 			           :responseMessage => "Chat List fetched successfully!",
-			           :chat_list => paging(@group.messages.order('id desc').includes(:user), params[:page_no],params[:page_size]).as_json(except: [:created_at,:updated_at],:include => {:user => {:only => [:picture]}}),
+			           :chat_list => paging(@group.messages.order('id desc').includes(:user), params[:page_no],params[:page_size]).as_json(except: [:updated_at],:include => {:user => {:only => [:picture]}}),
 		             :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }	                   
 
 		            } 
@@ -288,10 +276,7 @@ class ChatsController < ApplicationController
 													:group_users => @users
 											  }
 		else
-			render :json => {
-											:responseCode => 500,
-											:responseMessage => "Group not found" 
-											}
+			render :json => {:responseCode => 500,:responseMessage => "Group not found" }
 		end
 	end
 
@@ -313,10 +298,7 @@ class ChatsController < ApplicationController
 													:block => block.as_json(except: [:created_at,:updated_at]) 
 													}
 			else
-				render :json => {
-												:responseCode => 500,
-												:responseMessage => 'Sorry you are not admin!'
-												} 
+				render :json => {:responseCode => 500,:responseMessage => 'Sorry you are not admin!'} 
 			end
 	end
 
@@ -338,43 +320,101 @@ class ChatsController < ApplicationController
 		@block = User.where(id: @blocked)
 		@search_result = @all_users - @users
 		@final_result = @search_result - @block
+		if @final_result.present?
 		render :json => {
 										:responseCode => 200,
 										:responseMessage => "Successfully fetched users",
 										:search_result => paging(@final_result , params[:page_no],params[:page_size]).as_json(only: [:id, :username, :picture, :email, :gender]),
 										:pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }
 										}
+		else
+     render :json => {:responseCode => 500,:responseMessage => "Your search didn't match any users!",:search_result => [] }
+		end								
 	end
+
+	# def add_user_to_group
+	# 	@group = Group.find_by_id_and_admin_id(params[:group_id], @user)
+	# 		if @group
+	# 			if params[:members].present?
+	# 				params[:members].as_json(only: [:id]).each do |t|
+	# 					@user = User.find(t.values)
+	# 					unless @group.users.include?(@user) 
+	# 						@group.users << User.find(t.values)
+	# 					end
+
+ #             @user.first.devices.each {|device| (device.device_type == "Android") ? AndroidPushWorker.perform_async(nil, "Admin added you to #{@group.name} group" , nil, device.device_id, "message", nil, @group.id, nil) : ApplePushWorker.perform_async(nil, "Admin added you to #{@group.name} group", nil, device.device_id, "message", nil, @group.id, nil) } 
+
+	# 				end
+	# 				message = "User added successfully"
+	# 			else
+	# 				message = "No user added"
+	# 			end
+	# 		render :json => {
+	# 										:responseCode => 200,
+	# 										:responseMessage => message
+	# 										}
+	# 	else
+	# 		render :json => {
+	# 										:responseCode => 500,
+	# 										:responseMessage => 'Something went wrong'
+	# 										}
+	# 	end	
+	# end
 
 	def add_user_to_group
 		@group = Group.find_by_id_and_admin_id(params[:group_id], @user)
 			if @group
 				if params[:members].present?
-					params[:members].as_json(only: [:id]).each do |t|
-						@user = User.find(t.values)
-						unless @group.users.include?(@user) 
-							@group.users << User.find(t.values)
-						end
-
-             @user.first.devices.each {|device| (device.device_type == "Android") ? AndroidPushWorker.perform_async(nil, "Admin added you to #{@group.name} group" , nil, device.device_id, "message", nil, @group.id, nil) : ApplePushWorker.perform_async(nil, "Admin added you to #{@group.name} group", nil, device.device_id, "message", nil, @group.id, nil) } 
-
-					end
-					message = "User added successfully"
-				else
-					message = "No user added"
-				end
-			render :json => {
-											:responseCode => 200,
-											:responseMessage => message
-											}
-		else
-			render :json => {
-											:responseCode => 500,
-											:responseMessage => 'Something went wrong'
-											}
-		end	
+					 params[:members].as_json(only: [:id]).each do |t|
+						@users = User.find(t.values)
+              @users.each do |user|
+              	user.devices.each {|device| (device.device_type == "Android") ? AndroidPushWorker.perform_async(nil, "Admin added you to #{@group.name} group" , nil, device.device_id, "adduser", nil, @group.id, nil) : ApplePushWorker.perform_async(nil, "Admin added you to #{@group.name} group", nil, device.device_id, "adduser", nil, @group.id, nil) } 
+					      Notice.create(:user_id => @user.id, :action_type => 'User_added', :reciever_id => user.id, :pending => true, :group_id => @group.id)
+					    end 
+					  end
+			  		render :json => {
+														:responseCode => 200,
+														:responseMessage => "You are added to the #{@group.name} successfully!"
+														}
+			  else
+					render :json => {:responseCode => 500,:responseMessage => "Please select users to add in this group!"}
+				end	
+	    end 	
 	end
 
+	def user_grp_detail
+		 @group = Group.find_by_id(params[:group_id]) 
+		 if @group.present?
+		 	  @user = User.find_by_id(@group.admin_id)
+		    render :json => {
+													:responseCode => 200,
+													:responseMessage => "Group user details fetched successfully!",
+													:group_name => @group.name,
+													:admin_details => @user.as_json(only: [:id, :username, :picture]),
+													:admin_rating => Rating.calculate_ratings(@user)
+													}
+		 else
+		  render :json => {:responseCode => 500,:responseMessage => "Group doesn't exists!"	}
+		 end
+	end
+  
+  def accept_decline_for_groups
+  	  @group = Group.find_by_id(params[:group_id])
+  	  if @group.present?
+  	  		if params[:action_type] == 'Accept'
+			  	     unless @group.users.include?(@user) 
+								@group.users << User.find(@user.id)
+							 end
+							render :json => {:responseCode => 200,:responseMessage => 'You have successfully accepted the chat request!' } 
+		  	  elsif params[:action_type] == 'Decline'
+		  	  	@notice_decline = Notice.where(:user_id => @group.admin_id, :reciever_id => @user.id, :action_type => 'User_added', :invitation_id => nil, :book_to_give => nil).first
+							@notice_decline.update_attributes(:action_type => 'User_declined')
+							render :json => {:responseCode => 500,:responseMessage => 'Successfully declined the chat request!' } 
+		  	  end
+		  else
+		  	  render :json => {:responseCode => 500,:responseMessage => "Group doesn't exists!"	}
+      end 
+  end
 
 	def search_by_similar_reading_pref
 		  similar_pref = ReadingPreference.search_similar_rp(params)
@@ -385,11 +425,7 @@ class ChatsController < ApplicationController
 	                       :similar_reading_pref => {similar_pref: similar_pref.sort{|x|x[:other_user_detail][:distance]}}
 	  	                  }
   	  else
-  	  	 render :json => {
-                       :responseCode => 500,
-                       :responseMessage => "Don't have similar Reading Preferences Users!",
-                       :similar_reading_pref => []
-  	                  }
+  	  	 render :json => {:responseCode => 500,:responseMessage => "Don't have similar Reading Preferences Users!",:similar_reading_pref => [] }
   	  end                
 	end
 
@@ -402,11 +438,7 @@ class ChatsController < ApplicationController
                        :similar_books => {similar_book: similar_books.sort{|x|x[:other_user_detail][:distance]}}
   	                  }
   	  else
-  	  	 render :json => {
-		                       :responseCode => 500,
-		                       :responseMessage => "Don't have similar Books Catalogued Users!",
-		                       :similar_books => []
-  	                     }
+  	  	 render :json => {:responseCode => 500,:responseMessage => "Don't have similar Books Catalogued Users!",:similar_books => []	}
   	  end 
 	end
 
@@ -420,12 +452,7 @@ class ChatsController < ApplicationController
                        :is_deleted => @grp.is_deleted
   	                   }
 	  else
-	  	render :json => {
-                       :responseCode => 500,
-                       :responseMessage => 'Unable to delete the chat. Some device issue!',
-                       :is_deleted => @grp.is_deleted
-  	                   }
-
+	  	render :json => {:responseCode => 500,:responseMessage => 'Unable to delete the chat. Some device issue!',:is_deleted => @grp.is_deleted }
 	  end	 
 	end
 

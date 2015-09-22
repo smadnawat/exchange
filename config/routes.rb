@@ -28,6 +28,8 @@ Rails.application.routes.draw do
   post '/search_by_similar_reading_pref' => 'chats#search_by_similar_reading_pref'
   post '/search_by_similar_books' => 'chats#search_by_similar_books'
   post '/group_is_delete' => 'chats#group_is_delete'
+  get '/user_grp_detail' => 'chats#user_grp_detail'
+  post '/accept_decline_for_groups' => 'chats#accept_decline_for_groups'
 ######################################################################
 
 ############### web services API controller###########################
@@ -70,6 +72,7 @@ Rails.application.routes.draw do
   get '/terms_and_conditions' => 'apis#terms_and_conditions', as: :terms_and_conditions
   get '/api_privacy_policy' => 'apis#privacy_policy'
   post '/update_lat_and_long' => 'apis#update_lat_and_long'
+  get '/my_invites' => 'apis#my_invites'
 #################################################################################
 
   ############### web services my passwords controller###########################

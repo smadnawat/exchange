@@ -10,7 +10,7 @@ class AndroidPushWorker
     registration_ids = ["#{device_id}"]         
     options = {
           'data' => {
-            'message' => ['badge'=>  badges,'alert' => alert,'invitation_id' => invitation,'group_id' => group_id,"data" => data]
+            'message' => ['badge'=>  badges,'alert' => alert,'invitation_id' => invitation,'group_id' => group_id,"data" => data, 'type' => type]
           },
         "time_to_live" => 108,
         "delay_while_idle" => true,

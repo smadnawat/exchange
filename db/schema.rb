@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150908143318) do
+ActiveRecord::Schema.define(version: 20150921071455) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -243,8 +243,9 @@ ActiveRecord::Schema.define(version: 20150908143318) do
     t.integer  "sender_id",  limit: 4
     t.string   "media",      limit: 255
     t.integer  "group_id",   limit: 4
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.boolean  "is_send",    limit: 1,   default: false
   end
 
   add_index "messages", ["group_id"], name: "index_messages_on_group_id", using: :btree
@@ -258,6 +259,7 @@ ActiveRecord::Schema.define(version: 20150908143318) do
     t.datetime "updated_at",                null: false
     t.integer  "invitation_id", limit: 4
     t.integer  "book_to_give",  limit: 4
+    t.integer  "group_id",      limit: 4
   end
 
   add_index "notices", ["user_id"], name: "index_notices_on_user_id", using: :btree
