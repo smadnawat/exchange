@@ -205,7 +205,6 @@ ActiveAdmin.setup do |config|
   #
 
     config.namespace :admin do |admin|
-         admin.download_links = false
           admin.build_menu :utility_navigation do |menu|
             #  menu.add  :label  =>   proc{ display_name current_active_admin_user },
 
@@ -242,19 +241,19 @@ ActiveAdmin.setup do |config|
   #
   # To disable/customize for the :admin namespace:
   #
-  #   config.namespace :admin do |admin|
-  # #
-  # #     # Disable the links entirely
-  #      admin.download_links = false
-  # #
-  # #     # Only show XML & PDF options
-  # #     admin.download_links = [:xml, :pdf]
-  # #
-  # #     # Enable/disable the links based on block
-  # #     #   (for example, with cancan)
-  # #     admin.download_links = proc { can?(:view_download_links) }
-  # #
-  #    end
+    config.namespace :admin do |admin|
+  #
+  #     # Disable the links entirely
+       admin.download_links = false
+  #
+  #     # Only show XML & PDF options
+  #     admin.download_links = [:xml, :pdf]
+  #
+  #     # Enable/disable the links based on block
+  #     #   (for example, with cancan)
+  #     admin.download_links = proc { can?(:view_download_links) }
+  #
+     end
 
   # == Pagination
   #
@@ -270,17 +269,17 @@ ActiveAdmin.setup do |config|
   # You can enable or disable them for all resources here.
   #
   # config.filters = true
-#   ActiveAdmin::Views::Pages::Base.class_eval do
-#   private
+  ActiveAdmin::Views::Pages::Base.class_eval do
+  private
 
-#   def build_footer
-#     div :id => "footer" do
-#       para " Copyright @ 2015- All rights reserved".html_safe
-#     end
-#   end
-# end
+  def build_footer
+    div :id => "footer" do
+      para " Copyright @ 2015- All rights reserved".html_safe
+    end
+  end
+end
 
 end
-# module ActiveAdmin::ViewHelpers
-#   include ApplicationHelper
-# end
+module ActiveAdmin::ViewHelpers
+  include ApplicationHelper
+end
