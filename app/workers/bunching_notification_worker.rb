@@ -18,9 +18,6 @@ class BunchingNotificationWorker
             break if Block.find_by_user_id_and_group_id(user.id, gr.id).present?
               #msg = gr.messages.where(:is_send => false)
               msg  = @messages.select{|m|(m[:sender_id]!=user.id and m[:group_id] == gr.id)}
-              logger.info"==============================#{msg.count > 0}-----------------------msg count"
-
-
                if msg.count > 0
                 user.devices.each {|device| (device.device_type == "Android") ? AndroidPushWorker.perform_async(nil, "You have #{msg.count} unread messages in #{gr.name} ", nil, device.device_id, "message", nil, gr.id, nil) : ApplePushWorker.perform_async(nil, "You have #{msg.count} unread messages in #{gr.name} ", nil, device.device_id, "message", nil, gr.id, nil) }  #if ((@messages.pluck(:sender_id).uniq.count > 1) and (@messages.first.sender_id.eql?(user.id)))
                end
