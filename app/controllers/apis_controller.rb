@@ -350,8 +350,8 @@ class ApisController < ApplicationController
 				render :json => {
 	                     :responseCode => 200,
 	                     :responseMessage => 'Invitation details fetched successfully',
-	                     
 	                     :data => @invitation.invitation_status,
+	                     :status => @invitation.status,
 	                     :book_to_get => @book_to_get,
 	                     :book_to_give => @book_to_give,
 	                     :ratings => @rating,
@@ -537,11 +537,19 @@ class ApisController < ApplicationController
 		@review = Rating.where('ratable_id = ?', @user)
 		if @review
 			@rating = Rating.calculate_ratings(@user)
+			my_reviews = []
+			@review.each do |review|
+				review_data = {}
+				review_data[:comment] = review.comment
+				review_data[:picture] = User.find_by_id(review.user_id).picture 
+				review_data[:username] = User.find_by_id(review.user_id).username 
+				my_reviews << review_data
+			end
 			render :json => {
 											:responseCode => 200,
                       :responseMessage => 'Review details fetched successfully',
                       :ratings => @rating,
-                      :Review => @review.as_json(only: [:comment],:include => {:user => {:only => [:picture, :username]}})
+                      :Review => my_reviews
                     	}
 		else
 			render :json => {:responseCode => 500,:responseMessage => 'Something went wrong'} 
