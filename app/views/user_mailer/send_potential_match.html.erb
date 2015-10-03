@@ -8,26 +8,24 @@
                      <tr>
                         <td>
                            <!-- logo -->
-                           <table width="163" align="left" cellspacing="0" cellpadding="0" border="0">
+                           <!-- <table width="163" align="left" cellspacing="0" cellpadding="0" border="0">
                               <tbody>
                                  <tr>
                                     <td width="270" valign="middle" class="logo" style="padding: 10px 0 10px 20px;">
-                                      
-                                          <a href="#"><img border="0" class="logo" st-image="edit" style="display:block; border:none; outline:none; text-decoration:none;" alt="logo" src="http://res.cloudinary.com/abhicloud/image/upload/v1441345464/logo_mqya1a.png"></a>
-                                       
+                                      <a href="#"><img border="0" class="logo" st-image="edit" style="display:block; border:none; outline:none; text-decoration:none;" alt="logo" src="http://res.cloudinary.com/abhicloud/image/upload/v1441345464/logo_mqya1a.png"></a>
                                     </td>
                                  </tr>
                               </tbody>
-                           </table>
+                           </table> -->
                            <!-- End of logo -->
                            <!-- menu -->
-                           <table width="417" align="right" cellspacing="0" cellpadding="0" border="0">
+                           <table width="" align="center" cellspacing="0" cellpadding="0" border="0">
                               <tbody>
                                  <tr>
-                  <td width="270" valign="middle" align="right" st-content="menu" class="menu" style="font-family: Helvetica,Arial,sans-serif; font-size: 23px; color: rgb(0, 0, 0); line-height: 66px; padding: 10px 0px; text-align: left;">
+                  <td valign="middle" align="right" st-content="menu" class="menu" style="font-family: Helvetica,Arial,sans-serif; font-size: 23px; color: rgb(0, 0, 0); text-align: left;"> <!-- line-height: 66px; padding: 10px 0px;  width="270"-->
                                       Where Old Books Meet New Friends!
                                     </td>
-                                    <td width="20"></td>
+                                    <td width="20"><a href="#"><img border="0" class="logo" st-image="edit" style="display:block; border:none; outline:none; text-decoration:none;" alt="logo" src="http://res.cloudinary.com/abhicloud/image/upload/v1441345464/logo_mqya1a.png"></a></td>
                                  </tr>
                               </tbody>
                            </table>
@@ -65,7 +63,8 @@ You’re Book Matches from <span style="color:#B5DC5F; font-weight:bold">Novelin
                                  
                                 <tr>
                   <td>
-                                        <table style="border: 1px solid #DDD;">
+                    <%if @matches.present? %>
+                    <table style="border: 1px solid #DDD;">
                       <thead>
                       <tr>
                         <th style="padding: 5px 10px; vertical-align: top; width: 60px; border-bottom: 2px solid #81BA06; font-family: Helvetica,arial,sans-serif; font-size: 14px; font-weight: 600;border-right: 1px solid #ededed;">Sr. No</th>
@@ -75,25 +74,32 @@ You’re Book Matches from <span style="color:#B5DC5F; font-weight:bold">Novelin
                       </tr>
                       </thead>
                       <tbody>
+                    
                       <%count = 1%>
-                    <% @matches.each do |match|%>
-                      <tr>
-                        <td style=" padding: 5px 10px; vertical-align: top; width: 60px;
-                        border-bottom: 1px solid #ededed; text-align: center;font-family: Helvetica, arial, sans-serif;border-right: 1px solid #ededed;"><%= count %></td>
-                        <td style="padding: 5px 10px; vertical-align: top; width: 380px;
-                        border-bottom: 1px solid #ededed;font-family: Helvetica, arial, sans-serif;text-align:center;border-right: 1px solid #ededed;"><p style="color:#B5DC5F;padding: 0px; margin: 0px;font-size: 14px;"><%= match["title"]%></p>
-                        <p style="padding: 0px; margin: 0px;font-size: 14px;"><%= match["author"]%></p>
-                        <p style="padding: 0px; margin: 0px;font-size: 14px;"><%= match["genre"]%></p>
-                        </td>
-                        <td style="padding: 5px 10px; vertical-align: top; width: 120px;
-                        border-bottom: 1px solid #ededed;font-family: Helvetica, arial, sans-serif;text-align:center;"><%= match[:distance]%></td>
-                        
-                      </tr> 
-                      <%count = count+1%>
-                    <%end%>
+                      <% @matches.each do |match|%>
+                        <tr>
+                          <td style=" padding: 5px 10px; vertical-align: top; width: 60px;
+                          border-bottom: 1px solid #ededed; text-align: center;font-family: Helvetica, arial, sans-serif;border-right: 1px solid #ededed;"><%= count %></td>
+                          <td style="padding: 5px 10px; vertical-align: top; width: 380px;
+                          border-bottom: 1px solid #ededed;font-family: Helvetica, arial, sans-serif;text-align:center;border-right: 1px solid #ededed;"><p style="color:#B5DC5F;padding: 0px; margin: 0px;font-size: 14px;"><%= match["title"]%></p>
+                          <p style="padding: 0px; margin: 0px;font-size: 14px;"><%= match["author"]%></p>
+                          <p style="padding: 0px; margin: 0px;font-size: 14px;"><%= match["genre"]%></p>
+                          </td>
+                          <td style="padding: 5px 10px; vertical-align: top; width: 120px;
+                          border-bottom: 1px solid #ededed;font-family: Helvetica, arial, sans-serif;text-align:center;"><%= match[:distance]%></td>
+                          
+                        </tr> 
+                        <%count = count+1%>
+                      <%end%>
+                   
                       </tbody>
                     </table>
   <br>
+
+                 <%else%>
+                      <p>Sorry, there are no book matches for you. We request you to catalog at least 5 popular authors’ books & put down 3 book reading preferences, 3 author preferences & 2 category preferences to generate matches in the App. Thank you</p>
+                  <%end%>
+
                   </td>
                 </tr>
                                  <!-- Spacing -->
@@ -114,5 +120,7 @@ You’re Book Matches from <span style="color:#B5DC5F; font-weight:bold">Novelin
          </tr>
       </tbody>
    </table>
-
-  
+ 
+<p>
+We have used the catalog location of the last book in your catalogued books to arrive at your matches. Please use this setting in the Search Potential Matches Screen to come up with these matches. Initiate your chat, make friends and swap away!
+</p>

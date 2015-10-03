@@ -40,7 +40,7 @@ class UserMailer < ApplicationMailer
     header.to_json
     mail.smtpapi = header
     mail.html = header
-    mail.subject = "Newsletter for the month of #{Date.current.strftime('%B  %Y')} ."
+    mail.subject = "List of Free Books & News Letter – #{Date.current.strftime('%B  %Y')} ."
     ccc = client.send(mail)
     p "==================#{ccc.body}"
   
@@ -50,7 +50,7 @@ class UserMailer < ApplicationMailer
   def send_potential_match user,match
     @matches = match
     @user = user
-    mail(:to => @user.email, :subject => "Potential Match.")
+    mail(:to => @user.email, :subject => "Your List of Free Books. Where Old Books Meet New Friends – You’re Book Matches from Novelinked.com….")
   end
 
 

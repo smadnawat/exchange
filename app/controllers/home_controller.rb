@@ -38,7 +38,7 @@ class HomeController < ApplicationController
 		if user 
 			user.update_attributes(mat_email_token: nil)
 		  PotentialMatchWorker.perform_async(user.id)			
-			flash.now[:notice] = 'You will get your match on your registered email'
+			flash.now[:notice] = 'You will get your List of Free Books on your Registered Email'
 		else
 			flash.now[:notice] = 'Invalid link or link has been already used'
 		end

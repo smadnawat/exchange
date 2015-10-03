@@ -222,9 +222,9 @@ class User < ActiveRecord::Base
       book_title = other_user.books.select{|x|@user_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.title!="")}.map(&:title).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["title"].split(' ')[0,5].join('').upcase)}
       @books.each do |book|
         book_title.each do |other_users_book_title|
-          priority_first << book.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(distance: other_user.distance.round(2))
+          priority_first << book_title.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(distance: other_user.distance.round(1))
         end if (other_user.reading_preferences.select{|x|(x.book_deactivated == false && x.title!="")}.map(&:title).map{|x|x.split(' ')[0,5].join('').upcase}.include?(book.title.split(' ')[0,5].join('').upcase) and book_title.present?)
-        (my_flag=1;break;) if priority_first.count>=5
+        (my_flag=1;break;) if priority_first.count>=10
       end
       Rails.logger.info "======Priority first ==========#{priority_first.count}======================="
       break if my_flag==1
@@ -235,55 +235,55 @@ class User < ActiveRecord::Base
       book_author = other_user.books.select{|x|@user_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false && x.author!="")}.map(&:author).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["author"].split(' ')[0,5].join('').upcase)}
       @books.each do |book|
         book_author.each do |other_users_book_author|
-          priority_second << book.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(distance: other_user.distance.round(2))
+          priority_second << book_author.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(distance: other_user.distance.round(1))
         end if (other_user.reading_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false && x.author!="")}.map(&:author).map{|x|x.split(' ')[0,5].join('').upcase}.include?(book.author.split(' ')[0,5].join('').upcase) and book_author.present?)
-        (my_flag=1;break;) if ((priority_first + priority_second).to_set.count >=5)
+        (my_flag=1;break;) if ((priority_first + priority_second).to_set.count >=10)
       end
       Rails.logger.info "========Priority Second ============#{(priority_first + priority_second).to_set.count}==================="
       break if my_flag==1
-    end if (@books.present? and priority_first.count < 5)
+    end if (@books.present? and priority_first.count < 10)
 
     ####### Priority Third ##################
     other_users.each  do |other_user|
       book_genre = other_user.books.select{|x|@user_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.genre_deactivated == false && x.delete_genre == false && x.genre!="")}.map(&:genre).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["genre"].split(' ')[0,5].join('').upcase)}
       @books.each do |book|
         book_genre.each do |other_users_book_genre|
-          priority_third << book.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(distance: other_user.distance.round(2))
+          priority_third << book_genre.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(distance: other_user.distance.round(1))
         end if (other_user.reading_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.genre_deactivated == false && x.delete_genre == false && x.genre!="")}.map(&:genre).map{|x|x.split(' ')[0,5].join('').upcase}.include?(book.genre.split(' ')[0,5].join('').upcase) and book_genre.present?)
-        (my_flag=1;break;) if ((priority_first + priority_second + priority_third).to_set.count >=5)
+        (my_flag=1;break;) if ((priority_first + priority_second + priority_third).to_set.count >=10)
       end
       Rails.logger.info "========Priority Third ============#{(priority_first + priority_second + priority_third).to_set.count}==================="
       break if my_flag==1
-    end if (@books.present? and (priority_first + priority_second).to_set.count < 5)
+    end if (@books.present? and (priority_first + priority_second).to_set.count < 10)
 
     ####### Priority Fourth ##################
     other_users.each  do |other_user|
       book_author_n = other_user.books.select{|x|@user_preferences.select{|x|(x.by_scanning == true && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false && x.author!="")}.map(&:author).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["author"].split(' ')[0,5].join('').upcase)}
       @books.each do |book|
         book_author_n.each do |other_users_book_author_n|
-          priority_forth << book.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(distance: other_user.distance.round(2))
+          priority_forth << book_author_n.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(distance: other_user.distance.round(1))
         end if (other_user.reading_preferences.select{|x|(x.by_scanning == true && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false && x.author!="")}.map(&:author).map{|x|x.split(' ')[0,5].join('').upcase}.include?(book.author.split(' ')[0,5].join('').upcase) and book_author_n.present?)
-        (my_flag=1;break;) if ((priority_first + priority_second + priority_third + priority_forth).to_set.count >=5)
+        (my_flag=1;break;) if ((priority_first + priority_second + priority_third + priority_forth).to_set.count >=10)
       end
       Rails.logger.info "========Priority Fourth ============#{(priority_first + priority_second + priority_third + priority_forth).to_set.count}==================="
       break if my_flag==1
-    end if (@books.present? and (priority_first + priority_second + priority_third).to_set.count  < 5)
+    end if (@books.present? and (priority_first + priority_second + priority_third).to_set.count  < 10)
 
     ####### Priority Fifth ##################
     other_users.each  do |other_user|
       book_genre_n = other_user.books.select{|x|@user_preferences.select{|x|(x.by_scanning == true && x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false && x.genre!="")}.map(&:genre).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["genre"].split(' ')[0,5].join('').upcase)}
       @books.each do |book|
         book_genre_n.each do |other_users_book_genre_n|
-          priority_fifth << book.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(distance: other_user.distance.round(2))
+          priority_fifth << book_genre_n.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(distance: other_user.distance.round(1))
         end if (other_user.reading_preferences.select{|x|(x.by_scanning == true && x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false && x.genre!="")}.map(&:genre).map{|x|x.split(' ')[0,5].join('').upcase}.include?(book.genre.split(' ')[0,5].join('').upcase) and book_genre_n.present?)
-        (my_flag=1;break;) if ((priority_first + priority_second + priority_third + priority_forth + priority_fifth).to_set.count >=5)
+        (my_flag=1;break;) if ((priority_first + priority_second + priority_third + priority_forth + priority_fifth).to_set.count >=10)
       end
       Rails.logger.info "========Priority Fifth ============#{(priority_first + priority_second + priority_third + priority_forth + priority_fifth).to_set.count}==================="
       break if my_flag==1
-    end if (@books.present? and (priority_first + priority_second + priority_third + priority_forth).to_set.count < 5)
+    end if (@books.present? and (priority_first + priority_second + priority_third + priority_forth).to_set.count < 10)
 
     matches = priority_first.sort_by{|x|x[:distance]} + priority_second.sort_by{|x|x[:distance]} + priority_third.sort_by{|x|x[:distance]} + priority_forth.sort_by{|x|x[:distance]} + priority_fifth.sort_by{|x|x[:distance]} 
-    matches.to_set.first(5)
+    matches = matches.to_set.first(10)
     UserMailer.send_potential_match(@user,matches).deliver
   end
 

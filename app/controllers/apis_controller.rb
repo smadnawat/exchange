@@ -568,20 +568,12 @@ class ApisController < ApplicationController
 
 	def terms_and_conditions
 		  @terms_and_conditions = TermsAndCondition.last.as_json(only: [:description])
-		  		render :json => {
-											      :responseCode => 200,
-                            :responseMessage => 'Terms & Conditions fetched successfully',
-                            :description => @terms_and_conditions
-                    	    }
+		  	render :json => { :responseCode => 200, :responseMessage => 'Terms & Conditions fetched successfully', :description => @terms_and_conditions }
 	end
 
 	def privacy_policy
 		  @privacy_policy = PrivacyPolicy.last.as_json(only: [:description])
-		  		render :json => {
-											      :responseCode => 200,
-                            :responseMessage => 'Privacy Policy fetched successfully',
-                            :description => @privacy_policy
-                    	    }
+		  	render :json => { :responseCode => 200, :responseMessage => 'Privacy Policy fetched successfully', :description => @privacy_policy }
 	end
   
   def update_sign_in_token
@@ -591,10 +583,7 @@ class ApisController < ApplicationController
 
   def update_lat_and_long
   	  @user.update_attributes(:latitude => params[:latitude], :longitude => params[:longitude])
-  	        render :json => {
-											      :responseCode => 200,
-                            :responseMessage => 'Latitude and longitude updated successfully.'
-                    	      }  
+  	        render :json => { :responseCode => 200, :responseMessage => 'Latitude and longitude updated successfully.' }  
   end
 
   def my_invites
