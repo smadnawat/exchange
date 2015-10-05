@@ -216,7 +216,6 @@ class User < ActiveRecord::Base
 
     @user_preferences = @user.reading_preferences
     other_users = (User.includes(:books,:reading_preferences,:ratings).near([@lat_long.latitude,@lat_long.longitude], 10, :units => :km).reject{|u| u.id == @user.id})
-    logger.info"------------------------------#{other_users.inspect}---------------other_users"
     my_flag = 0
 
     ####### Priority First ##################
