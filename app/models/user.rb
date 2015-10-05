@@ -209,7 +209,7 @@ class User < ActiveRecord::Base
     priority_fifth = Set.new
    
     @user = User.find_by(id: user_id)
-    @lat_long = @user.books.last
+    @lat_long = @user.books.last if @user.books.last.present?
     @books = @user.books#.near([@lat_long.latitude,@lat_long.longitude], 10, :units => :km)
 
     @user_preferences = @user.reading_preferences
