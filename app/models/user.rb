@@ -214,7 +214,7 @@ class User < ActiveRecord::Base
 
     @user_preferences = @user.reading_preferences
     other_users = (User.includes(:books,:reading_preferences,:ratings).near([@lat_long.latitude,@lat_long.longitude], 10, :units => :km).reject{|u| u.id == @user.id})
-    
+    logger.info"------------------------------#{other_users.inspect}---------------other_users"
     my_flag = 0
 
     ####### Priority First ##################
@@ -222,7 +222,7 @@ class User < ActiveRecord::Base
       book_title = other_user.books.select{|x|@user_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.title!="")}.map(&:title).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["title"].split(' ')[0,5].join('').upcase)}
       @books.each do |book|
         book_title.each do |other_users_book_title|
-          priority_first << book_title.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(distance: other_user.distance.round(1))
+          priority_first << other_users_book_title.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(distance: other_user.distance.round(1))
         end if (other_user.reading_preferences.select{|x|(x.book_deactivated == false && x.title!="")}.map(&:title).map{|x|x.split(' ')[0,5].join('').upcase}.include?(book.title.split(' ')[0,5].join('').upcase) and book_title.present?)
         (my_flag=1;break;) if priority_first.count>=10
       end
@@ -235,7 +235,7 @@ class User < ActiveRecord::Base
       book_author = other_user.books.select{|x|@user_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false && x.author!="")}.map(&:author).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["author"].split(' ')[0,5].join('').upcase)}
       @books.each do |book|
         book_author.each do |other_users_book_author|
-          priority_second << book_author.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(distance: other_user.distance.round(1))
+          priority_second << other_users_book_author.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(distance: other_user.distance.round(1))
         end if (other_user.reading_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false && x.author!="")}.map(&:author).map{|x|x.split(' ')[0,5].join('').upcase}.include?(book.author.split(' ')[0,5].join('').upcase) and book_author.present?)
         (my_flag=1;break;) if ((priority_first + priority_second).to_set.count >=10)
       end
@@ -248,7 +248,7 @@ class User < ActiveRecord::Base
       book_genre = other_user.books.select{|x|@user_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.genre_deactivated == false && x.delete_genre == false && x.genre!="")}.map(&:genre).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["genre"].split(' ')[0,5].join('').upcase)}
       @books.each do |book|
         book_genre.each do |other_users_book_genre|
-          priority_third << book_genre.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(distance: other_user.distance.round(1))
+          priority_third << other_users_book_genre.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(distance: other_user.distance.round(1))
         end if (other_user.reading_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.genre_deactivated == false && x.delete_genre == false && x.genre!="")}.map(&:genre).map{|x|x.split(' ')[0,5].join('').upcase}.include?(book.genre.split(' ')[0,5].join('').upcase) and book_genre.present?)
         (my_flag=1;break;) if ((priority_first + priority_second + priority_third).to_set.count >=10)
       end
@@ -261,7 +261,7 @@ class User < ActiveRecord::Base
       book_author_n = other_user.books.select{|x|@user_preferences.select{|x|(x.by_scanning == true && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false && x.author!="")}.map(&:author).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["author"].split(' ')[0,5].join('').upcase)}
       @books.each do |book|
         book_author_n.each do |other_users_book_author_n|
-          priority_forth << book_author_n.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(distance: other_user.distance.round(1))
+          priority_forth << other_users_book_author_n.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(distance: other_user.distance.round(1))
         end if (other_user.reading_preferences.select{|x|(x.by_scanning == true && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false && x.author!="")}.map(&:author).map{|x|x.split(' ')[0,5].join('').upcase}.include?(book.author.split(' ')[0,5].join('').upcase) and book_author_n.present?)
         (my_flag=1;break;) if ((priority_first + priority_second + priority_third + priority_forth).to_set.count >=10)
       end
@@ -274,7 +274,7 @@ class User < ActiveRecord::Base
       book_genre_n = other_user.books.select{|x|@user_preferences.select{|x|(x.by_scanning == true && x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false && x.genre!="")}.map(&:genre).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["genre"].split(' ')[0,5].join('').upcase)}
       @books.each do |book|
         book_genre_n.each do |other_users_book_genre_n|
-          priority_fifth << book_genre_n.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(distance: other_user.distance.round(1))
+          priority_fifth << other_users_book_genre_n.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(distance: other_user.distance.round(1))
         end if (other_user.reading_preferences.select{|x|(x.by_scanning == true && x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false && x.genre!="")}.map(&:genre).map{|x|x.split(' ')[0,5].join('').upcase}.include?(book.genre.split(' ')[0,5].join('').upcase) and book_genre_n.present?)
         (my_flag=1;break;) if ((priority_first + priority_second + priority_third + priority_forth + priority_fifth).to_set.count >=10)
       end
