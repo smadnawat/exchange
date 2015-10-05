@@ -383,7 +383,8 @@ class ChatsController < ApplicationController
 	end
 
 	def user_grp_detail
-		 @group = Group.find_by_id(params[:group_id]) 
+		 @group = Group.find_by_id(params[:group_id])
+		 @notice = Notice.where(:user_id => @group.admin_id, :reciever_id => params[:reciever_id], :group_id => @group.id, :invitation_id => nil, :book_to_give => nil) 
 		 if @group.present?
 		 	  @user = User.find_by_id(@group.admin_id)
 		    render :json => {
@@ -391,7 +392,8 @@ class ChatsController < ApplicationController
 													:responseMessage => "Group user details fetched successfully!",
 													:group_name => @group.name,
 													:admin_details => @user.as_json(only: [:id, :username, :picture]),
-													:admin_rating => Rating.calculate_ratings(@user)
+													:admin_rating => Rating.calculate_ratings(@user),
+													:status => @notice.action_type
 													}
 		 else
 		  render :json => {:responseCode => 500,:responseMessage => "Group doesn't exists!"	}
@@ -404,12 +406,14 @@ class ChatsController < ApplicationController
   	  		if params[:action_type] == 'Accept'
 			  	     unless @group.users.include?(@user) 
 								@group.users << User.find(@user.id)
+		  	  			@notice_accept = Notice.where(:user_id => @group.admin_id, :reciever_id => @user.id, :action_type => 'User_added', :invitation_id => nil, :book_to_give => nil).first
+							   @notice_accept.update_attributes(:action_type => 'User_accepted')
 							 end
 							render :json => {:responseCode => 200,:responseMessage => 'You have successfully accepted the chat request!' } 
 		  	  elsif params[:action_type] == 'Decline'
 		  	  	@notice_decline = Notice.where(:user_id => @group.admin_id, :reciever_id => @user.id, :action_type => 'User_added', :invitation_id => nil, :book_to_give => nil).first
 							@notice_decline.update_attributes(:action_type => 'User_declined')
-							render :json => {:responseCode => 500,:responseMessage => 'Successfully declined the chat request!' } 
+							render :json => {:responseCode => 200,:responseMessage => 'Successfully declined the chat request!' } 
 		  	  end
 		  else
 		  	  render :json => {:responseCode => 500,:responseMessage => "Group doesn't exists!"	}
