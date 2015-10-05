@@ -384,7 +384,7 @@ class ChatsController < ApplicationController
 
 	def user_grp_detail
 		 @group = Group.find_by_id(params[:group_id])
-		 @notice = Notice.where(:user_id => @group.admin_id, :reciever_id => params[:reciever_id], :group_id => @group.id, :invitation_id => nil, :book_to_give => nil) 
+		 @notice = Notice.where(:user_id => @group.admin_id, :reciever_id => params[:reciever_id], :group_id => @group.id, :invitation_id => nil, :book_to_give => nil).first 
 		 if @group.present?
 		 	  @user = User.find_by_id(@group.admin_id)
 		    render :json => {
