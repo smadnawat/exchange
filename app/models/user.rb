@@ -207,7 +207,9 @@ class User < ActiveRecord::Base
     priority_third = Set.new
     priority_forth = Set.new
     priority_fifth = Set.new
-   
+    education_case = ['Education - School','Education - Undergrad - Art & Design','Education - Undergrad - Aeronautics','Education - Undergrad - Business Studies / Eco','Education - Undergrad - Drama', 'Education - Undergrad - Engineering', 'Education - Undergrad - Geography', 'Education - Undergrad - History', 'Education - Undergrad - Law', 'Education - Undergrad - Literature / English', 'Education - Undergrad - Maths', 'Education - Undergrad - Medicine', 'Education - Undergrad - Music', 'Education - Undergrad - Science', 'Education - Undergrad - Social Science', 'Education - Undergrad - Technology', 'Education - Undergrad - Others', 'Education - Postgrad - Business / Finance', 'Education - Postgrad - History', 'Education - Postgrad - Marketing', 'Education - Postgrad - Maths', 'Education - Postgrad - Medicine', 'Education - Postgrad - Technology', 'Education - Postgrad - Others']
+    
+
     @user = User.find_by(id: user_id)
     @lat_long = @user.books.last if @user.books.last.present?
     @books = @user.books#.near([@lat_long.latitude,@lat_long.longitude], 10, :units => :km)
@@ -219,7 +221,7 @@ class User < ActiveRecord::Base
 
     ####### Priority First ##################
     other_users.each  do |other_user|
-      book_title = other_user.books.select{|x|@user_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.title!="")}.map(&:title).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["title"].split(' ')[0,5].join('').upcase)}
+      book_title = other_user.books.reject{|x|education_case.include?(x.genre)}.select{|x|@user_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.title!="")}.map(&:title).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["title"].split(' ')[0,5].join('').upcase)}
       @books.each do |book|
         book_title.each do |other_users_book_title|
           priority_first << other_users_book_title.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(distance: other_user.distance.round(1))
@@ -232,7 +234,7 @@ class User < ActiveRecord::Base
 
     ####### Priority Second ##################
     other_users.each  do |other_user|
-      book_author = other_user.books.select{|x|@user_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false && x.author!="")}.map(&:author).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["author"].split(' ')[0,5].join('').upcase)}
+      book_author = other_user.books.reject{|x|education_case.include?(x.genre)}.select{|x|@user_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false && x.author!="")}.map(&:author).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["author"].split(' ')[0,5].join('').upcase)}
       @books.each do |book|
         book_author.each do |other_users_book_author|
           priority_second << other_users_book_author.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(distance: other_user.distance.round(1))
@@ -245,7 +247,7 @@ class User < ActiveRecord::Base
 
     ####### Priority Third ##################
     other_users.each  do |other_user|
-      book_genre = other_user.books.select{|x|@user_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.genre_deactivated == false && x.delete_genre == false && x.genre!="")}.map(&:genre).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["genre"].split(' ')[0,5].join('').upcase)}
+      book_genre = other_user.books.reject{|x|education_case.include?(x.genre)}.select{|x|@user_preferences.select{|x|(x.by_scanning == false && x.book_deactivated == false && x.genre_deactivated == false && x.delete_genre == false && x.genre!="")}.map(&:genre).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["genre"].split(' ')[0,5].join('').upcase)}
       @books.each do |book|
         book_genre.each do |other_users_book_genre|
           priority_third << other_users_book_genre.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(distance: other_user.distance.round(1))
@@ -258,7 +260,7 @@ class User < ActiveRecord::Base
 
     ####### Priority Fourth ##################
     other_users.each  do |other_user|
-      book_author_n = other_user.books.select{|x|@user_preferences.select{|x|(x.by_scanning == true && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false && x.author!="")}.map(&:author).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["author"].split(' ')[0,5].join('').upcase)}
+      book_author_n = other_user.books.reject{|x|education_case.include?(x.genre)}.select{|x|@user_preferences.select{|x|(x.by_scanning == true && x.book_deactivated == false && x.delete_author == false && x.author_deactivated == false && x.author!="")}.map(&:author).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["author"].split(' ')[0,5].join('').upcase)}
       @books.each do |book|
         book_author_n.each do |other_users_book_author_n|
           priority_forth << other_users_book_author_n.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(distance: other_user.distance.round(1))
@@ -271,7 +273,7 @@ class User < ActiveRecord::Base
 
     ####### Priority Fifth ##################
     other_users.each  do |other_user|
-      book_genre_n = other_user.books.select{|x|@user_preferences.select{|x|(x.by_scanning == true && x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false && x.genre!="")}.map(&:genre).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["genre"].split(' ')[0,5].join('').upcase)}
+      book_genre_n = other_user.books.reject{|x|education_case.include?(x.genre)}.select{|x|@user_preferences.select{|x|(x.by_scanning == true && x.book_deactivated == false && x.delete_genre == false && x.genre_deactivated == false && x.genre!="")}.map(&:genre).map{|x|x.split(' ')[0,5].join('').upcase}.include?(x["genre"].split(' ')[0,5].join('').upcase)}
       @books.each do |book|
         book_genre_n.each do |other_users_book_genre_n|
           priority_fifth << other_users_book_genre_n.as_json(:only => [:id, :title,:author,:genre, :about_us, :image_path]).merge(distance: other_user.distance.round(1))
