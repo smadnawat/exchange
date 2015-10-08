@@ -10,7 +10,7 @@ class ApisController < ApplicationController
 		params[:picture] = User.image_data(params[:picture])
 		if params[:provider].present? && params[:provider] == User::A
 			if @user = User.where('email = ?  AND provider !=?',params[:email],'normal').first					
-		        render :json => {:responseCode => 200,:responseMessage => "Email id #{@user.email} is already registered with Novelinked through a #{@user.provider} account. Please login via same."} 
+		        render :json => {:responseCode => 200,:responseMessage => "Email id #{@user.email} is already registered with Novelinked through a #{@user.provider} account. Please login via the same."} 
 			else	
 				@user = User.new(permitted_params)
 					if @user.save	
@@ -29,13 +29,13 @@ class ApisController < ApplicationController
 				   render :json => {:responseCode => 200,:responseMessage => 'Logged in successfull.', :user_id => @user.id	}
 				
 				elsif @user = User.where('email = ? AND provider = ?',params[:email],'normal').first					
-	        	render :json => {:responseCode => 500,:responseMessage => "Email ID #{@user.email} is already registered with Novelinked. Please login via same."} 
+	        	render :json => {:responseCode => 500,:responseMessage => "Email ID #{@user.email} is already registered with Novelinked. Please login via the same."} 
   
         elsif User.where('email = ? AND provider = ?',params[:email],'google').count == 0
 			  	@useer = User.find_by_email(params[:email])
 			  	if @useer.present?
 			  		 @user = @useer.provider
-			   	   render :json => {:responseCode => 500,:responseMessage => "Email ID #{params[:email]} is already registered with Novelinked through a #{@user} account. Please login via same."} 
+			   	   render :json => {:responseCode => 500,:responseMessage => "Email ID #{params[:email]} is already registered with Novelinked through a #{@user} account. Please login via the same."} 
 			   	else
 			   	   @user = User.create(permitted_params)
 				     manage_devices(@user)
@@ -47,7 +47,7 @@ class ApisController < ApplicationController
 			  	@useer = User.find_by_email(params[:email])
 			  	if @useer.present?
 			  		 @user = @useer.provider
-			   	   render :json => {:responseCode => 500,:responseMessage => "Email ID #{params[:email]} is already registered with Novelinked through a #{@user} account. Please login via same."} 
+			   	   render :json => {:responseCode => 500,:responseMessage => "Email ID #{params[:email]} is already registered with Novelinked through a #{@user} account. Please login via the same."} 
 			   	else
 			   	   @user = User.create(permitted_params)
 				     manage_devices(@user)
