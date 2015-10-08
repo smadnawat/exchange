@@ -368,7 +368,7 @@ class ChatsController < ApplicationController
 					 params[:members].as_json(only: [:id]).each do |t|
 						@users = User.find(t.values)
               @users.each do |user|
-              	user.devices.each {|device| (device.device_type == "Android") ? AndroidPushWorker.perform_async(nil, "#{(User.find(@group.admin_id).username.present?) ? User.find(@group.admin_id).username : "Admin" }  has sent you an invite to chat." , nil, device.device_id, "adduser", nil, @group.id, nil) : ApplePushWorker.perform_async(nil, "#{(User.find(@group.admin_id).username.present?) ? User.find(@group.admin_id).username : "Admin" } has sent you an invite to chat.", nil, device.device_id, "adduser", nil, @group.id, nil) } 
+              	user.devices.each {|device| (device.device_type == "Android") ? AndroidPushWorker.perform_async(nil, "#{(User.find(@group.admin_id).username.present?) ? User.find(@group.admin_id).username : "Admin" }  has sent you an invite to chat." , nil, device.device_id, "adduser", nil, @group.id, nil) : ApplePushWorker.perform_async(nil, "#{(User.find(@group.admin_id).username.present?) ? User.find(@group.admin_id).username : "Admin" } has sent you an invite to chat.", 1, device.device_id, "adduser", nil, @group.id, nil) } 
 					      Notice.create(:user_id => @user.id, :action_type => 'User_added', :reciever_id => user.id, :pending => true, :group_id => @group.id)
 					    end 
 					  end
