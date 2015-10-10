@@ -611,7 +611,7 @@ class ApisController < ApplicationController
   private
 
 	def permitted_params
-	   params.permit(:email, :username, :password, :password_confirmation, :sign_in_token, :gender, :location, :picture, :about_me, :reset_password_token, :author_prefernce, :genre_preference, :date_signup,:device_used, :latitude, :longitude, :provider, :u_id, reading_preferences_attributes: [:title, :author, :genre])
+	    params.permit(:email, :username, :password, :password_confirmation, :sign_in_token, :gender, :location, :picture, :about_me, :reset_password_token, :author_prefernce, :genre_preference, :date_signup,:device_used, :latitude, :longitude, :provider, :u_id, reading_preferences_attributes: [:title, :author, :genre])
 	end
 
 	def books_params
