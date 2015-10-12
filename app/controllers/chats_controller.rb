@@ -236,12 +236,14 @@ class ChatsController < ApplicationController
 
 	def get_chat
 		@group = Group.where(:id => params[:group_id]).first
+		@user_added_to_grp = UserGroup.find_by(:user_id => @user.id, :group_id => params[:group_id])
 		if @group
 			render :json => 
                 {
                  :responseCode => 200,	
 			           :responseMessage => "Chat List fetched successfully!",
-			           :chat_list => paging(@group.messages.order('id desc').includes(:user), params[:page_no],params[:page_size]).as_json(except: [:updated_at],:include => {:user => {:only => [:picture]}}),
+			           :chat_list => paging(@group.messages.where('created_at > ? ', @user_added_to_grp.created_at).order('id desc').includes(:user), params[:page_no],params[:page_size]).as_json(except: [:updated_at],:include => {:user => {:only => [:picture]}}),
+			           # :chat_list => paging(@group.messages.order('id desc').includes(:user), params[:page_no],params[:page_size]).as_json(except: [:updated_at],:include => {:user => {:only => [:picture]}}),
 		             :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }	                   
 
 		            } 
