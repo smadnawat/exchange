@@ -344,7 +344,7 @@ class User < ActiveRecord::Base
 
   def self.search_user_to_add_group(search)
     if search
-      where('username LIKE ?', "{search}%")
+      where('username LIKE ?', "%{search}%")
     else
       all
     end
