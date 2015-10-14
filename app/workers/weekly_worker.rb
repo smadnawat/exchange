@@ -16,7 +16,7 @@ class WeeklyWorker
           @devices.each do |device|
             if device.device_type == "Android"
               puts "======#{device.device_id}========"
-              alert = "Your potential matches for this week is "
+              alert = "Novelinked has #{priority_first} matches waiting for you"
               AndroidPushWorker.perform_async(user.id, alert, priority_first, device.device_id, nil, nil, nil, nil)
             else
               ApplePushWorker.perform_async(user.id, alert, priority_first, device.device_id, nil, nil, nil, nil)
@@ -27,3 +27,5 @@ class WeeklyWorker
     end
   end 
 end
+
+
