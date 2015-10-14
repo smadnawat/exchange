@@ -164,7 +164,7 @@ class ApisController < ApplicationController
 	def user_profile
     @user = User.includes(:reading_preferences).where(:id => params[:user_id]).first
 		  @user_preferences = @user.reading_preferences
-			  @reading_pref = @user_preferences.where("title != ? and genre = ? and author = ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre = ? and author = ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre = ? and author != ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre != ? and author = ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre != ? and author != ? ", " ", " ", " ")
+			  @reading_pref = @user_preferences.where("title != ? and genre = ? and author = ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre = ? and author != ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre != ? and author = ? ", " ", " ", " ") + @user_preferences.where("title != ? and genre != ? and author != ? ", " ", " ", " ")
 				 	@authors = @user_preferences.where(:delete_author => false).where("title = ? and genre = ? and author != ? ", " ", " ", " ") + @user_preferences.where(:delete_author => false).where("title = ? and genre != ? and author != ? ", " ", " ", " ") 
             	@genres = @user_preferences.where(:delete_genre => false).where("title = ? and genre != ? and author = ? ", " ", " ", " ") + @user_preferences.where(:delete_genre => false).where("title = ? and genre != ? and author != ? ", " ", " ", " ") 
 		  		    #@rating = Rating.calculate_ratings(@user)
