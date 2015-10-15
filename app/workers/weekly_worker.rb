@@ -19,7 +19,7 @@ class WeeklyWorker
               puts "======#{device.device_id}========"
               AndroidPushWorker.perform_async(user.id, alert, priority_first, device.device_id, nil, nil, nil, nil)
             else
-              ApplePushWorker.perform_async(user.id, alert, priority_first, device.device_id, 'Weekly', nil, nil, nil)
+              ApplePushWorker.perform_async(user.id, alert, "1", device.device_id, 'Weekly', nil, nil, nil)
             end
           end
         end
