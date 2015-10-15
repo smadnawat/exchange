@@ -19,7 +19,7 @@ class WeeklyWorker
               alert = "Novelinked has #{priority_first} matches waiting for you"
               AndroidPushWorker.perform_async(user.id, alert, priority_first, device.device_id, nil, nil, nil, nil)
             else
-              ApplePushWorker.perform_async(user.id, alert, priority_first, device.device_id, nil, nil, nil, nil)
+              ApplePushWorker.perform_async(user.id, alert, priority_first, device.device_id, 'Weekly', nil, nil, nil)
             end
           end
         end
