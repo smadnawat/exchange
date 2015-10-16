@@ -17,7 +17,7 @@ class WeeklyWorker
             alert = "Novelinked has #{priority_first} matches waiting for you"
             if device.device_type == "Android"
               puts "======#{device.device_id}========"
-              AndroidPushWorker.perform_async(user.id, alert, priority_first, device.device_id, nil, nil, nil, nil)
+              AndroidPushWorker.perform_async(user.id, alert, priority_first, device.device_id, 'Weekly', nil, nil, nil)
             else
               ApplePushWorker.perform_async(user.id, alert, 1, device.device_id, 'Weekly', nil, nil, nil)
             end
