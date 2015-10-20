@@ -70,13 +70,13 @@ class ApisController < ApplicationController
 	   @books = @user.books.build(books_params)
 	    if params[:isbn13].present?
 	      @isbn_last = params[:isbn13]
-        @books.image_path = "http://ec2-52-24-139-4.us-west-2.compute.amazonaws.com/covers/#{@isbn_last.to_s[9..10]}/#{@isbn_last.to_s[11..12]}/#{@isbn_last}.jpg" 
+        @books.image_path = "https://s3-us-west-2.amazonaws.com/novelinkedbookpics/covers/#{@isbn_last.to_s[9..10]}/#{@isbn_last.to_s[11..12]}/#{@isbn_last}.jpg" 
       end 
 		    if @books.save
 		           if params[:upload_type].eql? "scanning" and params[:reading_pref_upload].eql? "true" and params[:isbn13].present?
 		           	  @isbn_last = params[:isbn13] 
 		              @reading_pref = @user.reading_preferences.build(:title => " ", :author => params[:author], :genre => params[:genre], :isbn13 => params[:isbn13], :by_scanning => true)
-		              @reading_pref.image_path = "http://ec2-52-24-139-4.us-west-2.compute.amazonaws.com/covers/#{@isbn_last.to_s[9..10]}/#{@isbn_last.to_s[11..12]}/#{@isbn_last}.jpg" 
+		              @reading_pref.image_path = "https://s3-us-west-2.amazonaws.com/novelinkedbookpics/covers/#{@isbn_last.to_s[9..10]}/#{@isbn_last.to_s[11..12]}/#{@isbn_last}.jpg" 
 			              @reading_pref.save
 		           end
 		      render_message 200, 'Book has been uploaded successfully!'     
@@ -103,7 +103,7 @@ class ApisController < ApplicationController
 	   @reading_pref = @user.reading_preferences.build(reading_pref_params)
 	      if params[:isbn13].present?
 	       @isbn_last = params[:isbn13]
-         @reading_pref.image_path = "http://ec2-52-24-139-4.us-west-2.compute.amazonaws.com/covers/#{@isbn_last.to_s[9..10]}/#{@isbn_last.to_s[11..12]}/#{@isbn_last}.jpg" 
+         @reading_pref.image_path = "https://s3-us-west-2.amazonaws.com/novelinkedbookpics/covers/#{@isbn_last.to_s[9..10]}/#{@isbn_last.to_s[11..12]}/#{@isbn_last}.jpg" 
         end 
 	     if @reading_pref.save
               render_message 200, 'Your Reading Preference has been uploaded successfully!'
@@ -445,7 +445,7 @@ class ApisController < ApplicationController
 		 	   render :json => {
 	                        :responseCode => 200,
 	                        :responseMessage => "Book fetched successfully!",
-	                        :name => @book.attributes.merge!(about_us: @book.overview.gsub(/<\/?[^>]*>/, ""),image_url: "http://ec2-52-24-139-4.us-west-2.compute.amazonaws.com/covers/#{@book.isbn13.to_s[9..10]}/#{@book.isbn13.to_s[11..12]}/#{@book.isbn13}.jpg"),
+	                        :name => @book.attributes.merge!(about_us: @book.overview.gsub(/<\/?[^>]*>/, ""),image_url: "https://s3-us-west-2.amazonaws.com/novelinkedbookpics/covers/#{@book.isbn13.to_s[9..10]}/#{@book.isbn13.to_s[11..12]}/#{@book.isbn13}.jpg"),
 	                        :subjects => ScanningSubject.pluck(:title)
 	                       } 
 	    else
@@ -470,7 +470,7 @@ class ApisController < ApplicationController
 	end
 
 	def reading_prf_searching     # Search by Book Name, Author name, isbn_no or genre  #.sort_by { |i| [i ? 0 : 1, i] }
-		  @book = Document.search(params[:name], star: true, :per_page => 1000).map{|x| x.attributes.merge!(image_url:  "http://ec2-52-24-139-4.us-west-2.compute.amazonaws.com/covers/#{x.isbn13.to_s[9..10]}/#{x.isbn13.to_s[11..12]}/#{x.isbn13}.jpg")}
+		  @book = Document.search(params[:name], star: true, :per_page => 1000).map{|x| x.attributes.merge!(image_url:  "https://s3-us-west-2.amazonaws.com/novelinkedbookpics/covers/#{x.isbn13.to_s[9..10]}/#{x.isbn13.to_s[11..12]}/#{x.isbn13}.jpg")}
 		  if @book.present?
 		  	 render :json => {
                             :responseCode => 200,
