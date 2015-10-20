@@ -5,10 +5,7 @@ include Clockwork
 
 # every(1.week,'weekly_worker called', :at => 'Sunday 13:05', :tz => 'UTC') { WeeklyWorker.perform_async }
 
-# every(1.day,'weekly_worker called', :at => '14:15', :tz => 'UTC') { WeeklyWorker.perform_async }
-
-every('15m','weekly_worker called', :tz => 'UTC') { WeeklyWorker.perform_async }
-
+every(1.day,'weekly_worker called', :at => '14:15', :tz => 'UTC') { WeeklyWorker.perform_async }
 
 every(1.day,'monthly worker called', :at => '11:45', :tz => 'UTC') { MonthlyEmailWorker.perform_async }
 
