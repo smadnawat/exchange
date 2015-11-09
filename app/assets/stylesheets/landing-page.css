@@ -4,6 +4,16 @@
  * For details, see http://www.apache.org/licenses/LICENSE-2.0.
  */
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,400,300,600,700);
+@font-face {
+    font-family: 'Conv_Lucida Handwriting Italic';
+    src: url('fonts/Lucida Handwriting Italic.eot');
+    src: url('fonts/Lucida Handwriting Italic.woff') format('woff'), 
+         url('fonts/Lucida Handwriting Italic.ttf') format('truetype'), 
+         url('fonts/Lucida Handwriting Italic.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
 body,
 html {
     width: 100%;
@@ -38,6 +48,10 @@ a,img{outline:none !important;}
 }
 .text-c{
 	text-align:center;
+}
+.text-c span{
+    text-align:center;
+    color: #81BB07;
 }
 .topnav {
     font-size: 14px; 
@@ -377,6 +391,22 @@ height: 46px;
 .btn-red:hover, .btn-red:focus, .btn-red:active{
   outline:none;
 }
+
+.btn-red2{
+  background: #d2183b !important;
+  border-radius: 4px;
+  color: #fff !important;
+  font-weight: 600;
+  font-size: 16px;
+  border:none;
+  padding: 15px 65px;
+  outline:none;
+}
+.btn-red2:hover, .btn-red2:focus, .btn-red2:active{
+  outline:none;
+}
+
+
 .main-w h3{
 	text-align:center;
 	color:#fff;
@@ -385,6 +415,11 @@ height: 46px;
     text-align: center;
     display: block;
     padding: 30px 0;
+}
+.btn-sec2 {
+    text-align: center;
+    display: block;
+    padding: 0 0 30px 0;
 }
 footer {
     background-color: #363636;
@@ -719,6 +754,67 @@ background-color:#000;}
     width: 100% !important;
 }
 /*==========================*/
+/*------------------Start 06-11-2015------------*/
+.appBtns{
+    display: block;
+    margin-top: 7px;
+
+}
+.appBtns a{
+    display: inline-block;
+    margin: 0 5px;
+}
+
+/*---------------Slider----------------*/
+
+.awardsBg{ width:100%; padding:10px 0; text-align:center;}
+.awardsImgList{ display:block; padding:10px 0; text-align:center; max-width:730px; margin:0 auto;}
+.awardsImgList .owl-item.active.center img{ z-index:99999; transform: scale(1.4); transition: all 0.5s ease-in-out 0s; border-color:#ccc; opacity:1 !important;}
+.awardsImgList ul li{ padding-top:50px; height:410px; text-align:center; display:inline-block; position:static;}
+.awardsImgList ul li img{ width:140px !important; display:block; margin:26px auto; behavior: url(css/PIE.htc); opacity:0.5;}
+.awardsImgList ul li.active img{ width:140px; height:400px; margin:0 auto;}
+.awardsDetail {background: #fff none repeat scroll 0 0; border: 1px solid #ccc; box-sizing: border-box; display: block; margin: 44px auto 10px -130px;
+  padding: 20px 10px; position: relative; max-width: 800px;}
+.awardsDetail:before { left: 0%; right:0; top: -13px; border: solid transparent; margin:0 auto; content: " "; height: 0; width: 0; position: absolute; pointer-events: none; }
+.awardsDetail:before { background:url(../assets/after-arrow.png) left top no-repeat; width:19px; height:10px; }
+.awardsDisc{ font-size:13px; display:block; text-align:center; line-height:18px; color:#151714;}
+.awardsDisc span{ display:block; font-size:16px; color:#000000; font-family: 'open_sansbold';}
+.awardsDisc small{ display:block; font-size:14px; color:#e78216; font-family: 'open_sanssemibold'; padding:3px 0 15px 0;}
+
+.awardsImgList .owl-nav .owl-prev {background: red none repeat scroll 0 0;display: inline-block !important; height: 380px; left: 50%; margin-left: -26%; margin-top:0; position: absolute; text-indent: -99999px; top:30px; width: 75px;opacity:0;z-index:500;}
+.awardsImgList .owl-nav .owl-next { background: red none repeat scroll 0 0;  display: inline-block !important; height: 380px;  right: 50%; margin-right: -27%; margin-top:0; position: absolute; text-indent: -99999px; top: 30px; width: 85px; opacity:0; z-index:500;}
+.owl-item .awardsDetail{ display:none;}
+.owl-item.active.center .awardsDetail{ display:block;}
+.bestquoteList{padding: 0 10px;}
+.bestquoteList ul li{ display: block; padding-bottom:5px; font-size: 14px; line-height: 20px; color: #666; }
+.bestquoteList ul li span{ float: right; display: inline-block;}
+.play-btn2 {
+    left: 42%;
+    position: absolute;
+    top: 40%;
+    z-index: 99999;
+}
+.play-btn2 a span{
+  width: 50px;
+  height: 50px;
+  display: inline-block;
+  background:url("../assets/play-btn.png") no-repeat center top;
+  background-size: 100%;
+  outline:none !important;
+  position: absolute;
+  top: 50%;
+  left: 50%; margin-left: -25px;
+  margin-top: -25px;
+  z-index: 9;
+}
+.play-btn2 a span:hover{
+   background:url("../assets/play-btn-hvr.png") no-repeat center top;
+   width: 50px;
+  height: 50px;
+  display: inline-block;
+  background-size: 100%;
+  outline:none !important;
+}
 
 /*=====================================Responsive====================================*/
 
@@ -784,6 +880,7 @@ color:#363636;
 .player .title header h1{
 	display:none !important;
 }
+.resp-head{ left: 0;}
 .modal-open .navbar-fixed-top,
 .modal-open .navbar-fixed-bottom {
 padding-right: 17px;
@@ -1061,14 +1158,23 @@ outline:none;
 }
 /*-----------------------end min-width 1280---------------------*/
 @media(min-width:1280px) and (max-width:1350px){
-.play-btn {
-    left: 46%;
-    top: 38%;
-}
-.app-btn {
-    right: 7%!important;
-    top: 86%!important;
-}
+    .play-btn {
+        left: 46%;
+        top: 38%;
+    }
+    .app-btn {
+        right: 7%!important;
+        top: 86%!important;
+    }
 }
 
 
+
+/*------------09-11-2015------------------*/
+.thanksList{width:100%; background:url(../assets/paper-img.jpg) center center no-repeat; background-size:cover; padding:50px 20px; font-size:20px; color:#000; border:#ccc solid 1px; margin-bottom:25px; text-shadow:#fff 0 1px 1px; font-family:'Conv_Lucida Handwriting Italic';}
+.btns{ margin:40px 0 30px 0;}
+.btns span{ width:33.33%; float:left;}
+.app-thanks{ text-align:left;}
+.logo-thanks{ text-align:center;}
+.gplay-thanks{ text-align:right;}
+h3 span{ color:#81bb07;}

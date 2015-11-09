@@ -15,17 +15,18 @@ class HomeController < ApplicationController
 	def my_team		
 	end
 
-	def contact_us
+	def contact_us		
 	  contact_us = ContactU.new(params_permit)
 		if contact_us.save
 			contact_data = ContactU.find(contact_us.id)
-      UserMailer.sending_contact_details(contact_data).deliver
+      		UserMailer.sending_contact_details(contact_data).deliver
 			flash[:notice] = "Your Contact Us form has been submitted successfully"
-			redirect_to thank_you_path
+			redirect_to thank_you_path( :id => contact_us.id, :join_event => params[:join_event] )
 		end	
 	end
 
-	def thank_you		
+	def thank_you
+		@contact_us = ContactU.find(params[:id]) if params[:id]
 	end
 
 	def download_csv
