@@ -325,38 +325,38 @@
               </label>
             </div>
           </div>
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label for="exampleInputEmail1" class="label-txt">Your Best Picture</label>
-            <%= f.file_field :avatar, :class=>"filestyle", "data-icon"=>"false" %>
+            <%#= f.file_field :avatar, :class=>"filestyle", "data-icon"=>"false" %>
             <span class="error-name error"></span>
-          </div>
+          </div> -->
           <%=hidden_field_tag :join_event, true%>
           <div class="form-group">
             <label class="label-txt" for="exampleInputEmail1">Your Best Quote </label>
             <div class="bestquoteList">
               <ul>
-                <li><input type="checkbox" name="contact_us[quotes][]" value='1'>
+                <li><input type="radio" name="contact_us[quotes]" value='1'>
                   “There are no faster or firmer friendships than those formed between people who love the same books” <span>Irving Stone</span>
                 </li>
-                <li><input type="checkbox" name="contact_us[quotes][]" value='2'>
+                <li><input type="radio" name="contact_us[quotes]" value='2'>
                   There are many little ways to enlarge your child’s world. Love of books is the best of all.  <span>Jacqueline Kennedy Onassis</span>
                 </li>
-                <li><input type="checkbox" name="contact_us[quotes][]" value='3'>
+                <li><input type="radio" name="contact_us[quotes]" value='3'>
                   There is no friend as loyal as a book <span>Earnest Hemingway</span>
                 </li>
-                <li><input type="checkbox" name="contact_us[quotes][]" value='4'>
+                <li><input type="radio" name="contact_us[quotes]" value='4'>
                   The more we share, the more we have <span>Leonard Nimoy</span>
                 </li>
-                <li><input type="checkbox" name="contact_us[quotes][]" value='5'>
+                <li><input type="radio" name="contact_us[quotes]" value='5'>
                   If you have a candle, the light won’t glow any dimmer if I light yours off  of mine	 <span>Steven Tyler</span>
                 </li>
               </ul>
             </div>
           </div>
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label class="label-txt" for="exampleInputEmail1">Author Code (if any)</label>
-            <%= f.text_field :author_code, :class=> "form-control form-c"  %>
-          </div>
+            <%#= f.text_field :author_code, :class=> "form-control form-c"  %>
+          </div> -->
         </div>
         <div class="modal-footer put-center">
           <a href="#" class="btn btn-default btn-red" type="button" id = "contact_us_valid" onclick="$('.join_event_form').submit();">Join our Event</a>

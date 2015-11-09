@@ -393,7 +393,7 @@ height: 46px;
 }
 
 .btn-red2{
-  background: #d2183b !important;
+  background: #81bb07 !important;
   border-radius: 4px;
   color: #fff !important;
   font-weight: 600;
@@ -786,9 +786,9 @@ background-color:#000;}
 .owl-item .awardsDetail{ display:none;}
 .owl-item.active.center .awardsDetail{ display:block;}
 .bestquoteList{padding: 0 10px;}
-.bestquoteList ul li{ display: block; padding-bottom:5px; font-size: 14px; line-height: 20px; color: #666; }
-.bestquoteList ul li span{ float: right; display: inline-block;}
-.play-btn2 {
+.bestquoteList ul li{ display: block; padding-bottom:15px; font-size: 14px; line-height: 18px; color: #666; }
+.bestquoteList ul li span{ display:block; font-size:14px; color: #333; font-weight: bold;}
+/*.play-btn2 {
     left: 42%;
     position: absolute;
     top: 40%;
@@ -815,7 +815,7 @@ background-color:#000;}
   background-size: 100%;
   outline:none !important;
 }
-
+*/
 /*=====================================Responsive====================================*/
 
 @media(min-width:320px) and (max-width:480px){

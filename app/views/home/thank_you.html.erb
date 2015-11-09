@@ -1,3 +1,10 @@
+<% content_for :head do %>  
+  <meta property="og:url"    content="<%= request.url %>" /> 
+  <meta property="og:title"  content="Novelinked is the only Social Book Swapping App which promises you an unlimited supply of Free Books of your Favorite Authors. Download Us and Enter A New World of Free Books!!" /> 
+  <meta property="og:description"  content="<%=quote(@contact_us.quotes)%>" /> 
+<% end %>
+
+
 <% provide(:title, 'Thanks for starting your Journey with Us') %>
 <nav class="navbar navbar-default navbar-fixed-top topnav navi other-nav" role="navigation">
   <div class="container topnav">
@@ -56,10 +63,8 @@
             <span class="gplay-thanks"><a href="https://play.google.com/store/apps/details?id=com.novAlinked" target="_blank"><img src="assets/gplay-icon.png" alt=""></a></span>
           </div>
           <%if @contact_us.quotes%>
-            <div class="thanksList">
-              <% JSON.parse(@contact_us.quotes).each do | quote | %>
-                <p><%=quote(quote)%></p><br />
-              <%end%>
+            <div class="thanksList">              
+              <p><%=quote(@contact_us.quotes)%></p>
             </div>
           <%end%>  
         </div>
@@ -68,9 +73,10 @@
           <div class="put-center">
             <div class="foter-social">
               <ul class="banner-social-buttons list-inline">
-                <li><a href="https://developers.facebook.com/docs/plugins/like-button" class="f-ico"></a></li>
-                <li><a href=" https://about.twitter.com/resources/buttons#tweet" class="t-ico"></a></li>
-                <li><a href="https://developers.google.com/+/web/share/" class="g-ico"></a></li>
+
+                <li><a href="#-" target="" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=<%=request.url%>','name','width=600,height=400')" class="f-ico"></a></li>
+                <li><a href="https://twitter.com/home?status=<%=quote(@contact_us.quotes)%>" target="_blank" class="t-ico"></a></li>
+                <li><a href="#-" target="" onclick="window.open('https://plus.google.com/share?url=<%=request.url%>','name','width=600,height=400')" class="g-ico"></a></li>
               </ul>
             </div>
           </div>
