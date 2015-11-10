@@ -247,7 +247,7 @@
           </div>
           <div class="form-group">
             <label class="label-txt" for="exampleInputEmail1">Email</label>
-            <%= f.text_field :email, :class=> "form-control form-c"  %>
+            <%= f.email_field :email, :class=> "form-control form-c"  %>
             <span class="error-email error"></span>
           </div>
           <div class="form-group">
@@ -292,23 +292,23 @@
       <div class="modal-body">
         <%= form_for :contact_us,url: contact_us_path, :html=>{:class => "join_event_form",id: "join_event_form"} do |f| %>
           <div class="form-group">
-            <label for="exampleInputEmail1" class="label-txt">Name</label>
-            <%= f.text_field :name, autofocus: true, :class => "form-control form-c" %>
+            <label for="exampleInputEmail1" class="label-txt">Name<span style='color:red'>*</span></label>
+            <%= f.text_field :name, :required => true, autofocus: true, :class => "form-control form-c" %>
             <span class="error-name error"></span>
           </div>
           <div class="form-group">
-            <label for="exampleInputEmail1" class="label-txt">Surname</label>
-            <%= f.text_field :surname, :class => "form-control form-c" %>
+            <label for="exampleInputEmail1" class="label-txt">Surname<span style='color:red'>*</span></label>
+            <%= f.text_field :surname, :required => true, :class => "form-control form-c" %>
             <span class="error-name error"></span>
           </div>
           <div class="form-group">
-            <label for="exampleInputEmail1" class="label-txt">Email Address</label>
-            <%= f.text_field :email, :class=> "form-control form-c" %>
+            <label for="exampleInputEmail1" class="label-txt">Email Address<span style='color:red'>*</span></label>
+            <%= f.email_field :email, :required => true, :email => true,  :class=> "form-control form-c" %>
             <span class="error-email error"></span>
           </div>
           <div class="form-group">
             <label class="label-txt" for="exampleInputEmail1">Country</label>
-            <%= country_list%>  
+            <%= country_list %>  
           </div>
           <div class="form-group">
             <label for="exampleInputEmail1" class="label-txt">Gender</label>
@@ -335,7 +335,7 @@
             <label class="label-txt" for="exampleInputEmail1">Your Best Quote </label>
             <div class="bestquoteList">
               <ul>
-                <li><input type="radio" name="contact_us[quotes]" value='1'>
+                <li><input type="radio" name="contact_us[quotes]" value='1', chacked= "chacked">
                   “There are no faster or firmer friendships than those formed between people who love the same books” <span>Irving Stone</span>
                 </li>
                 <li><input type="radio" name="contact_us[quotes]" value='2'>
