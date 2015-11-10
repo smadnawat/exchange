@@ -80,8 +80,8 @@
       <form class="form-inline sec-marg">
         <div class="col-md-10 col-sm-8">
           <div class="appBtns">
-            <a href="https://itunes.apple.com/us/app/novelinked-social-book-swaps/id1031267627" target="_blank"><img src="assets/app-store-btn.png"></a>
-            <a href="https://play.google.com/store/apps/details?id=com.novAlinked" target="_blank"><img src="assets/google-play-btn.png"></a>
+            <a href="https://itunes.apple.com/us/app/novelinked-social-book-swaps/id1031267627" target="_blank"><img src="assets/app-icon.png"></a>
+            <a href="https://play.google.com/store/apps/details?id=com.novAlinked" target="_blank"><img src="assets/gplay-icon.png"></a>
           </div>
         </div>
         <div class="col-md-2 col-sm-4">
@@ -89,9 +89,9 @@
             <div class="label-top">Socialize with Us</div>
             <div class="foter-social">
               <ul class="banner-social-buttons list-inline">
-                <li><a href="https://developers.facebook.com/docs/plugins/like-button" class="f-ico"></a></li>
-                <li><a href=" https://about.twitter.com/resources/buttons#tweet" class="t-ico"></a></li>
-                <li><a href="https://developers.google.com/+/web/share/" class="g-ico"></a></li>
+                <li><a href="https://www.facebook.com/Novelinked" class="f-ico" target="_blank"></a></li>
+                <li><a href="https://twitter.com/Novelinked" class="t-ico" target="_blank"></a></li>
+                <li><a href="https://plus.google.com/114794872396110872910/posts" target="_blank" class="g-ico"></a></li>
               </ul>
             </div>
           </div>
@@ -105,17 +105,20 @@
 <div class="content-section-b" id="services">
   <div id="carousel-example-captions" class="carousel slide main" data-ride="carousel">
     <h3>How It Works</h3>
-    <div class="awardsImgList">
-      <ul class="pro-carousel">        
-        <li><img src="assets/awards-img1.png" alt=""></li>
-        <li><img src="assets/awards-img2.png" alt=""></li>
-        <li><img src="assets/awards-img3.png" alt=""></li>
-        <li><img src="assets/awards-img4.png" alt=""></li>
-        <li><img src="assets/awards-img5.png" alt=""></li>
-        <li><img src="assets/awards-img6.png" alt=""></li>
-        <li><img src="assets/awards-img7.png" alt=""></li>
-        <li><img src="assets/awards-img8.png" alt=""></li>
-      </ul>
+    <div class="awardBannerBx">
+      <div class="awardBanner">
+        <ul class="bannerSlider">
+          <li><img src="assets/awards-img1.png" alt=""></li>
+          <li><img src="assets/awards-img2.png" alt=""></li>
+          <li><img src="assets/awards-img3.png" alt=""></li>
+          <li><img src="assets/awards-img4.png" alt=""></li>
+          <li><img src="assets/awards-img5.png" alt=""></li>
+          <li><img src="assets/awards-img6.png" alt=""></li>
+          <li><img src="assets/awards-img7.png" alt=""></li>
+          <li><img src="assets/awards-img8.png" alt=""></li>
+        </ul>
+      </div>
+      <div class="clr"></div>
     </div>
   </div>
 </div>
@@ -418,38 +421,13 @@
       })
    });
 </script>
+<!-- <script src="js/jquery.bxslider.js"></script> -->
 <script>
-  var owl = $('.pro-carousel');
-  owl.owlCarousel({
-     items:5,
-     loop:true,
-     nav: true,
-     autoplay:false,
-     margin:0,
-     center:true,
-     autoplayTimeout:5000,
-     smartSpeed: 1000,
-     responsiveClass:true,
-     responsive:{
-         0:{
-             items:3,
-             nav:true
-         },
-  	480:{
-             items:3,
-             nav:true
-         },
-         640:{
-             items:5,
-             nav:true
-         },
-  
-  768:{
-             items:5,
-             nav:true
-         },
-         
-     },
-     autoplayHoverPause:true
-  }); 
+$('.bannerSlider').bxSlider({
+  minSlides: 1,
+  maxSlides: 1,
+  slideMargin: 0,
+  moveSlides: 1,
+  auto:true,
+});
 </script>
