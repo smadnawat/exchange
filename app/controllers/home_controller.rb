@@ -15,7 +15,7 @@ class HomeController < ApplicationController
 	def my_team		
 	end
 
-	def contact_us		
+	def contact_us
 	  contact_us = ContactU.new(params_permit)
 		if contact_us.save
 			contact_data = ContactU.find(contact_us.id)
