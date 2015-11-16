@@ -1,7 +1,8 @@
 <% content_for :head do %>  
   <meta property="og:url"    content="<%= request.url %>" /> 
-  <meta property="og:title"  content="Novelinked is the only Social Book Swapping App which promises you an unlimited supply of Free Books of your Favorite Authors. Download Us and Enter A New World of Free Books!!" /> 
-  <meta property="og:description"  content="<%=quote(@contact_us.quotes)%>" /> 
+  <meta property="og:title"  content="Thank You <%=@contact_us.name%> For Entering Our Event!!" />
+  <meta property="og:description"  content="Novelinked is the only Social Book Swapping App which promises you an unlimited supply of Free Books of your Favorite Authors. Download Us and Enter A New World of Free Books!!" /> 
+  <!-- meta property="og:description"  content="<%=quote(@contact_us.quotes)%>" />  -->
 <% end %>
 
 
@@ -55,18 +56,20 @@
         <h3 class="text-c">Thank You <span><%=@contact_us.name%></span> For Entering Our Event!!</h3>
         <div class="row">
           <div class="text-area">
-            <p class="text-c">"Novelinked" is the only Social Book Swapping App which promises you an unlimited supply of Free Books of your Favorite Authors. Download Us and Enter A New World of Free Books!!</p>            
+            <p class="text-c">"Novelinked" is the only Social Book Swapping App which promises you an unlimited supply of Free Books of your Favorite Authors. Download Us and Enter A New World of Free Books!!</p>
           </div>
-          <div class="btns clearfix">
+          <h2 class="text-c">Download Our App</h2>
+          <div class="btns clearfix text-c">
             <span class="app-thanks"><a href="https://itunes.apple.com/us/app/novelinked-social-book-swaps/id1031267627" target="_blank"><img src="assets/app-icon2.png" alt=""></a></span>
-            <span class="logo-thanks"><a href="http://www.novelinked.com/" target="_blank"><img src="assets/logo.png" alt="" width="100%"></a></span>
+            <!-- <span class="logo-thanks"><a href="http://www.novelinked.com/" target="_blank"><img src="assets/logo.png" alt="" width="100%"></a></span> -->
             <span class="gplay-thanks"><a href="https://play.google.com/store/apps/details?id=com.novAlinked" target="_blank"><img src="assets/gplay-icon2.png" alt=""></a></span>
           </div>
-          <%if @contact_us.quotes%>
-            <div class="thanksList">              
-              <p><%=quote(@contact_us.quotes)%></p>
-            </div>
-          <%end%>  
+          <%#if @contact_us.quotes%>
+            <!-- <div class="thanksList">               -->
+              <!-- <p><%#=quote(@contact_us.quotes)%></p> -->
+            <!-- </div> -->
+          <%#end%>
+          <h2 class="text-c">Share Us on</h2>
         </div>
        
         <div class="row">
@@ -75,7 +78,7 @@
               <ul class="banner-social-buttons list-inline">
 
                 <li><a href="#-" target="" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=<%=request.url%>','name','width=600,height=400')" class="f-ico"></a></li>
-                <li><a href="https://twitter.com/home?status=<%=quote(@contact_us.quotes)%>" target="_blank" class="t-ico"></a></li>
+                <li><a href="https://twitter.com/home?status='World's' Only Social Book Swapping App, download from https://itunes.apple.com/us/app/novelinked-social-book-swaps/id1031267627 or https://play.google.com/store/apps/details?id=com.novAlinked" target="_blank" class="t-ico"></a></li>
                 <li><a href="#-" target="" onclick="window.open('https://plus.google.com/share?url=<%=request.url%>','name','width=600,height=400')" class="g-ico"></a></li>
               </ul>
             </div>

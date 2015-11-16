@@ -311,7 +311,7 @@
           </div>
           <div class="form-group">
             <label class="label-txt" for="exampleInputEmail1">Country</label>
-            <%= country_list %>  
+            <%= country %>  
           </div>
           <div class="form-group">
             <label for="exampleInputEmail1" class="label-txt">Gender</label>
@@ -334,7 +334,7 @@
             <span class="error-name error"></span>
           </div> -->
           <%=hidden_field_tag :join_event, true%>
-          <div class="form-group">
+         <!--  <div class="form-group">
             <label class="label-txt" for="exampleInputEmail1">Your Best Quote </label>
             <div class="bestquoteList">
               <ul>
@@ -355,7 +355,7 @@
                 </li>
               </ul>
             </div>
-          </div>
+          </div> -->
           <!-- <div class="form-group">
             <label class="label-txt" for="exampleInputEmail1">Author Code (if any)</label>
             <%#= f.text_field :author_code, :class=> "form-control form-c"  %>
@@ -428,6 +428,28 @@ $('.bannerSlider').bxSlider({
   maxSlides: 1,
   slideMargin: 0,
   moveSlides: 1,
-  auto:true,
+  auto:false,
+});
+
+$(document).ready(function(){
+               
+    setTimeout(function(){ 
+    $( "<div class='bx-prev1'></div>" ).insertBefore(".bx-pager.bx-default-pager");
+    $( "<div class='bx-next1'></div>" ).insertAfter(".bx-pager.bx-default-pager");
+
+
+    }, 400);
+
+    setTimeout(function(){ 
+    $(".bx-prev1").click(function(){
+      $("a.bx-prev").click();             
+    });
+
+    $(".bx-next1").click(function(){
+      $("a.bx-next").click();             
+    });
+
+  }, 500);
+
 });
 </script>

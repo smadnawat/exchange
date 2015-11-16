@@ -788,15 +788,23 @@ background-color:#000;}
 .bestquoteList{padding: 0 10px;}
 .bestquoteList ul li{ display: block; padding-bottom:15px; font-size: 14px; line-height: 18px; color: #666; }
 .bestquoteList ul li span{ display:inline-block; float: right; font-size:14px; color: #333; font-weight: bold;}
-.awardBannerBx{ display:block; margin:15px auto 0 auto; width:445px; height:897px; background:url(../assets/mobile-bg.png) left top no-repeat;}
-.awardBanner{ display:block; width:389px; padding:103px 0 0 29px;}
+.awardBannerBx{ display:block; margin:0 auto; width:445px; height:897px; background:url(../assets/mobile-bg.png) left top no-repeat;}
+.awardBanner{ display:block; width:418px; padding:103px 0 0 29px; position:relative;}
 .awardBanner ul li{ display:block;}
-.awardBanner .bx-pager {display:block; text-align:center;}
-.awardBanner .bx-pager .bx-pager-item {display:inline-block;}
-.awardBanner .bx-pager .bx-pager-item a {display:inline-block; text-decoration: none; float:left; background:#666; width:16px; height:16px; border-radius:50%; margin:110px 2px 0 2px; overflow:hidden; color:#fff; font-size:10px; line-height:16px;}
+.awardBanner .bx-pager {display:block; text-align:center; position:relative; bottom:0px;}
+.awardBanner .bx-pager .bx-pager-item {display:inline-block; vertical-align:top;}
+.awardBanner .bx-pager .bx-pager-item a {display:inline-block; float:left; background:#666; width:20px; height:20px; border-radius:50%; margin:0px 2px 0 2px; overflow:hidden; color:#fff; font-size:12px; line-height:20px;}
 .awardBanner .bx-pager .bx-pager-item a:hover, .awardBanner .bx-pager .bx-pager-item a.active {background:#81bb07;}
-.awardBanner .bx-controls-direction a {position:absolute; top:50%; height:33px; width:18px; z-index:9999; display:block; text-indent:-99999px;}
+.awardBanner .bx-controls-direction a {position:absolute; bottom:-10px; left:50%; height:20px; width:28px; z-index:9999; display:inline-block; text-indent:-99999px;}
+.awardBanner .bx-prev {background:url(../assets/prev-img.png) no-repeat;}
+.awardBanner .bx-next {background:url(../assets/next-img.png) no-repeat;}
 
+.awardBanner .bx-controls{ text-align:center; height:20px;  margin-top:110px;}
+.awardBanner .bx-pager.bx-default-pager{ width:auto; display:inline-block;}
+.awardBanner .bx-wrapper .bx-pager, .bx-wrapper .bx-controls-auto{ position:relative;}
+.awardBanner .bx-prev1{ display:inline-block; height:20px; width:28px; vertical-align:middle; background:url(../assets/prev-img.png) no-repeat center center; cursor:pointer; margin-right:3px;}
+.awardBanner .bx-next1{ display:inline-block; height:20px; width:28px; vertical-align:middle; background:url(../assets/next-img.png) no-repeat center center; cursor:pointer; margin-left:3px;}
+.awardBanner .bx-controls-direction{ opacity:0; z-index:-500;}
 
 /*.play-btn2 {
     left: 42%;
@@ -1182,8 +1190,8 @@ outline:none;
 
 /*------------09-11-2015------------------*/
 .thanksList{width:100%; background:url(../assets/paper-img.jpg) center center no-repeat; background-size:cover; padding:50px 20px; font-size:20px; color:#000; border:#ccc solid 1px; margin-bottom:25px; text-shadow:#fff 0 1px 1px; font-family:'Conv_Lucida Handwriting Italic';}
-.btns{ margin:40px 0 30px 0;}
-.btns span{ width:33.33%; float:left;}
+.btns{ margin:15px 0 30px 0;}
+.btns span{ width:33.33%; margin: 0 5px;}
 .app-thanks{ text-align:left;}
 .logo-thanks{ text-align:center;}
 .gplay-thanks{ text-align:right;}

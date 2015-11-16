@@ -253,7 +253,16 @@ module HomeHelper
       <option value='Zambia'>Zambia</option>
       <option value='Zimbabwe'>Zimbabwe</option>
     </select>".html_safe		
-	end
+  end
+
+  def country
+    "<select class='form-control' name=[contact_us][country] id='country'>      
+      <option>Select Country</option>
+      <option value='India'>India</option>
+      <option value='Indonesia'>Indonesia</option>
+      <option value='Philippines'>Philippines</option>
+    </select>".html_safe    
+  end
 
   def quote(quote)    
     case quote
