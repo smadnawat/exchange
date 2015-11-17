@@ -47,7 +47,7 @@
     <div class="play-btn">
       <a href="#"  data-toggle="modal" data-target="#vdo" data-theVideo="https://player.vimeo.com/video/132415741"><span></span></a>
       <div class="btn-sec btn-sec-1">
-        <a data-toggle="modal" data-target="#contact_us" role="button" href="#" class="btn btn-default btn-red">Journey With Us</a>
+        <!-- <a data-toggle="modal" data-target="#contact_us" role="button" href="#" class="btn btn-default btn-red">Journey With Us</a> -->
       </div>
       <div class="btn-sec2 btn-sec-1">
         <a data-toggle="modal" data-target="#contact2_us" role="button" href="#" class="btn btn-default btn-red2">Join Our Event</a>
@@ -105,20 +105,42 @@
 <div class="content-section-b" id="services">
   <div id="carousel-example-captions" class="carousel slide main" data-ride="carousel">
     <h3>How It Works</h3>
-    <div class="awardBannerBx">
-      <div class="awardBanner">
-        <ul class="bannerSlider">
-          <li><img src="assets/awards-img1.png" alt=""></li>
-          <li><img src="assets/awards-img2.png" alt=""></li>
-          <li><img src="assets/awards-img3.png" alt=""></li>
-          <li><img src="assets/awards-img4.png" alt=""></li>
-          <li><img src="assets/awards-img5.png" alt=""></li>
-          <li><img src="assets/awards-img6.png" alt=""></li>
-          <li><img src="assets/awards-img7.png" alt=""></li>
-          <li><img src="assets/awards-img8.png" alt=""></li>
-        </ul>
+    <div class="container">
+      <div class="awardBannerBx">
+        <div class="awardBanner">
+          <ul class="bannerSlider">
+            <li class="clearfix">
+              <div class="slider-left">Catalog Books with our in-built barcode scanner or manually</div>
+            <div class="slider-right"><img src="assets/awards-img1.png" alt=""></div>
+            </li>
+                <li>
+              <div class="slider-left">List of books catalogued which are books you are ready to swap</div>
+            <div class="slider-right"><img src="assets/awards-img2.png" alt=""></div>
+            </li>
+                <li>
+              <div class="slider-left">Register your reading preferences through three convenient options</div>
+            <div class="slider-right"><img src="assets/awards-img3.png" alt=""></div>
+            </li>
+            <li>
+              <div class="slider-left">Reading preferences is a list of books, authors &amp; / or categories you would like to read</div>
+            <div class="slider-right"><img src="assets/awards-img4.png" alt=""></div>
+            </li>
+            <li>
+              <div class="slider-left">Search potential matches based on your location and distance</div>
+            <div class="slider-right"><img src="assets/awards-img5.png" alt=""></div>
+            </li>
+            <li>
+              <div class="slider-left">Potential swaps with “Get a Free Book” invite button to swap books</div>
+            <div class="slider-right"><img src="assets/awards-img6.png" alt=""></div>
+            </li>
+            <li>
+              <div class="slider-left">Chat Screen to get to know your swap partner and decide location to meet up</div>
+            <div class="slider-right"><img src="assets/awards-img7.png" alt=""></div>
+            </li>
+          </ul>
+        </div>
+        <div class="clr"></div>
       </div>
-      <div class="clr"></div>
     </div>
   </div>
 </div>
@@ -202,7 +224,7 @@
       <div class="col-lg-4 col-lg-offset-4 main">
         <div class="main-w">
           <div class="btn-sec">
-            <a class="btn btn-default btn-red" href="#" role="button" data-target="#contact_us" data-toggle="modal">Journey With Us</a>
+            <!-- <a class="btn btn-default btn-red" href="#" role="button" data-target="#contact_us" data-toggle="modal">Journey With Us</a> -->
           </div>
         </div>
       </div>
@@ -424,42 +446,6 @@
       })
    });
 </script>
-<script>
-  var owl = $('.pro-carousel');
-  owl.owlCarousel({
-     items:5,
-     loop:true,
-     nav: true,
-     autoplay:false,
-     margin:0,
-     center:true,
-     autoplayTimeout:5000,
-     smartSpeed: 1000,
-     responsiveClass:true,
-     responsive:{
-         0:{
-             items:3,
-             nav:true
-         },
-  	480:{
-             items:3,
-             nav:true
-         },
-         640:{
-             items:5,
-             nav:true
-         },
-  
-  768:{
-             items:5,
-             nav:true
-         },
-         
-     },
-     autoplayHoverPause:true
-  }); 
-</script>
-
 <script type="text/javascript">
 function jef_click(){
     var email = document.getElementById('email');
@@ -516,33 +502,11 @@ function jef_click(){
 </script>
 <!-- <script src="js/jquery.bxslider.js"></script>  -->
 <script>
-$('.bannerSlider').bxSlider({
-  minSlides: 1,
-  maxSlides: 1,
-  slideMargin: 0,
-  moveSlides: 1,
-  auto:false,
-});
-
-$(document).ready(function(){
-               
-    setTimeout(function(){ 
-    $( "<div class='bx-prev1'></div>" ).insertBefore(".bx-pager.bx-default-pager");
-    $( "<div class='bx-next1'></div>" ).insertAfter(".bx-pager.bx-default-pager");
-
-
-    }, 400);
-
-    setTimeout(function(){ 
-    $(".bx-prev1").click(function(){
-      $("a.bx-prev").click();             
-    });
-
-    $(".bx-next1").click(function(){
-      $("a.bx-next").click();             
-    });
-
-  }, 500);
-
-});
+  $('.bannerSlider').bxSlider({
+    minSlides: 1,
+    maxSlides: 1,
+    slideMargin: 0,
+    moveSlides: 1,
+    auto:true,
+  });
 </script>

@@ -788,24 +788,18 @@ background-color:#000;}
 .bestquoteList{padding: 0 10px;}
 .bestquoteList ul li{ display: block; padding-bottom:15px; font-size: 14px; line-height: 18px; color: #666; }
 .bestquoteList ul li span{ display:inline-block; float: right; font-size:14px; color: #333; font-weight: bold;}
-.awardBannerBx{ display:block; margin:0 auto; width:445px; height:897px; background:url(../assets/mobile-bgg.png) left top no-repeat;}
-.awardBanner{ display:block; width:418px; padding:103px 0 0 29px; position:relative;}
+.awardBannerBx{ display:block; margin:0 auto;}
+.awardBanner{ display:block; position:relative; margin-top:30px;}
 .awardBanner ul li{ display:block;}
-.awardBanner .bx-pager {display:block; text-align:center; position:relative; bottom:0px;}
+.awardBanner .bx-pager {display:none; text-align:center; position:relative; bottom:0px;}
 .awardBanner .bx-pager .bx-pager-item {display:inline-block; vertical-align:top;}
 .awardBanner .bx-pager .bx-pager-item a {display:inline-block; float:left; background:#666; width:20px; height:20px; border-radius:50%; margin:0px 2px 0 2px; overflow:hidden; color:#fff; font-size:12px; line-height:20px;}
 .awardBanner .bx-pager .bx-pager-item a:hover, .awardBanner .bx-pager .bx-pager-item a.active {background:#81bb07;}
-.awardBanner .bx-controls-direction a {position:absolute; bottom:-10px; left:50%; height:20px; width:28px; z-index:9999; display:inline-block; text-indent:-99999px;}
-.awardBanner .bx-prev {background:url(../assets/prev-img.png) no-repeat;}
-.awardBanner .bx-next {background:url(../assets/next-img.png) no-repeat;}
-
-.awardBanner .bx-controls{ text-align:center; height:20px;  margin-top:110px;}
-.awardBanner .bx-pager.bx-default-pager{ width:auto; display:inline-block;}
-.awardBanner .bx-wrapper .bx-pager, .bx-wrapper .bx-controls-auto{ position:relative;}
-.awardBanner .bx-prev1{ display:inline-block; height:20px; width:28px; vertical-align:middle; background:url(../assets/prev-img.png) no-repeat center center; cursor:pointer; margin-right:3px;}
-.awardBanner .bx-next1{ display:inline-block; height:20px; width:28px; vertical-align:middle; background:url(../assets/next-img.png) no-repeat center center; cursor:pointer; margin-left:3px;}
-.awardBanner .bx-controls-direction{ opacity:0; z-index:-500;}
-
+.awardBanner .bx-controls-direction a {position:absolute; top:50%; margin-top:-20px; height:40px; width:40px; z-index:9999; display:inline-block; text-indent:-99999px;}
+.awardBanner .bx-prev {background:url(../assets/prev-img.png) no-repeat; left:0%;}
+.awardBanner .bx-next {background:url(../assets/next-img.png) no-repeat; right:0%;}
+.slider-left{ width:60%; float:left; font-size:20px; color:#666666; padding:260px 50px 0 50px; text-align:center; box-sizing:border-box;}
+.slider-right{ width:40%; float:right; text-align:center;}
 /*.play-btn2 {
     left: 42%;
     position: absolute;
