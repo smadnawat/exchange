@@ -796,10 +796,11 @@ background-color:#000;}
 .awardBanner .bx-pager .bx-pager-item a {display:inline-block; float:left; background:#666; width:20px; height:20px; border-radius:50%; margin:0px 2px 0 2px; overflow:hidden; color:#fff; font-size:12px; line-height:20px;}
 .awardBanner .bx-pager .bx-pager-item a:hover, .awardBanner .bx-pager .bx-pager-item a.active {background:#81bb07;}
 .awardBanner .bx-controls-direction a {position:absolute; top:50%; margin-top:-20px; height:40px; width:40px; z-index:9999; display:inline-block; text-indent:-99999px;}
-.awardBanner .bx-prev {background:url("../assets/prev-image.png") no-repeat; left:0%;}
-.awardBanner .bx-next {background:url("../assets/next-image.png") no-repeat; right:0%;}
-.slider-left{ width:60%; float:left; font-size:16px; color:#666666; padding:200px 50px 0 50px; box-sizing:border-box;}
-.slider-left span{ font-size:20px; color:#666; font-weight:600; display:block; padding-bottom:10px;}
+
+.awardBanner .bx-prev {background:url("/prev-image.png") no-repeat; left:0%;}
+.awardBanner .bx-next {background:url("/next-image.png") no-repeat; right:0%;}
+.slider-left{ width:60%; float:left; font-size:20px; color:#666666; padding:260px 50px 0 50px; text-align:center; box-sizing:border-box;}
+
 .slider-right{ width:40%; float:right; text-align:center;}
 /*.play-btn2 {
     left: 42%;
