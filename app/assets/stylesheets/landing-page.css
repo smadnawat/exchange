@@ -1215,7 +1215,7 @@ h3 span{ color:#81bb07;}
 }
 @media(max-width:767px){
 .navbar-brand{ width:300px;}
-.pull-right{ width:100%;}
+.pull-right{ width:100%; float: none !important; display: block;}
 .padd-sec{padding-top: 80px !important;}
 .navbar-toggle{ margin-top:20px !important;}
 .intro-header{ padding:80px 0 0 0;}
@@ -1226,7 +1226,8 @@ h3 span{ color:#81bb07;}
 ul.banner-social-buttons{ width:144px;}
 .slider-left{ display:none;}
 .slider-right{ float:none; width:273px; margin:0 auto 20px auto;} 
-
+.navbar-nav > li > a{ color:#363636; font-size:15px !important;}
+.mob-img1 img{ width: auto !important;}
 }
 @media(max-width:639px){
 .navbar-brand{ width:250px;}
