@@ -799,7 +799,8 @@ background-color:#000;}
 
 .awardBanner .bx-prev {background:url("/prev-image.png") no-repeat; left:0%;}
 .awardBanner .bx-next {background:url("/next-image.png") no-repeat; right:0%;}
-.slider-left{ width:60%; float:left; font-size:20px; color:#666666; padding:260px 50px 0 50px; text-align:center; box-sizing:border-box;}
+.slider-left{ width:60%; float:left; font-size:16px; color:#666666; padding:200px 50px 0 50px; box-sizing:border-box;}
+.slider-left span{ font-size:20px; color:#666; font-weight:600; display:block; padding-bottom:10px;}
 
 .slider-right{ width:40%; float:right; text-align:center;}
 /*.play-btn2 {
