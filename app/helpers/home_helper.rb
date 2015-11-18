@@ -256,7 +256,7 @@ module HomeHelper
   end
 
   def country
-    "<select class='form-control' name=[contact_us][country] id='country'>      
+    "<select class='form-control' name=[contact_us][country] id='country3'>      
       <option>Select Country</option>
       <option value='India'>India</option>
       <option value='Indonesia'>Indonesia</option>

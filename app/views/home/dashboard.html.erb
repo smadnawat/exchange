@@ -346,8 +346,9 @@
             <span id="email_span" class="error-email error"></span>
           </div>
           <div class="form-group">
-            <label class="label-txt" for="exampleInputEmail1">Country</label>
-            <%= country %>  
+            <label class="label-txt" for="exampleInputEmail1">Country<span style='color:red'>*</span></label>
+            <%= country %>
+            <span id="country_span" class="error-email error"></span>
           </div>
           <div class="form-group">
             <label for="exampleInputEmail1" class="label-txt">Gender</label>
@@ -501,6 +502,15 @@ function jef_click(){
          $('#email_span').html("");
       }
   }
+  
+  if ($("#country3 option:selected").text()=="Select Country") {
+     $('#country_span').html("Please select country");
+      arr.insert('country')
+   }
+   else{
+     $('#country_span').html("");
+  }
+
 
   if (arr.length == 0)
   {
