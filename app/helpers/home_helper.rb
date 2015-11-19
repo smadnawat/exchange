@@ -264,19 +264,38 @@ module HomeHelper
     </select>".html_safe    
   end
 
-  def quote(quote)    
-    case quote
-    when "1"
-      "There are no faster or firmer friendships than those formed between people who love the same books  -  Irving Stone"
-    when "2"
-      "There are many little ways to enlarge your child’s world. Love of books is the best of all.  -  Jacqueline Kennedy Onassis"
-    when "3"
-      "There is no friend as loyal as a book  -  Earnest Hemingway"
-    when "4"
-      "The more we share, the more we have  -  Leonard Nimoy"
-    when "5"
-      "If you have a candle, the light won’t glow any dimmer if I light yours off  of mine  -  Steven Tyler"
+  # def quote(quote)    
+  #   case quote
+  #   when "1"
+  #     "There are no faster or firmer friendships than those formed between people who love the same books  -  Irving Stone"
+  #   when "2"
+  #     "There are many little ways to enlarge your child’s world. Love of books is the best of all.  -  Jacqueline Kennedy Onassis"
+  #   when "3"
+  #     "There is no friend as loyal as a book  -  Earnest Hemingway"
+  #   when "4"
+  #     "The more we share, the more we have  -  Leonard Nimoy"
+  #   when "5"
+  #     "If you have a candle, the light won’t glow any dimmer if I light yours off  of mine  -  Steven Tyler"
+  #   end
+  # end
+
+  def country_event(country=nil, url=nil)
+    case country
+    when "India"
+      pic = "http://static.adzerk.net/Advertisers/72156ae7d17b4328808246c02701d7b0.png"
+      url = "https://www.facebook.com/events/1784356635125021/"
+    when "Indonesia"
+      pic = "http://static.adzerk.net/Advertisers/72156ae7d17b4328808246c02701d7b0.png"
+      url = "https://www.facebook.com/events/960701244014746/"
+    when "Philippines"
+      pic = "http://static.adzerk.net/Advertisers/72156ae7d17b4328808246c02701d7b0.png"
+      url = "https://www.facebook.com/events/644898388946334/"
+    else
+      pic = "http://1ad53a29.ngrok.com/assets/logo.png"
+      url = request.url
     end
+    return pic, url
+
   end
 
 end
