@@ -281,21 +281,20 @@ module HomeHelper
 
   def country_event(country=nil, url=nil)
     case country
-    when "India"
-      pic = "http://static.adzerk.net/Advertisers/72156ae7d17b4328808246c02701d7b0.png"
+    when "India"      
+      pic = "http://108.174.155.117:3003/india-banner.jpg"
       url = "https://www.facebook.com/events/1784356635125021/"
     when "Indonesia"
-      pic = "http://static.adzerk.net/Advertisers/72156ae7d17b4328808246c02701d7b0.png"
+      pic = "http://108.174.155.117:3003/indonesia-banner.jpg"
       url = "https://www.facebook.com/events/960701244014746/"
     when "Philippines"
-      pic = "http://static.adzerk.net/Advertisers/72156ae7d17b4328808246c02701d7b0.png"
+      pic = "http://108.174.155.117:3003/phillipinces-banner.jpg"
       url = "https://www.facebook.com/events/644898388946334/"
     else
-      pic = "http://1ad53a29.ngrok.com/assets/logo.png"
+      pic = "http://108.174.155.117:3003/470x246.jpg"
       url = request.url
     end
     return pic, url
-
   end
 
 end

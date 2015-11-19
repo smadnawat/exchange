@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="utf-8">
+<head>	
+	<% if content_for?(:head) %>
+		  <%= yield(:head) %>
+		<% end %>
+		<meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
    
@@ -10,9 +13,7 @@
 
     <meta name="author" content="">
     <title><%= full_title(yield(:title)) %></title>
-    <% if content_for?(:head) %>
-		  <%= yield(:head) %>
-		<% end %>
+    
     <%= csrf_meta_tags %>    
 
   <!-- <title>Meetup & Swap Books of Favorite Authors For Free –
