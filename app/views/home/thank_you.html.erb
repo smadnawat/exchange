@@ -1,4 +1,6 @@
 <% content_for :head do %>  
+  <meta property="og:image" content="http://108.174.155.117:3003/470x246.jpg" />
+  <meta property="og:url"    content="#{request.url}" /> 
   <meta property="og:title"  content="Thank You <%=@contact_us.name%> For Entering Our Event!!" />
   <meta property="og:description"  content="Novelinked is the only Social Book Swapping App which promises you an unlimited supply of Free Books of your Favorite Authors. Download Us and Enter A New World of Free Books!!" />  
 <% end %>
@@ -77,10 +79,6 @@
                 <li><a href="#-" id="share_button" class="f-ico"></a></li>
                 <li><a href="https://twitter.com/home?status='World's' Only Social Book Swapping App, download from https://itunes.apple.com/us/app/novelinked-social-book-swaps/id1031267627 or https://play.google.com/store/apps/details?id=com.novAlinked" target="_blank" class="t-ico"></a></li>
                 <li><a href="#-" target="" onclick="window.open('https://plus.google.com/share?url=<%=request.url%>','name','width=600,height=400')" class="g-ico"></a></li>
- <a href="https://plus.google.com/share?url=<%= url_for(:only_path => false) %>" target="_blank">Google +</a> 
-                <a href="https://plus.google.com/share?u=https://www.facebook.com/events/1784356635125021/&p[images][0]=http://108.174.155.117:3003/india-banner.jpg&description=Novelinked is the only Social Book Swapping App which promises you an unlimited supply of Free Books of your Favorite Authors. Download Us and Enter A New World of Free Books!!">Facebook</a>
-
-
               </ul>
             </div>
           </div>
