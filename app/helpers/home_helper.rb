@@ -256,7 +256,7 @@ module HomeHelper
   end
 
   def country
-    "<select class='form-control' name=[contact_us][country] id='country'>      
+    "<select class='form-control' name=[contact_us][country] id='country3'>      
       <option>Select Country</option>
       <option value='India'>India</option>
       <option value='Indonesia'>Indonesia</option>
@@ -264,19 +264,37 @@ module HomeHelper
     </select>".html_safe    
   end
 
-  def quote(quote)    
-    case quote
-    when "1"
-      "There are no faster or firmer friendships than those formed between people who love the same books  -  Irving Stone"
-    when "2"
-      "There are many little ways to enlarge your child’s world. Love of books is the best of all.  -  Jacqueline Kennedy Onassis"
-    when "3"
-      "There is no friend as loyal as a book  -  Earnest Hemingway"
-    when "4"
-      "The more we share, the more we have  -  Leonard Nimoy"
-    when "5"
-      "If you have a candle, the light won’t glow any dimmer if I light yours off  of mine  -  Steven Tyler"
+  # def quote(quote)    
+  #   case quote
+  #   when "1"
+  #     "There are no faster or firmer friendships than those formed between people who love the same books  -  Irving Stone"
+  #   when "2"
+  #     "There are many little ways to enlarge your child’s world. Love of books is the best of all.  -  Jacqueline Kennedy Onassis"
+  #   when "3"
+  #     "There is no friend as loyal as a book  -  Earnest Hemingway"
+  #   when "4"
+  #     "The more we share, the more we have  -  Leonard Nimoy"
+  #   when "5"
+  #     "If you have a candle, the light won’t glow any dimmer if I light yours off  of mine  -  Steven Tyler"
+  #   end
+  # end
+
+  def country_event(country=nil, url=nil)
+    case country
+    when "India"      
+      pic = "http://108.174.155.117:3003/india-banner.jpg"      
+      url = "#{request.url}?country=#{@contact_us.country}"      
+    when "Indonesia"
+      pic = "http://108.174.155.117:3003/indonesia-banner.jpg"
+      url = "#{request.url}?country=#{@contact_us.country}"      
+    when "Philippines"
+      pic = "http://108.174.155.117:3003/phillipinces-banner.jpg"
+      url = "#{request.url}?country=#{@contact_us.country}"      
+    else
+      pic = "http://108.174.155.117:3003/470x246.jpg"
+      url = request.url
     end
+    return pic, url
   end
 
 end
