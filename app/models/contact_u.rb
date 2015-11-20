@@ -1,5 +1,7 @@
 class ContactU < ActiveRecord::Base
 	mount_uploader :avatar, AvatarUploader
+	 validates :name, :surname, :email, :country, presence: true
+	 validates_format_of :email,:with => /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/
 	
 	def self.to_csv(options = {})
 	  CSV.generate(options) do |csv|
