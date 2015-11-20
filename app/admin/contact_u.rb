@@ -30,7 +30,7 @@ permit_params :name, :surname, :email, :country, :gender
 	filter :gender
 
 	form(:html => { :multipart => true }) do |f|
-		f.inputs "Users" do
+		f.inputs do
 		    f.input :name, :required => true
 		    f.input :surname, :required => true
 		    f.input :email, :required => true, :email => true
