@@ -1236,11 +1236,12 @@ h3 span{ color:#81bb07;}
 ul.banner-social-buttons{ width:144px;}
 .slider-left{ display:none;}
 .slider-right{ float:none; width:273px; margin:0 auto 20px auto;} 
-.navbar-nav > li > a{ color:#363636; font-size:15px !important;}
+.navbar-nav > li > a{ color:#000 !important; font-size:15px !important;}
 .mob-img1 img{ }
 .play-btn{margin-left:-86px !important;left:50% !important;}
 .resp-head{ left:0 !important;}
 .intro-message > .resp-head h1{ left:0 !important;}
+.btn-red2 {padding: 7px 16px;}
 }
 @media(max-width:639px){
 .navbar-brand{ width:250px;}
