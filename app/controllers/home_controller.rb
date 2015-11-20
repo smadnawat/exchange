@@ -26,7 +26,16 @@ class HomeController < ApplicationController
 	end
 
 	def thank_you
-		@contact_us = ContactU.find(params[:id]) if params[:id]
+		if request.fullpath.include?("India")
+			redirect_to "https://www.facebook.com/events/1784356635125021/"
+		elsif request.fullpath.include?("Indonesia")
+			redirect_to "https://www.facebook.com/events/960701244014746/"
+		elsif request.fullpath.include?("Philippines")
+			redirect_to "https://www.facebook.com/events/644898388946334/"
+		else
+			@contact_us = ContactU.find(params[:id]) if params[:id]
+		end
+
 	end
 
 	def download_csv

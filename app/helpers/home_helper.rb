@@ -282,14 +282,14 @@ module HomeHelper
   def country_event(country=nil, url=nil)
     case country
     when "India"      
-      pic = "http://108.174.155.117:3003/india-banner.jpg"
-      url = "https://www.facebook.com/events/1784356635125021/"
+      pic = "http://108.174.155.117:3003/india-banner.jpg"      
+      url = "#{request.url}?country=#{@contact_us.country}"      
     when "Indonesia"
       pic = "http://108.174.155.117:3003/indonesia-banner.jpg"
-      url = "https://www.facebook.com/events/960701244014746/"
+      url = "#{request.url}?country=#{@contact_us.country}"      
     when "Philippines"
       pic = "http://108.174.155.117:3003/phillipinces-banner.jpg"
-      url = "https://www.facebook.com/events/644898388946334/"
+      url = "#{request.url}?country=#{@contact_us.country}"      
     else
       pic = "http://108.174.155.117:3003/470x246.jpg"
       url = request.url
