@@ -108,6 +108,13 @@ a,img{outline:none !important;}
     background-size: cover;
 }
 
+.how-it-work.bul-line {
+    left: 26px;
+    position: absolute;
+    top: 46%;
+    transform: rotate(180deg);
+}
+
 .intro-message {
 /*     padding-bottom: 20%;
     padding-top: 10%; */
@@ -138,7 +145,7 @@ a,img{outline:none !important;}
 
 .navbar-nav {
     float: left;
-    margin-top: 24px;
+    margin-top: 30px;
 	margin-right:0;
 }
 .other-nav > a{
@@ -663,7 +670,7 @@ button.cls-btn:hover{
 }
 
 .navbar-2{
-    background-color: rgba(255, 255, 255, 0.0);
+    background: rgba(0,0,0,0.3);
     position: fixed;
     width: 100%;
 	border:none;
@@ -803,7 +810,7 @@ background-color:#000;}
 .slider-left{ width:60%; float:left; font-size:16px; color:#666666; padding:200px 50px 0 50px; box-sizing:border-box;}
 .slider-left span{ font-size:20px; color:#666; font-weight:600; display:block; padding-bottom:10px;}
 
-.slider-right{ width:40%; float:right; text-align:center;}
+.slider-right{ width:40%; float:right; text-align:center; position: relative; }
 /*.play-btn2 {
     left: 42%;
     position: absolute;
@@ -940,6 +947,7 @@ padding-right: 17px;
     padding: 4px 21px;
     font-size: 14px;
 }
+
 .bul-line-r{
 	display:none;
 }
@@ -1230,6 +1238,9 @@ ul.banner-social-buttons{ width:144px;}
 .slider-right{ float:none; width:273px; margin:0 auto 20px auto;} 
 .navbar-nav > li > a{ color:#363636; font-size:15px !important;}
 .mob-img1 img{ }
+.play-btn{margin-left:-86px !important;left:50% !important;}
+.resp-head{ left:0 !important;}
+.intro-message > .resp-head h1{ left:0 !important;}
 }
 @media(max-width:639px){
 .navbar-brand{ width:250px;}
@@ -1241,6 +1252,9 @@ ul.banner-social-buttons{ width:144px;}
 .navbar-toggle{ margin-top:15px !important;}
 .intro-header{ padding:69px 0 0 0;} 
 .text-sec-1{ margin-top: 50px;}
+.thankBx{ width:84%;margin:10px auto;}
+.btns span.app-thanks{ display:inline-block;width:110px;}
+.btns span.app-thanks img{ max-width:100%;}
 }
 @media(max-width:479px){
 .navbar-brand{ width:200px;}
@@ -1258,5 +1272,16 @@ ul.banner-social-buttons{ margin:0 auto 20px auto;}
 .awardBanner .bx-prev{ left:-12px;}
 .intro-header{ padding:57px 0 0 0;} 
 .text-area { padding: 0 10px; }
-body{ overflow-x: hidden;}
+/*body{ overflow-x: hidden;}*/
+.appBtns a{width:120px !important;margin:0;display:inline-block;}
+.appBtns a img{ max-width:100% !important;}
+.appBtns{ margin-top:0;}
 }
+.intro-message > .resp-head h1{ color:#fff;}
+.navbar-default .navbar-nav > li > a, .navbar-nav > li > a{ color:#fff;}
+.appBtns{ margin-top:0;}
+.form-inline.sec-marg{ padding:0;}
+.green-band{ padding:12px 0;}
+.social-r{ padding:5px 0;}
+body{ position:static;}
+body.bdyfixed{ position:fixed;top:0;left:0;right:0;}
