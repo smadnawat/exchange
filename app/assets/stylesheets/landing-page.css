@@ -870,6 +870,7 @@ color:#363636;
 
 .intro-message >.resp-head h1  {
     font-size: 20px !important;
+    margin-left: -18px !important;
     
 }
 .resp-head {
