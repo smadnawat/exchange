@@ -1,7 +1,7 @@
 $(document).on("ready", function(){
 	// if($(window).width > 767)
 	// {
-		$(".navbar-nav > li > a").click(function(){
+		$("a").click(function(){
 			$("#bs-example-navbar-collapse-1").removeClass("in");
 		});
 	// }
