@@ -1215,13 +1215,15 @@ h3 span{ color:#81bb07;}
 
 /*-----------------18-11-2015---------------------*/
 @media(max-width:1199px){
-.navbar-nav > li > a{ font-size:15px !important;}
- 
+.navbar-nav > li > a{ font-size:15px !important;} 
 }
 @media(max-width:991px){
 .padd-sec{padding-top: 63px !important;}
 .navbar-nav{ margin-top:12px;}
 .slider-left{ padding: 100px 50px 0; }
+}
+@media(max-width:800px){
+.how-it-work.bul-line{ left:-47px !important;}
 }
 @media(max-width:767px){
 .navbar-brand{ width:300px;}
@@ -1242,6 +1244,19 @@ ul.banner-social-buttons{ width:144px;}
 .resp-head{ left:0 !important;}
 .intro-message > .resp-head h1{ left:0 !important;}
 .btn-red2 {padding: 7px 16px;}
+.thankBx{ margin:10px auto !important;width:92% !important;}
+.thankBx .about-head h3{ font-size:18px !important;margin-top:0 !important;}
+.thankBx .text-area{ margin-top:0 !important;}
+.thankBx .text-area p{ font-size:12px !important;  line-height: 19px !important;margin-bottom:10px !important;}
+.thankBx .btns span{ display:inline-block !important;}
+.thankBx .text-c{ margin-top:0 !important;}
+.thankBx .btns{ margin-bottom:0px !important}
+.thankBx .btns span.app-thanks img{ max-width:100%;}
+.thankBx .btns span{width:110px !important;display:inline-block !important;}
+.thankBx .btns span img{ max-width:100% !important;}
+.thankBx ul.banner-social-buttons{ margin:0 auto !important;}
+.slider-left{ display:block !important;width:auto !important;padding:0 !important;margin-bottom:36px !important;text-align:center !important;}
+.content-section-b{ padding-top:0 !important;}
 }
 @media(max-width:639px){
 .navbar-brand{ width:250px;}
