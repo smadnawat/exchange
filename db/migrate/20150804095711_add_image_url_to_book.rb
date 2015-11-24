@@ -18,3 +18,5 @@ class AddImageUrlToBook < ActiveRecord::Migration
   end
 
 end
+
+
