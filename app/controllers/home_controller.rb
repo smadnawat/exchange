@@ -19,13 +19,23 @@ class HomeController < ApplicationController
 	  contact_us = ContactU.new(params_permit)
 		if contact_us.save
 			contact_data = ContactU.find(contact_us.id)
-      UserMailer.sending_contact_details(contact_data).deliver
+      		UserMailer.sending_contact_details(contact_data).deliver
 			flash[:notice] = "Your Contact Us form has been submitted successfully"
-			redirect_to thank_you_path
+			redirect_to thank_you_path( :id => contact_us.id, :join_event => params[:join_event] )
 		end	
 	end
 
-	def thank_you		
+	def thank_you
+		if request.fullpath.include?("India")
+			redirect_to "https://www.facebook.com/events/1784356635125021/"
+		elsif request.fullpath.include?("Indonesia")
+			redirect_to "https://www.facebook.com/events/960701244014746/"
+		elsif request.fullpath.include?("Philippines")
+			redirect_to "https://www.facebook.com/events/644898388946334/"
+		else
+			@contact_us = ContactU.find(params[:id]) if params[:id]
+		end
+
 	end
 
 	def download_csv
