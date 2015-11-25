@@ -23,6 +23,16 @@ permit_params :name, :surname, :email, :country, :gender
 	    actions
 	end
 
+	csv do
+		if params[:action] == 'index'
+		   column :name
+		   column :surname
+		   column :email
+		   column :country	    
+		   column :gender	    
+		end
+  end
+
 	filter :name
 	filter :surname
 	filter :email
@@ -39,4 +49,9 @@ permit_params :name, :surname, :email, :country, :gender
     	end
     	f.actions
   	end
+
+	action_item(:only => :index) do
+    link_to 'Download CSV',  '/admin/contact_us.csv'
+  end
+  
 end
