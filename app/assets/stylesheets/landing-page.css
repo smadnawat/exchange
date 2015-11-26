@@ -905,6 +905,13 @@ color:#363636;
 }
 }
 @media(max-width:767px) {
+    .carousel-indicators {
+    bottom: 10px;
+    left: 44%;
+    top: 55px;
+    width: 73%;
+    height: 40px;
+}
 /*.btns span img{
     width:50%;
 }*/
