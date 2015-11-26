@@ -109,7 +109,7 @@ a,img{outline:none !important;}
 }
 
 .how-it-work.bul-line {
-    left: 26px;
+    left: -39px;
     position: absolute;
     top: 46%;
     transform: rotate(180deg);
@@ -321,6 +321,7 @@ height: 46px;
     top: 55px;
     width: 60%;
     z-index: 15;
+    height: 40px;
 }
 .carousel-indicators li {
     background-color: #81bb07;
@@ -369,15 +370,15 @@ height: 46px;
 	font-size:30px;
 }
 .carousel-control {
-    bottom: 0;
-    color: #fff;
+    bottom: 0px;
+    color: #FFF;
     font-size: 20px;
-    left: 0;
+    left: 0px;
     opacity: 0.5;
     position: absolute;
     text-align: center;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
-    top: 40px;
+    text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.6);
+    top: 240px;
     width: 15%;
 }
 .mob-img1 img,.mob-img2 img {
@@ -750,10 +751,13 @@ background-color:#000;}
 .item .active .car-img {
     width: 100%;
 }
+
 .carousel-inner .item img {
     width: 100% !important;
 }
-
+.carousel-inner .mob-img1{
+    width: 79% !important;
+}
 /*=================last */
 .form-control {
     width: 100% ;
@@ -807,7 +811,7 @@ background-color:#000;}
 
 .awardBanner .bx-prev {background:url("/prev-image.png") no-repeat; left:0%;}
 .awardBanner .bx-next {background:url("/next-image.png") no-repeat; right:0%;}
-.slider-left{ width:60%; float:left; font-size:16px; color:#666666; padding:200px 50px 0 50px; box-sizing:border-box;}
+.slider-left {font-size: 16px;color: #666;padding: 200px 50px 0px;box-sizing: border-box;text-align: left; text-shadow: none;}
 .slider-left span{ font-size:20px; color:#666; font-weight:600; display:block; padding-bottom:10px;}
 
 .slider-right{ width:40%; float:right; text-align:center; position: relative; }
@@ -901,6 +905,21 @@ color:#363636;
 }
 }
 @media(max-width:767px) {
+/*.btns span img{
+    width:50%;
+}*/
+.left, .right{
+display:none;
+
+}
+.slider-left{
+font-size: 14px;
+
+}
+.slider-left span{
+font-size: 14px;
+
+}
 .player .title header h1{
 	display:none !important;
 }
@@ -1294,10 +1313,15 @@ ul.banner-social-buttons{ margin:0 auto 20px auto;}
 .appBtns{ margin-top:0;}
 }
 .intro-message > .resp-head h1{ color:#fff;}
-.navbar-default .navbar-nav > li > a, .navbar-nav > li > a{ color:#fff;}
+.navbar-default .navbar-nav > li > a, .navbar-nav > li > a {
+    color: #FFF;
+    text-decoration: none !important;
+}
 .appBtns{ margin-top:0;}
 .form-inline.sec-marg{ padding:0;}
 .green-band{ padding:12px 0;}
 .social-r{ padding:5px 0;}
 body{ position:static;}
 body.bdyfixed{ position:fixed;top:0;left:0;right:0;}
+
+/*----------------26--mobiloitte----*/
