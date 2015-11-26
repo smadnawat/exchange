@@ -652,6 +652,7 @@ button.cls-btn:hover{
   -moz-transition-property: opacity;
   -o-transition-property: opacity;
   transition-property: opacity;
+  width:100%;
 }
 .carousel-fade .carousel-inner .active {
   opacity: 1;
