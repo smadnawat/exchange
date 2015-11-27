@@ -15,7 +15,7 @@ module ExchangeApp
     # -- all .rb files in that directory are automatically loaded.
 
     # config.assets.paths << Rails.root.join('vendor', 'assets')
-    config.serve_static_files = true 
+    # config.serve_static_files = true 
 
 
     # config.autoload_paths += %W(#{config.root}/app/workers)
