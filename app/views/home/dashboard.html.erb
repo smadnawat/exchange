@@ -363,7 +363,7 @@
 </footer>
 </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-<!-- <div class="modal fade" id="contact_us" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+<div class="modal fade" id="contact_us" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
   <div role="document" class="modal-dialog">
     <div class="modal-content small_d_model">
       <div class="modal-header">
@@ -371,15 +371,15 @@
         <h4 id="exampleModalLabel" class="modal-title">Your Details</h4>
       </div>
       <div class="modal-body">
-        <%#= form_for :contact_us,url: contact_us_path, :html=>{:class => "contact_us_form",id: "contact-form"} do |f| %>
+        <%= form_for :contact_us,url: contact_us_path, :html=>{:class => "contact_us_form",id: "contact-form"} do |f| %>
           <div class="form-group">
             <label for="exampleInputEmail1" class="label-txt">Name</label>
-            <%#= f.text_field :name, autofocus: true, :class => "form-control form-c" %>
+            <%= f.text_field :name, autofocus: true, :class => "form-control form-c" %>
             <span class="error-name error"></span>
           </div>
           <div class="form-group">
             <label class="label-txt" for="exampleInputEmail1">Email</label>
-            <%#= f.email_field :email, :class=> "form-control form-c"  %>
+            <%= f.email_field :email, :class=> "form-control form-c"  %>
             <span class="error-email error"></span>
           </div>
           <div class="form-group">
@@ -390,29 +390,29 @@
             <label class="label-txt" for="exampleInputEmail1">Gender</label>
             <div class="radio">
               <label>
-              <%#= f.radio_button :gender, 'Male', :checked=> true %>
+              <%= f.radio_button :gender, 'Male', :checked=> true %>
               Male
               </label>
             </div>
             <div class="radio">
               <label>
-              <%#= f.radio_button :gender, 'Female' %>
+              <%= f.radio_button :gender, 'Female' %>
               Female
               </label>
             </div>
           </div>
           <div class="form-group">
             <label class="label-txt" for="exampleInputEmail1">Author Code (if any)</label>
-            <%#= f.text_field :author_code, :class=> "form-control form-c"  %>
+            <%= f.text_field :author_code, :class=> "form-control form-c"  %>
           </div>
         </div>
         <div class="modal-footer put-center">
           <a href="#" class="btn btn-default btn-red" type="button" id = "contact_us_valid" onclick="$('.contact_us_form').submit();">Journey With Us</a>
         </div>
-      <%# end %>
+      <% end %>
     </div>
   </div>
-</div> -->
+</div>
 <!--Start of form 2-->
 <div class="modal fade" id="contact2_us" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
   <div role="document" class="modal-dialog">
