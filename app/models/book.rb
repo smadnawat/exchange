@@ -9,6 +9,7 @@ class Book < ActiveRecord::Base
 	scope :details, -> {Book.order(:upload_date_for_admin).map{|x| x}.uniq{|x| x.upload_date_for_admin}}
 	before_save :update_date_admin, :if => :new_record?
 	before_save :update_country_name
+  before_create :update_no_of_books_for_user
     
   validates :user_id, :uniqueness => {:scope => [:isbn13] , :message => "Book Already Catalogued"}, if: 'isbn13.present?'
 
@@ -48,6 +49,11 @@ class Book < ActiveRecord::Base
 	def update_country_name
 	  self.country_name = self.address.split(',').last	
 	end
+
+  def update_no_of_books_for_user
+    @user = User.find_by_id(self.user_id)
+    @user.update_attributes(:no_of_books_uploaded => (@user.no_of_books_uploaded + 1) )
+  end
 
 
   def self.search_similar_books(params)

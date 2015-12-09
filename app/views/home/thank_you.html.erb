@@ -182,31 +182,69 @@
 <!-- Bootstrap Core JavaScript -->
 </body>
 
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=749828881790236&version=v2.0";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
+  <div id="fb-root"></div>
+  <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=749828881790236&version=v2.0";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
 
-</script>
-<div class="col-xs-4 col-md-2"> <%#= link_to "F Share","#",:id => "share_button"%>
+  </script>
+  <div class="col-xs-4 col-md-2"> <%#= link_to "F Share","#",:id => "share_button"%>
 
-<script type="text/javascript">
-    
-        $(document).on('click','#share_button',function(e){
-            e.preventDefault();
-            FB.ui(
-            {
-                method: 'feed',
-                link: '<%=country_event(@contact_us.country,@url)[1]%>',
-                name: 'Thank You <%=@contact_us.name%> For Entering Our Event!!',
-                picture: '<%=country_event(@contact_us.country)[0]%>',
-                caption: '',
-                description: 'Novelinked is the only Social Book Swapping App which promises you an unlimited supply of Free Books of your Favorite Authors. Download Us and Enter A New World of Free Books!!'                
+  <script type="text/javascript">
+      
+          $(document).on('click','#share_button',function(e){
+              e.preventDefault();
+              FB.ui(
+              {
+                  method: 'feed',
+                  link: '<%=country_event(@contact_us.country,@url)[1]%>',
+                  name: 'Thank You <%=@contact_us.name%> For Entering Our Event!!',
+                  picture: '<%=country_event(@contact_us.country)[0]%>',
+                  caption: '',
+                  description: 'Novelinked is the only Social Book Swapping App which promises you an unlimited supply of Free Books of your Favorite Authors. Download Us and Enter A New World of Free Books!!'                
 
-            });
-        });
+              });
+          });
+  </script>
+
+  <script type="text/javascript">
+  /* <![CDATA[ */
+  var google_conversion_id = 939561481;
+  var google_conversion_language = "en";
+  var google_conversion_format = "3";
+  var google_conversion_color = "ffffff";
+  var google_conversion_label = "PL57CLeAimIQiaSCwAM";
+  var google_remarketing_only = false;
+  /* ]]> */
+  </script>
+   <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+   </script>
+    <noscript>
+      <div style="display:inline;">
+      <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/939561481/?label=PL57CLeAimIQiaSCwAM&amp;guid=ON&amp;script=0"/>
+      </div>
+    </noscript>
+
+  <head>
+    <!-- Facebook Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','//connect.facebook.net/en_US/fbevents.js');
+
+    fbq('init', '932147590168333');
+    fbq('track', "PageView");
+    fbq('track', 'CompleteRegistration');
     </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=932147590168333&ev=PageView&noscript=1"
+    />
+    </noscript>
+    <!-- End Facebook Pixel Code -->
+  </head>
