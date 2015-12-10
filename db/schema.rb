@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151106121710) do
+ActiveRecord::Schema.define(version: 20151209103031) do
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace",     limit: 255
@@ -284,6 +284,10 @@ ActiveRecord::Schema.define(version: 20151106121710) do
     t.string   "mat_email_token",        limit: 255
     t.boolean  "is_subscribe",           limit: 1,     default: true
     t.string   "unsubscription_token",   limit: 255
+    t.integer  "no_of_books_uploaded",   limit: 4,     default: 0
+    t.integer  "no_of_author_pref",      limit: 4,     default: 0
+    t.integer  "no_of_book_pref",        limit: 4,     default: 0
+    t.integer  "no_of_category_pref",    limit: 4,     default: 0
   end
 
   add_foreign_key "blocks", "groups"

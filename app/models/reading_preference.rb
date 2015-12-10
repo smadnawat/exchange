@@ -5,6 +5,18 @@ class ReadingPreference < ActiveRecord::Base
 
   #validates_uniqueness_of :title, :allow_blank => true, :message => "already exists."
   validates :user_id, :uniqueness => {:scope => [:isbn13] , :message => "reading preference already exists!."}, if: 'isbn13.present?'
+  before_create :update_no_of_book_pref_for_user
+
+  def update_no_of_book_pref_for_user
+     @user = User.find_by_id(self.user_id)
+     if (self.title != "" && self.author != "" && self.genre != "")     
+        @user.update_attributes(:no_of_book_pref => (@user.no_of_book_pref + 1), :no_of_author_pref => (@user.no_of_author_pref + 1), :no_of_category_pref => (@user.no_of_category_pref + 1))
+     elsif (self.author != "" && self.genre == "")
+        @user.update_attributes(:no_of_book_pref => (@user.no_of_book_pref + 1), :no_of_author_pref => (@user.no_of_author_pref + 1))
+     elsif (self.author == "" && self.genre != "")  
+        @user.update_attributes(:no_of_book_pref => (@user.no_of_book_pref + 1), :no_of_category_pref => (@user.no_of_category_pref + 1))
+     end
+  end
 
   def self.search_similar_rp(params)
       education_genre = ['Education - School','Education - Undergrad - Art & Design','Education - Undergrad - Aeronautics','Education - Undergrad - Business Studies / Eco','Education - Undergrad - Drama', 'Education - Undergrad - Engineering', 'Education - Undergrad - Geography', 'Education - Undergrad - History', 'Education - Undergrad - Law', 'Education - Undergrad - Literature / English', 'Education - Undergrad - Maths', 'Education - Undergrad - Medicine', 'Education - Undergrad - Music', 'Education - Undergrad - Science', 'Education - Undergrad - Social Science', 'Education - Undergrad - Technology', 'Education - Undergrad - Others', 'Education - Postgrad - Business / Finance', 'Education - Postgrad - History', 'Education - Postgrad - Marketing', 'Education - Postgrad - Maths', 'Education - Postgrad - Medicine', 'Education - Postgrad - Technology', 'Education - Postgrad - Others']
