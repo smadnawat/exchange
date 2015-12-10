@@ -190,7 +190,6 @@
   js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=749828881790236&version=v2.0";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
-fbq('track', 'InitiateCheckout');
 </script>
 <div class="col-xs-4 col-md-2"> <%#= link_to "F Share","#",:id => "share_button"%>
   <script type="text/javascript">
@@ -227,23 +226,3 @@ fbq('track', 'InitiateCheckout');
       <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/939561481/?label=PL57CLeAimIQiaSCwAM&amp;guid=ON&amp;script=0"/>
       </div>
     </noscript>
-
-  <head>
-    <!-- Facebook Pixel Code -->
-    <script>
-    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-    document,'script','//connect.facebook.net/en_US/fbevents.js');
-
-    fbq('init', '932147590168333');
-    fbq('track', "PageView");
-    fbq('track', 'CompleteRegistration');
-    </script>
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=932147590168333&ev=PageView&noscript=1"
-    />
-    </noscript>
-    <!-- End Facebook Pixel Code -->
-  </head>
