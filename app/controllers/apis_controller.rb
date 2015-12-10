@@ -13,7 +13,7 @@ class ApisController < ApplicationController
 		        render :json => {:responseCode => 200,:responseMessage => "Email id #{@user.email} is already registered with Novelinked through a #{@user.provider} account. Please login via the same."} 
 			else	
 				@user = User.new(permitted_params)
-					if @user.save	
+					if @user.save
 						User.generate_sign_in_token(@user)
 						  manage_devices(@user)
 						#Device.total_devices(params[:device_id],params[:device_type],@user.id) unless params[:device_id].nil?
@@ -138,7 +138,7 @@ class ApisController < ApplicationController
 		    	                :responseMessage => 'Your uploaded authors in reading preferences!',
 		    	                :Authors => paging(@authors, params[:page_no],params[:page_size]).uniq {|p| p.author}.as_json(only: [:id, :author, :author_deactivated]),
 		    	                :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }
-		                     }
+	                     }
 	   else
 
 	     render :json => { :responseCode => 200, :responseMessage => 'Your uploaded authors in reading preferences!', :Authors => [], :total_uploaded_books => 0 }  
@@ -477,7 +477,7 @@ class ApisController < ApplicationController
                             :responseMessage => "Books has been searched successfully!",
                             :book => paging(@book, params[:page_no],params[:page_size]).as_json(only: ["author", "title","subjects", "isbn13", :image_url]),
                             :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }	                   
-		  	                   }
+		  	                  }
 		  else
 		  	 render :json => {
                             :responseCode => 500,
@@ -487,14 +487,14 @@ class ApisController < ApplicationController
 		  end                 
 	end
 
-	def get_advertisement	
+	def get_advertisement
 		  @ad_pictures = Banner.all
-			render :json => { 
+			render :json => {
 				               :responseCode => 200,
 				               :responseMessage => 'Listing advertisement pictures.',
 				               :ad_pictures => paging(@ad_pictures, params[:page_no],params[:page_size]).as_json(except: [:created_at,:updated_at]),
 				               :pagination => { page_no: params[:page_no],max_page_no: @max,total_no_records: @total }	                   
-				              }		
+				              }
 	end
 
 	def upload_multiple_reading_pref

@@ -1,4 +1,5 @@
 class AddImageUrlToBook < ActiveRecord::Migration
+  
   def self.up
     sql = ActiveRecord::Base.connection()
     sql.execute "SET autocommit=0"

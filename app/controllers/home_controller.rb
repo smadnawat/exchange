@@ -35,7 +35,6 @@ class HomeController < ApplicationController
 		else
 			@contact_us = ContactU.find(params[:id]) if params[:id]
 		end
-
 	end
 
 	def download_csv
